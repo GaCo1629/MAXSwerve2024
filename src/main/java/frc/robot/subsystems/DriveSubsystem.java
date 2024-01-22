@@ -17,6 +17,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.LimelightHelpers;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -83,6 +84,12 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
+
+      LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
+      
+      if (llresults.targetingResults.valid) {
+        m_odometry.addVisionMeasurement(llresults.targetingResults.getBotPose2d(), m_currentRotation);
+      }
   }
 
   /**
