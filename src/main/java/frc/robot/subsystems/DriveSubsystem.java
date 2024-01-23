@@ -13,11 +13,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.LimelightHelpers;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -87,9 +87,18 @@ public class DriveSubsystem extends SubsystemBase {
 
       LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
       
-      if (llresults.targetingResults.valid) {
-        m_odometry.addVisionMeasurement(llresults.targetingResults.getBotPose2d(), m_currentRotation);
-      }
+
+ 
+      double tagID = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0);
+              SmartDashboard.putNumber("Tag ID", tagID);
+
+      if (tagID > 0 ) {
+        Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
+        m_odometry.addVisionMeasurement(robotPosition, m_currentRotation);
+        SmartDashboard.putString("BotPose", robotPosition.toString());
+      } else {
+        SmartDashboard.putString("BotPose", "No Targets");
+       }
   }
 
   /**
