@@ -75,6 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // Update the odometry in the periodic block
     m_odometry.update(
       getRotation2d(),
@@ -83,22 +84,18 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      });
+    });
 
-      LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
-      
-
- 
-      double tagID = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0);
-              SmartDashboard.putNumber("Tag ID", tagID);
-
-      if (tagID > 0 ) {
-        Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-        m_odometry.addVisionMeasurement(robotPosition, m_currentRotation);
-        SmartDashboard.putString("BotPose", robotPosition.toString());
-      } else {
-        SmartDashboard.putString("BotPose", "No Targets");
-       }
+    // Attempt to use vision targets to update location.  Use the BotPose if tagID > 0
+    LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
+       
+    if (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0) > 0 ) {
+      Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
+      m_odometry.addVisionMeasurement(robotPosition, m_currentRotation);
+      SmartDashboard.putString("BotPose", robotPosition.toString());
+    } else {
+      SmartDashboard.putString("BotPose", "No Targets");
+    }
   }
 
   /**
