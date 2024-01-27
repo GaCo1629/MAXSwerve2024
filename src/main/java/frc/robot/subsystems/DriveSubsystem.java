@@ -73,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Field2d field = new Field2d();
 
   private static final Vector<N3> stateStdDevs  = VecBuilder.fill(0.1, 0.1, 0.01);
-  private static final Vector<N3> visionStdDevs = VecBuilder.fill(0.5, 0.5, 10000);
+  private static final Vector<N3> visionStdDevs = VecBuilder.fill(0.9, 0.9, 10000);
  
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -85,9 +85,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearLeft.getPosition(),
         m_rearRight.getPosition()
     },
-    new Pose2d(),
-    stateStdDevs,
-    visionStdDevs  );
+    new Pose2d());
+  
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -146,7 +145,7 @@ public class DriveSubsystem extends SubsystemBase {
       Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
       SmartDashboard.putString("BotPose", robotPosition.toString());
 
-      //m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
+      // m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
     } else {
       SmartDashboard.putString("BotPose", "No Targets");
     }

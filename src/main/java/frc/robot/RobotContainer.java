@@ -84,8 +84,9 @@ public class RobotContainer {
             m_robotDrive));
 
     // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("Pickup 1", new PathPlannerAuto("PickupOne"));
-    SmartDashboard.putData("Pickup 2", new PathPlannerAuto("PickupTwo"));
+    SmartDashboard.putData("Pickup 1", new PathPlannerAuto("ScoreSingle"));
+    SmartDashboard.putData("Pickup 2", new PathPlannerAuto("ScoreDouble"));
+    SmartDashboard.putData("Pickup 3", new PathPlannerAuto("ScoreTripple"));
 
 
   }
