@@ -40,7 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("M1",   Commands.print("Passed marker 1"));
+    NamedCommands.registerCommand("M1", Commands.print("Passed marker 1"));
     NamedCommands.registerCommand("M2", Commands.print("Passed marker 2"));
     
     // Configure the button bindings
