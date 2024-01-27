@@ -78,8 +78,15 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
+   new JoystickButton(m_driverController, Button.kTouchpad.value)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.zeroHeading(),
+            m_robotDrive));
+
     // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("Example Auto", new PathPlannerAuto("Example Auto"));
+    SmartDashboard.putData("Pickup 1", new PathPlannerAuto("PickupOne"));
+    SmartDashboard.putData("Pickup 2", new PathPlannerAuto("PickupTwo"));
+
 
   }
 

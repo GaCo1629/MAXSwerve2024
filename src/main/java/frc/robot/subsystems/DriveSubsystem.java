@@ -10,7 +10,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
-
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,10 +22,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
@@ -69,6 +72,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   private Field2d field = new Field2d();
 
+  private static final Vector<N3> stateStdDevs  = VecBuilder.fill(0.1, 0.1, 0.01);
+  private static final Vector<N3> visionStdDevs = VecBuilder.fill(0.5, 0.5, 10000);
+ 
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
@@ -79,7 +85,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearLeft.getPosition(),
         m_rearRight.getPosition()
     },
-    new Pose2d());
+    new Pose2d(),
+    stateStdDevs,
+    visionStdDevs  );
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -112,7 +120,7 @@ public class DriveSubsystem extends SubsystemBase {
         );
          // Set up custom logging to add the current path to a field 2d widget
 
-    //  PathPlannerLogging.setLogActivePathCallback((poses) -> Field2d.getObject("path").setPoses(poses));
+    // PathPlannerLogging.setLogActivePathCallback((poses) -> Field2d.getObject("path").setPoses(poses));
 
     SmartDashboard.putData("Field", field);
 
@@ -131,16 +139,20 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
     });
 
-    // Attempt to use vision targets to update location.  Use the BotPose if tagID > 0
+    // Attempt to use vision targets to update estimated position.  Use the BotPose if tagID > 0
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
        
     if (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0) > 0 ) {
       Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-      m_odometry.addVisionMeasurement(robotPosition, m_currentRotation);
       SmartDashboard.putString("BotPose", robotPosition.toString());
+
+      //m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
     } else {
       SmartDashboard.putString("BotPose", "No Targets");
     }
+
+    // Display Estimated Position
+    SmartDashboard.putString("Estimated Pos", m_odometry.getEstimatedPosition().toString());
   }
 
   /**
@@ -308,20 +320,26 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroHeading() {
     m_gyro.reset();
   }
+  
 
-  /**
-   * Returns the heading of the robot.
-   *
-   * @return the robot's heading in degrees, from -180 to 180
+  public double gyro2FieldOffset = Math.PI;
+  
+/***
+   * Reads heading from gyro, adjusts for field orientation and sets current Heading member.
+   * @return
    */
-  public double getHeadingDeg() {
-    return Math.toRadians(-m_gyro.getAngle());
+  public double getHeading() {
+    SmartDashboard.putNumber("gyro", -m_gyro.getAngle());
+      double currentHeading = Math.IEEEremainder(Math.toRadians(-m_gyro.getAngle()) + gyro2FieldOffset, Math.PI * 2);
+      return currentHeading;
   }
 
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeadingDeg());
+    return Rotation2d.fromRadians(getHeading());
   }
-  
+
+
+
   /**
    * Returns the turn rate of the robot.
    *
