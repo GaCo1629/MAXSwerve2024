@@ -72,9 +72,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   private Field2d field = new Field2d();
 
-  private static final Vector<N3> stateStdDevs  = VecBuilder.fill(0.1, 0.1, 0.01);
-  private static final Vector<N3> visionStdDevs = VecBuilder.fill(0.9, 0.9, 10000);
- 
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
@@ -86,7 +83,11 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.getPosition()
     },
     new Pose2d());
-  
+
+//    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VisionConstants.STANDARD_DEVIATION_ODOMETRY, VisionConstants.STANDARD_DEVIATION_ODOMETRY, VisionConstants.STANDARD_DEVIATION_ODOMETRY_ANGLE),
+//    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VisionConstants.STANDARD_DEVIATION_VISION2D, VisionConstants.STANDARD_DEVIATION_VISION2D, VisionConstants.STANDARD_DEVIATION_VISION_ANGLE));
+
+ 
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -140,14 +141,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Attempt to use vision targets to update estimated position.  Use the BotPose if tagID > 0
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
-       
-    if (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0) > 0 ) {
-      Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-      SmartDashboard.putString("BotPose", robotPosition.toString());
 
-      // m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
+    if (llresults.targetingResults.valid) {
+      Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
+      double latency = llresults.targetingResults.botpose[6] / 1000.0;
+
+      SmartDashboard.putString("BotPose", robotPosition.toString());
+      SmartDashboard.putNumber("Latency", latency);
+
+      m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp() - latency);
     } else {
       SmartDashboard.putString("BotPose", "No Targets");
+      SmartDashboard.putNumber("Latency", 0);
     }
 
     // Display Estimated Position

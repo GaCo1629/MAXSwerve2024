@@ -137,4 +137,11 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public class VisionConstants {
+    public static double STANDARD_DEVIATION_ODOMETRY = 1;
+    public static double STANDARD_DEVIATION_ODOMETRY_ANGLE = 0.01;
+    public static double STANDARD_DEVIATION_VISION2D = 0.5;
+    public static double STANDARD_DEVIATION_VISION_ANGLE = 0.6;
+  }
 }
