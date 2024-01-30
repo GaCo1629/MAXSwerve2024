@@ -136,20 +136,27 @@ public class DriveSubsystem extends SubsystemBase {
     // Attempt to use vision targets to update estimated position.  Use the BotPose if tagID > 0
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
 
-    if (llresults.targetingResults.valid && (!Globals.IS_AUTO)) {
-      Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-      double latencyPipeline  = llresults.targetingResults.latency_pipeline;
+    if (llresults.targetingResults.valid) {
       double latencyCapture   = llresults.targetingResults.latency_capture;
+      double latencyPipeline  = llresults.targetingResults.latency_pipeline;
       SmartDashboard.putNumber("Latency Capture", latencyCapture);
       SmartDashboard.putNumber("Latency Pipeline", latencyPipeline);
+
       SmartDashboard.putNumber("RealTime",Timer.getFPGATimestamp());
 
-      if ((robotPosition.getX() != 0) && (robotPosition.getY() != 0)) {
-        SmartDashboard.putString("BotPose", robotPosition.toString());
-        m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp() - ((latencyCapture + latencyPipeline) / 1000));
+      if (DriverStation.isDisabled()) {
+        Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
+
+        if ((robotPosition.getX() != 0) && (robotPosition.getY() != 0)) {
+          SmartDashboard.putString("BotPose", robotPosition.toString());
+          m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp() - ((latencyCapture + latencyPipeline) / 1000));
+        } else {
+          SmartDashboard.putString("BotPose", "No Targets");
+          SmartDashboard.putNumber("Latency", 0);
+        }
       } else {
-        SmartDashboard.putString("BotPose", "No Targets");
-        SmartDashboard.putNumber("Latency", 0);
+        
+        
       }
    }
 
@@ -198,6 +205,10 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedCommanded;
     double ySpeedCommanded;
 
+    xSpeed = squareJoystick(xSpeed);
+    ySpeed = squareJoystick(ySpeed);
+    rot    = squareJoystick(rot);
+    
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
@@ -323,6 +334,8 @@ public class DriveSubsystem extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
+    resetOdometry(new Pose2d(m_odometry.getEstimatedPosition().getX(), 
+                             m_odometry.getEstimatedPosition().getY(), getRotation2d() )); 
   }
   
 
@@ -334,15 +347,17 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getHeading() {
     SmartDashboard.putNumber("gyro", -m_gyro.getAngle());
-      double currentHeading = Math.IEEEremainder(Math.toRadians(-m_gyro.getAngle()) + gyro2FieldOffset, Math.PI * 2);
-      return currentHeading;
+    double currentHeading = Math.IEEEremainder(Math.toRadians(-m_gyro.getAngle()) + gyro2FieldOffset, Math.PI * 2);
+    return currentHeading;
   }
 
   public Rotation2d getRotation2d() {
     return Rotation2d.fromRadians(getHeading());
   }
 
-
+  public double squareJoystick(double joystickIn) {
+    return Math.signum(joystickIn) * joystickIn * joystickIn;
+  }
 
   /**
    * Returns the turn rate of the robot.
