@@ -40,8 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("M1", Commands.print("Passed marker 1"));
-    NamedCommands.registerCommand("M2", Commands.print("Passed marker 2"));
+    NamedCommands.registerCommand("Shoot", Commands.print("Shooting"));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -84,9 +83,10 @@ public class RobotContainer {
             m_robotDrive));
 
     // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("Pickup 1", new PathPlannerAuto("ScoreSingle"));
-    SmartDashboard.putData("Pickup 2", new PathPlannerAuto("ScoreDouble"));
-    SmartDashboard.putData("Pickup 3", new PathPlannerAuto("ScoreTripple"));
+    SmartDashboard.putData("ScoreSingle", new PathPlannerAuto("ScoreSingle"));
+    SmartDashboard.putData("ScoreDouble", new PathPlannerAuto("ScoreDouble"));
+    SmartDashboard.putData("ScoreTripple", new PathPlannerAuto("ScoreTripple"));
+    SmartDashboard.putData("TwoOnTheWall", new PathPlannerAuto("TwoOnTheWall"));
 
 
   }

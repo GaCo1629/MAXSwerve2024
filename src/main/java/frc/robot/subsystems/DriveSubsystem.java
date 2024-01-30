@@ -83,47 +83,40 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.getPosition()
     },
     new Pose2d());
-
-//    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VisionConstants.STANDARD_DEVIATION_ODOMETRY, VisionConstants.STANDARD_DEVIATION_ODOMETRY, VisionConstants.STANDARD_DEVIATION_ODOMETRY_ANGLE),
-//    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VisionConstants.STANDARD_DEVIATION_VISION2D, VisionConstants.STANDARD_DEVIATION_VISION2D, VisionConstants.STANDARD_DEVIATION_VISION_ANGLE));
-
  
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 
-            // Configure AutoBuilder last
-        AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
-                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                        4.5, // Max module speed, in m/s
-                        0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                ),
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    // Configure AutoBuilder last
+    AutoBuilder.configureHolonomic(
+      this::getPose, // Robot pose supplier
+      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+              4.5, // Max module speed, in m/s
+              0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+              new ReplanningConfig() // Default path replanning config. See the API for the options here
+      ),
+      () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
-         // Set up custom logging to add the current path to a field 2d widget
-
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      this // Reference to this subsystem to set requirements
+    );
+    
     // PathPlannerLogging.setLogActivePathCallback((poses) -> Field2d.getObject("path").setPoses(poses));
-
     SmartDashboard.putData("Field", field);
-
   }
 
   @Override
@@ -136,24 +129,29 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-    });
+          m_rearRight.getPosition()}
+    );
 
+    // Only update odometry with vieo in Teleop
     // Attempt to use vision targets to update estimated position.  Use the BotPose if tagID > 0
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
 
-    if (llresults.targetingResults.valid) {
+    if (llresults.targetingResults.valid && (!Globals.IS_AUTO)) {
       Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-      double latency = llresults.targetingResults.botpose[6] / 1000.0;
+      double latencyPipeline  = llresults.targetingResults.latency_pipeline;
+      double latencyCapture   = llresults.targetingResults.latency_capture;
+      SmartDashboard.putNumber("Latency Capture", latencyCapture);
+      SmartDashboard.putNumber("Latency Pipeline", latencyPipeline);
+      SmartDashboard.putNumber("RealTime",Timer.getFPGATimestamp());
 
-      SmartDashboard.putString("BotPose", robotPosition.toString());
-      SmartDashboard.putNumber("Latency", latency);
-
-      m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp() - latency);
-    } else {
-      SmartDashboard.putString("BotPose", "No Targets");
-      SmartDashboard.putNumber("Latency", 0);
-    }
+      if ((robotPosition.getX() != 0) && (robotPosition.getY() != 0)) {
+        SmartDashboard.putString("BotPose", robotPosition.toString());
+        m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp() - ((latencyCapture + latencyPipeline) / 1000));
+      } else {
+        SmartDashboard.putString("BotPose", "No Targets");
+        SmartDashboard.putNumber("Latency", 0);
+      }
+   }
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", m_odometry.getEstimatedPosition().toString());

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Globals;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -48,14 +49,19 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    Globals.IS_AUTO = false;
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+      Globals.IS_AUTO = false;
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    Globals.IS_AUTO = true;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*
@@ -73,10 +79,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    Globals.IS_AUTO = true;
+  }
 
   @Override
   public void teleopInit() {
+    Globals.IS_AUTO = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -88,7 +97,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    Globals.IS_AUTO = false;
+  }
 
   @Override
   public void testInit() {

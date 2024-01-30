@@ -3,45 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2630356689284812,
-        "y": 5.55593454044051
+        "x": 7.938764761139975,
+        "y": 7.409816244810638
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.882166647216177,
-        "y": 6.193951126640992
+        "x": 6.690795709387315,
+        "y": 7.146572772955534
       },
       "isLocked": false,
-      "linkedName": "AtSpeaker"
+      "linkedName": "AtFour"
     },
     {
       "anchor": {
-        "x": 2.5847640884470957,
-        "y": 6.813346239305091
+        "x": 4.5165996270284055,
+        "y": 6.659084862112729
       },
       "prevControl": {
-        "x": 1.882166647216177,
-        "y": 6.35111108060054
+        "x": 5.2185822186420445,
+        "y": 6.873579542883562
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AtOne"
+      "linkedName": "SideShoot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "CollectorOn",
-      "waypointRelativePos": 0.5,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": []
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
@@ -50,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -147.26477372789242,
+    "rotation": -165.9637565320737,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0.0
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }
