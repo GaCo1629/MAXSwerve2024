@@ -548,10 +548,7 @@ public class LimelightHelpers {
         return getLimelightNTDouble(limelightName, "tclass");
     }
 
-    /////
-    /////
-
-    public static Pose3d getBotPose3d(String limelightName) {
+     public static Pose3d getBotPose3d(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose");
         return toPose3D(poseArray);
     }

@@ -50,26 +50,17 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Globals.IS_AUTO = false;
   }
 
   @Override
   public void disabledPeriodic() {
-      Globals.IS_AUTO = false;
   }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /** This runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    Globals.IS_AUTO = true;
+    m_robotContainer.m_robotDrive.resetHeading();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -80,12 +71,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    Globals.IS_AUTO = true;
   }
 
   @Override
   public void teleopInit() {
-    Globals.IS_AUTO = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -93,12 +82,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.m_robotDrive.init();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    Globals.IS_AUTO = false;
   }
 
   @Override

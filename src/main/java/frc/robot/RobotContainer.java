@@ -29,7 +29,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public DriveSubsystem m_robotDrive = new DriveSubsystem();
+
   private final SendableChooser<Command> autoChooser;
 
   PS4Controller m_driverController = new PS4Controller(OIConstants.kDriverControllerPort);
@@ -79,7 +80,7 @@ public class RobotContainer {
 
    new JoystickButton(m_driverController, Button.kTouchpad.value)
         .whileTrue(new RunCommand(
-            () -> m_robotDrive.zeroHeading(),
+            () -> m_robotDrive.resetHeading(),
             m_robotDrive));
 
     // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above

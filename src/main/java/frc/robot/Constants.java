@@ -129,9 +129,23 @@ public final class Constants {
     public static final double kPYController = 1;
     public static final double kPThetaController = 1;
 
+    public static final double kAutoMaxAngularSpeedRPS = 6;
+    public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
+
+    // Used in Teleop Heading lock Command
+    public static final double kPHeadingLockController = 1.3; // unit gain was 1.4
+    public static final double kIHeadingLockController = 0;
+    public static final double kDHeadingLockController = 0; // try to slow down approach
+
+    public static final TrapezoidProfile.Constraints kHeadingLockConstraints = new TrapezoidProfile.Constraints(
+      kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
+  
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+    public static final double kNotRotating = 0.5;  // degrees per second was 0.5
+
   }
 
   public static final class NeoMotorConstants {
