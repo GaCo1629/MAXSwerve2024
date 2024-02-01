@@ -120,14 +120,13 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+
+    public static final double kNotRotating = 0.5;  // degrees per second was 0.5
+
     public static final double kMaxSpeedMetersPerSecond = 1;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
 
     public static final double kAutoMaxAngularSpeedRPS = 6;
     public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
@@ -144,7 +143,17 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
-    public static final double kNotRotating = 0.5;  // degrees per second was 0.5
+    // Used in Teleop Heading lock Command
+    public static final double kPTrackingController = 1.3; // unit gain was 1.4
+    public static final double kITrackingController = 0;
+    public static final double kDTrackingController = 0; // try to slow down approach
+
+    public static final TrapezoidProfile.Constraints kTrackingConstraints = new TrapezoidProfile.Constraints(
+      kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
+  
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaTrackingConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   }
 

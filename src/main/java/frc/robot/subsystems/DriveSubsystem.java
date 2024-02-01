@@ -56,7 +56,10 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   //  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); 
-  private boolean m_heading_locked = false;
+  private boolean m_headingLocked = false;
+  private boolean m_targetTracking = false;
+  private boolean m_lastTargetTracking = false;
+  
   private double  m_headingSetpoint = 0;
   private double  m_currentHeading = 0;
 
@@ -73,6 +76,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   private ProfiledPIDController headingLockController;
+  private ProfiledPIDController trackingController;
   
 
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
@@ -118,10 +122,18 @@ public class DriveSubsystem extends SubsystemBase {
       this // Reference to this subsystem to set requirements
     );
 
-    headingLockController = new ProfiledPIDController(AutoConstants.kPHeadingLockController, 0, 0, AutoConstants.kHeadingLockConstraints );
+    headingLockController = new ProfiledPIDController(AutoConstants.kPHeadingLockController, 
+                                                      AutoConstants.kIHeadingLockController, 
+                                                      AutoConstants.kDHeadingLockController, 
+                                                      AutoConstants.kHeadingLockConstraints );
     headingLockController.enableContinuousInput(-Math.PI, Math.PI);
     
-   
+    trackingController = new ProfiledPIDController(AutoConstants.kPTrackingController, 
+                                                      AutoConstants.kITrackingController, 
+                                                      AutoConstants.kDTrackingController, 
+                                                      AutoConstants.kTrackingConstraints );
+    trackingController.enableContinuousInput(-Math.PI, Math.PI);
+    
   }
 
   /**
@@ -212,20 +224,28 @@ public class DriveSubsystem extends SubsystemBase {
     rot    = squareJoystick(rot);
     getHeading();
 
-    // determine if heading lock should be engaged
-    if (rot != 0) {
-      m_heading_locked = false;
-    } else if (!m_heading_locked && isNotRotating()) {
-      lockCurrentHeading();
-    }
+    if (m_targetTracking) {
+      if (!m_lastTargetTracking) {
+        // trackingController.reset();    
+      }
 
-    // if Heading lock is engaged, override the user input with data from PID
-    if (m_heading_locked) {
-      rot = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
-      if (Math.abs(rot) < 0.025) {
-        rot = 0;
-      } 
+    } else {
+      // determine if heading lock should be engaged
+      if (rot != 0) {
+        m_headingLocked = false;
+      } else if (!m_headingLocked && isNotRotating()) {
+        lockCurrentHeading();
+      }
+
+      // if Heading lock is engaged, override the user input with data from PID
+      if (m_headingLocked) {
+        rot = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
+        if (Math.abs(rot) < 0.025) {
+          rot = 0;
+        } 
+      }
     }
+    m_lastTargetTracking = m_targetTracking;
 
     
     if (rateLimit) {
@@ -361,6 +381,27 @@ public class DriveSubsystem extends SubsystemBase {
     return Math.signum(joystickIn) * joystickIn * joystickIn;
   }
 
+  //  ======================  Vision processing
+  public Target getTarget() {
+      double x,y,z = 0;
+      double range = 0;
+      double bearing = 0;
+      double elevation = 0;
+
+      LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
+      if (llresults.targetingResults.valid) {
+        double targetLocation[] = llresults.targetingResults.camerapose_robotspace;
+        x = targetLocation[0];
+        y = targetLocation[1];
+        z = targetLocation[2];
+      }
+
+
+    return new Target();
+  }
+
+  //  ======================  Heading related utilities.
+
   /**
    * Returns the turn rate of the robot.
    *
@@ -373,7 +414,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void newHeadingSetpoint(double newSetpoint) {
     m_headingSetpoint = newSetpoint;
     headingLockController.reset(m_currentHeading);
-    m_heading_locked = true;
+    m_headingLocked = true;
   }
 
   public void lockCurrentHeading() {
