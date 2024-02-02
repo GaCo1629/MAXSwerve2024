@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -87,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   private ProfiledPIDController headingLockController;
-  private ProfiledPIDController trackingController;
+  private PIDController trackingController;
   
 
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
@@ -142,11 +143,11 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kHeadingLockConstraints );
     headingLockController.enableContinuousInput(-Math.PI, Math.PI);
     
-    trackingController = new ProfiledPIDController(AutoConstants.kPTrackingController, 
+    trackingController = new PIDController(AutoConstants.kPTrackingController, 
                                                       AutoConstants.kITrackingController, 
-                                                      AutoConstants.kDTrackingController, 
-                                                      AutoConstants.kTrackingConstraints );
-    trackingController.enableContinuousInput(-Math.PI, Math.PI);
+                                                      AutoConstants.kDTrackingController);
+                                                      
+  
     
   }
 
@@ -239,7 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeed, ySpeedCommanded;
     double rotate;
     boolean fieldRelative = true;
-    boolean rateLimit = true;
+    boolean rateLimit = false;
     VisionTarget target;
 
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kSpeedFactor);
@@ -253,12 +254,12 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("Target", target.toString());
 
     if (m_targetTracking) {
-      rotate = trackingController.calculate(target.bearing, 0);
+      rotate = -trackingController.calculate(target.bearing, 0);
       
       if (!m_lastTargetTracking) {
-        ;//.reset();    
+        trackingController.reset();    
       }
-
+      lockCurrentHeading();
     } else {
 
       
