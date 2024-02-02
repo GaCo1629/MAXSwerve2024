@@ -25,6 +25,10 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
+    public static final double kSpeedFactor     = 0.95; //was 0.95
+    public static final double kSafeSpeedFactor = 0.70;
+    public static final double kTurnFactor      = 0.70; //was 0.70
+
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
@@ -116,12 +120,15 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kCoPilotController1Port= 1;
+    public static final int kCoPilotController2Port= 2;
+ 
     public static final double kDriveDeadband = 0.05;
   }
 
   public static final class AutoConstants {
 
-    public static final double kNotRotating = 0.5;  // degrees per second was 0.5
+    public static final double kNotRotating = 0.1;  // Radian per second
 
     public static final double kMaxSpeedMetersPerSecond = 1;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1;

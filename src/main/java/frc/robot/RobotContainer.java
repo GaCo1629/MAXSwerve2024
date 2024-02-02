@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,13 +29,19 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+
+// The driver's controller
+  PS4Controller m_driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
+  Joystick  m_copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
+  Joystick  m_copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
+
   // The robot's subsystems
-  public DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final DriveSubsystem  m_robotDrive    = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
 
   private final SendableChooser<Command> autoChooser;
 
-  PS4Controller m_driverController = new PS4Controller(OIConstants.kDriverControllerPort);
-
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -54,11 +61,7 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
+            () -> m_robotDrive.drive(),
             m_robotDrive));
 
   }

@@ -4,18 +4,21 @@
 
 package frc.robot.subsystems;
 
+import java.lang.annotation.Target;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -23,11 +26,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -56,6 +62,11 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   //  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); 
+  
+  private PS4Controller driver;
+  private Joystick copilot_1;
+  private Joystick copilot_2;
+  
   private boolean m_headingLocked = false;
   private boolean m_targetTracking = false;
   private boolean m_lastTargetTracking = false;
@@ -93,7 +104,10 @@ public class DriveSubsystem extends SubsystemBase {
  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+   public DriveSubsystem(PS4Controller driver, Joystick copilot_1, Joystick copilot_2) {
+    this.driver = driver;
+    this.copilot_1 = copilot_1;
+    this.copilot_2 = copilot_2;
 
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(
@@ -140,6 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
    * Initialoze everything needed when Teleop first starts up.
    */
   public void init() {
+
+    if (!Globals.gyroReset) {
+      resetHeading();
+    }
+
     setFieldOffsets();
     lockCurrentHeading();
   }
@@ -214,24 +233,38 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+  public void drive() {
     
-    double xSpeedCommanded;
-    double ySpeedCommanded;
+    double xSpeed, xSpeedCommanded;
+    double ySpeed, ySpeedCommanded;
+    double rotate;
+    boolean fieldRelative = true;
+    boolean rateLimit = true;
+    VisionTarget target;
 
-    xSpeed = squareJoystick(xSpeed);
-    ySpeed = squareJoystick(ySpeed);
-    rot    = squareJoystick(rot);
+    xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kSpeedFactor);
+    ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband) * DriveConstants.kSpeedFactor);
+    rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband) * DriveConstants.kTurnFactor);
+ 
     getHeading();
+    m_targetTracking = driver.getL1Button();
+
+    target = getTarget();
+    SmartDashboard.putString("Target", target.toString());
 
     if (m_targetTracking) {
+      rotate = trackingController.calculate(target.bearing, 0);
+      
       if (!m_lastTargetTracking) {
-        // trackingController.reset();    
+        ;//.reset();    
       }
 
     } else {
+
+      
+      
       // determine if heading lock should be engaged
-      if (rot != 0) {
+      if (rotate != 0) {
         m_headingLocked = false;
       } else if (!m_headingLocked && isNotRotating()) {
         lockCurrentHeading();
@@ -239,12 +272,15 @@ public class DriveSubsystem extends SubsystemBase {
 
       // if Heading lock is engaged, override the user input with data from PID
       if (m_headingLocked) {
-        rot = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
-        if (Math.abs(rot) < 0.025) {
-          rot = 0;
+        rotate = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
+        if (Math.abs(rotate) < 0.025) {
+          rotate = 0;
         } 
       }
+      
+
     }
+
     m_lastTargetTracking = m_targetTracking;
 
     
@@ -286,12 +322,12 @@ public class DriveSubsystem extends SubsystemBase {
       
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rot);
+      m_currentRotation = m_rotLimiter.calculate(rotate);
 
     } else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
-      m_currentRotation = rot;
+      m_currentRotation = rotate;
     }
 
 
@@ -335,7 +371,6 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()); 
   }
 
-
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -368,39 +403,48 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
+    public double squareJoystick(double joystickIn) {
+    return Math.signum(joystickIn) * joystickIn * joystickIn;
+  }
+
+  //  ======================  Vision processing
+  public VisionTarget getTarget() {
+    double x,y,z = 0;
+    double range = 0;
+    double bearing = 0;
+    double elevation = 0;
+
+    Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
+    
+    x = targetLocation.getX();
+    y = targetLocation.getZ();
+    z = -targetLocation.getY();
+
+    // SmartDashboard.putString("Target Coord", String.format("X:Y:Z %5.2f  %5.2f  %5.2f ", x,y,z));
+
+    range = Math.hypot(x, y);
+    bearing = -Math.atan2(x, y);
+    elevation = Math.atan2(z, range);
+
+    if (range > 0.5) {
+      return new VisionTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
+    }
+    
+    return new VisionTarget();
+  }
+
+  //  ======================  Heading related utilities.
+
   /** Zeroes the heading of the robot. And zeros out heading for Odometry */
   public void resetHeading() {
     m_gyro.reset();
+    Globals.gyroReset = true;
+
     setFieldOffsets();
     resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), getRotation2d() )); 
     lockCurrentHeading();
   }
   
-
-  public double squareJoystick(double joystickIn) {
-    return Math.signum(joystickIn) * joystickIn * joystickIn;
-  }
-
-  //  ======================  Vision processing
-  public Target getTarget() {
-      double x,y,z = 0;
-      double range = 0;
-      double bearing = 0;
-      double elevation = 0;
-
-      LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
-      if (llresults.targetingResults.valid) {
-        double targetLocation[] = llresults.targetingResults.camerapose_robotspace;
-        x = targetLocation[0];
-        y = targetLocation[1];
-        z = targetLocation[2];
-      }
-
-
-    return new Target();
-  }
-
-  //  ======================  Heading related utilities.
 
   /**
    * Returns the turn rate of the robot.
@@ -422,7 +466,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isNotRotating() {
-    SmartDashboard.putNumber("Rotate rate", m_gyro.getRate());
+
     return (Math.abs(m_gyro.getRate()) < AutoConstants.kNotRotating);
   }
 
@@ -432,6 +476,14 @@ public class DriveSubsystem extends SubsystemBase {
       gyro2FieldOffset = 0.0;
     } else {
       gyro2FieldOffset = Math.PI;  
+    }
+  }
+
+  public void squareUp() {
+    if (Math.abs(getHeading()) < Math.PI / 2) {
+      newHeadingSetpoint(0);
+    } else {
+      newHeadingSetpoint(Math.PI);
     }
   }
 
