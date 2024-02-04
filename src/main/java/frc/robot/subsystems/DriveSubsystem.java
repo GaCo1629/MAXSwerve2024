@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.lang.annotation.Target;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -70,11 +68,9 @@ public class DriveSubsystem extends SubsystemBase {
   
   private boolean m_headingLocked = false;
   private boolean m_targetTracking = false;
-  private boolean m_lastTargetTracking = false;
-  
+   
   private double  m_headingSetpoint = 0;
   private double  m_currentHeading = 0;
-
   private double gyro2FieldOffset = 0;
 
 
@@ -188,7 +184,7 @@ public class DriveSubsystem extends SubsystemBase {
         if ((robotPosition.getX() != 0) && (robotPosition.getY() != 0)) {
           SmartDashboard.putString("BotPose", robotPosition.toString());
           m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
-        } else {
+         } else {
           SmartDashboard.putString("BotPose", "No Targets");
         }
       }
@@ -240,7 +236,7 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeed, ySpeedCommanded;
     double rotate;
     boolean fieldRelative = true;
-    boolean rateLimit = false;
+    boolean rateLimit = true;
     VisionTarget target;
 
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kSpeedFactor);
@@ -253,17 +249,21 @@ public class DriveSubsystem extends SubsystemBase {
     target = getTarget();
     SmartDashboard.putString("Target", target.toString());
 
-    if (m_targetTracking) {
+    if (target.valid && m_targetTracking) {
+      // turn towards target
       rotate = -trackingController.calculate(target.bearing, 0);
-      
-      if (!m_lastTargetTracking) {
-        trackingController.reset();    
-      }
-      lockCurrentHeading();
-    } else {
 
-      
-      
+      // on blue side
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        rotate += (ySpeed * 0.2);
+      } else {
+        rotate += (ySpeed * 0.2);   //  change sign ???        
+      }
+
+      lockCurrentHeading();
+      m_currentRotation = rotate;
+
+    } else {
       // determine if heading lock should be engaged
       if (rotate != 0) {
         m_headingLocked = false;
@@ -273,16 +273,22 @@ public class DriveSubsystem extends SubsystemBase {
 
       // if Heading lock is engaged, override the user input with data from PID
       if (m_headingLocked) {
+        // PID control.
         rotate = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
         if (Math.abs(rotate) < 0.025) {
           rotate = 0;
         } 
+        m_currentRotation = rotate;
+
+      } else {
+        // plain driver control
+        if (rateLimit) {
+          m_currentRotation = m_rotLimiter.calculate(rotate);
+        } else {
+          m_currentRotation = rotate;
+        }
       }
-      
-
     }
-
-    m_lastTargetTracking = m_targetTracking;
 
     
     if (rateLimit) {
@@ -323,7 +329,7 @@ public class DriveSubsystem extends SubsystemBase {
       
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rotate);
+
 
     } else {
       xSpeedCommanded = xSpeed;
@@ -446,7 +452,6 @@ public class DriveSubsystem extends SubsystemBase {
     lockCurrentHeading();
   }
   
-
   /**
    * Returns the turn rate of the robot.
    *
@@ -516,6 +521,5 @@ public class DriveSubsystem extends SubsystemBase {
   public Rotation2d getFCDRotation2d() {
       return Rotation2d.fromRadians(getFCDHeading());
   }
-
 
 }

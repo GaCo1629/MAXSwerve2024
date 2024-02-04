@@ -1,5 +1,5 @@
 package frc.robot.subsystems;
 
-public class Globals {
+public final class Globals {
     public static boolean gyroReset = false;
 }

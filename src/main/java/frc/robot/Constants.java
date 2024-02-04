@@ -139,7 +139,7 @@ public final class Constants {
     public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
 
     // Used in Teleop Heading lock Command
-    public static final double kPHeadingLockController = 1.3; // unit gain was 1.4
+    public static final double kPHeadingLockController = 0.015;
     public static final double kIHeadingLockController = 0;
     public static final double kDHeadingLockController = 0; // try to slow down approach
 
@@ -151,7 +151,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.015; // unit gain was 1.4
+    public static final double kPTrackingController = 0.015; //  0.015
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
 
