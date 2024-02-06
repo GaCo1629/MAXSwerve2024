@@ -182,4 +182,9 @@ public final class Constants {
     public static int tiltLeftID = 23;
     public static int tiltRightID = 24;
   }
+
+  public class LiftConstants{
+    public static int leftLiftID = 25;
+    public static int rightLiftID = 26;
+  }
 }

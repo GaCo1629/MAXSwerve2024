@@ -148,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Initialoze everything needed when Teleop first starts up.
+   * Initialize everything needed when Teleop first starts up.
    */
   public void init() {
 
