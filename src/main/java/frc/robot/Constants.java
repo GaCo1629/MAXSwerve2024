@@ -174,4 +174,12 @@ public final class Constants {
     public static double STANDARD_DEVIATION_VISION2D = 0.9;
     public static double STANDARD_DEVIATION_VISION_ANGLE = 010;
   }
+  
+  public class BatonConstants {
+    public static int intakeID = 20;
+    public static int shooterTopID = 21;
+    public static int shooterBottomID = 22;
+    public static int tiltLeftID = 23;
+    public static int tiltRightID = 24;
+  }
 }
