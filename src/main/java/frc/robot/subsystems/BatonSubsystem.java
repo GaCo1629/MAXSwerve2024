@@ -13,7 +13,7 @@ import frc.robot.Constants.BatonConstants;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
-public class Baton extends SubsystemBase {
+public class BatonSubsystem extends SubsystemBase {
     private final CANSparkMax intake;
     private final CANSparkMax tiltLeft;
     private final CANSparkMax tiltRight;
@@ -31,7 +31,7 @@ public class Baton extends SubsystemBase {
     private Joystick copilot_1;
     private Joystick copilot_2;
 
-    public Baton (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
+    public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
         this.driver = driver;
         this.copilot_1 = copilot_1;
         this.copilot_2 = copilot_2;

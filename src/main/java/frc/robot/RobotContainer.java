@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Baton;
+import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -38,7 +38,7 @@ public class RobotContainer {
 
   // The robot's subsystems
   public final DriveSubsystem  m_robotDrive    = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final Baton m_baton = new Baton(m_driverController, m_copilot_1, m_copilot_2);
+  public final BatonSubsystem m_baton = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
 
   private final SendableChooser<Command> autoChooser;
 
