@@ -28,7 +28,7 @@ public class LiftSubsystem extends SubsystemBase{
     private Joystick copilot_2;
 
 
-public LiftSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
+    public LiftSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
         this.driver = driver;
         this.copilot_1 = copilot_1;
         this.copilot_2 = copilot_2;
@@ -36,21 +36,21 @@ public LiftSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot
         leftLift = new CANSparkFlex(LiftConstants.leftLiftID, MotorType.kBrushless);
         rightLift = new CANSparkFlex(LiftConstants.rightLiftID, MotorType.kBrushless);
 
-        robotAngle = balanceGyro.getAngle();
+        robotAngle = balanceGyro.getRoll();
         leftLiftSetpoint = 0;
         rightLiftSetpoint = 0;
-}
+    }
 
-@Override
-public void periodic(){
-    robotAngle = balanceGyro.getAngle();
+    @Override
+    public void periodic(){
+    robotAngle = balanceGyro.getRoll();
     leftLiftSpeed = leftLift.getEncoder().getVelocity();
     rightLiftSpeed = rightLift.getEncoder().getVelocity();
 
-    SmartDashboard.putNumber("Robot Angle", robotAngle);
+    SmartDashboard.putNumber("Robot roll", robotAngle);
     SmartDashboard.putNumber("Left Lift Speed", leftLiftSpeed);
     SmartDashboard.putNumber("Right Lift Speed", rightLiftSpeed);
 
-}
-}
+    }
+    }
 

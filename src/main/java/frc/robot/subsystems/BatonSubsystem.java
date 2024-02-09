@@ -23,6 +23,7 @@ public class BatonSubsystem extends SubsystemBase {
     private final AbsoluteEncoder tiltEncoder;
     
     private double tiltAngle;
+    private double tiltAngleSetPoint;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
     private double shooterSpeedBottom;
@@ -48,21 +49,48 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
+    public void periodic() { 
+        double power;
+
         tiltAngle = tiltEncoder.getPosition();
         shooterSpeedBottom = shooterBottom.getEncoder().getVelocity();
         shooterSpeedTop = shooterTop.getEncoder().getVelocity();
+
+        power = shooterSpeedSetPoint / BatonConstants.maxShooterRPM;
+        shooterBottom.set(power);
+        shooterTop.set(-power);
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
         SmartDashboard.putNumber("shooter bottom", shooterSpeedBottom);
         SmartDashboard.putNumber("shooter top", shooterSpeedTop);
         SmartDashboard.putNumber("shooter set point", shooterSpeedSetPoint);
-
-        if (driver.getR1Button()){
-            shooterBottom.set(0.4);
-        } else {
-            shooterBottom.set(0);
-        }
-
+        SmartDashboard.putNumber("shooter power",power);   
     }
+
+    public void setTiltAngle(double angle){
+        tiltAngleSetPoint = angle;
+    }
+
+    public void setShooterRPM(double speed){
+        shooterSpeedSetPoint = speed;
+    }
+    
+    public void collect (){
+        intake.set(BatonConstants.collect);
+    }
+
+    public void eject (){
+        intake.set(BatonConstants.eject);
+    }
+
+    public void fire (){
+        intake.set(BatonConstants.fire);   
+    }
+
+    public void stopCollector (){
+        intake.set(BatonConstants.stopCollector);
+    }
+
+    
+
 }

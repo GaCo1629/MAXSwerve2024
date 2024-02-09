@@ -181,6 +181,12 @@ public final class Constants {
     public static int shooterBottomID = 22;
     public static int tiltLeftID = 23;
     public static int tiltRightID = 24;
+    public static double maxShooterRPM = 6500;
+    public static double collect = 0.5;
+    public static double eject = -0.25;
+    public static double fire = 1;
+    public static double stopCollector = 0;
+    
   }
 
   public class LiftConstants{

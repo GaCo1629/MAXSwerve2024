@@ -420,6 +420,8 @@ public class DriveSubsystem extends SubsystemBase {
     double range = 0;
     double bearing = 0;
     double elevation = 0;
+    VisionTarget aTarget;
+
 
     Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
     
@@ -434,10 +436,12 @@ public class DriveSubsystem extends SubsystemBase {
     elevation = Math.atan2(z, range);
 
     if (range > 0.5) {
-      return new VisionTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
+      aTarget = new VisionTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
+    }else{
+      aTarget = new VisionTarget();
     }
-    
-    return new VisionTarget();
+    Globals.visionTarget = aTarget;
+    return aTarget;
   }
 
   //  ======================  Heading related utilities.

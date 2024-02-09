@@ -87,6 +87,29 @@ public class RobotContainer {
             () -> m_robotDrive.resetHeading(),
             m_robotDrive));
 
+    new JoystickButton(m_copilot_1, Button.kCross.value)
+        .onTrue(new RunCommand(
+          () -> m_baton.stopCollector(), m_baton));
+
+    new JoystickButton(m_copilot_1, Button.kSquare.value)
+        .onTrue(new RunCommand(
+          () -> m_baton.collect(), m_baton));
+
+    new JoystickButton(m_copilot_1, Button.kCircle.value)
+        .onTrue(new RunCommand(
+          () -> m_baton.eject(), m_baton));
+
+    new JoystickButton(m_copilot_1, Button.kTriangle.value)
+        .onTrue(new RunCommand(
+          () -> m_baton.fire(), m_baton));
+
+    new JoystickButton(m_copilot_1, Button.kR1.value)
+        .onTrue(new RunCommand(
+          () -> m_baton.setShooterRPM(2000), m_baton))
+        .onFalse(new RunCommand(
+          () -> m_baton.setShooterRPM(0), m_baton));
+
+
     // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above
     SmartDashboard.putData("ScoreSingle", new PathPlannerAuto("ScoreSingle"));
     SmartDashboard.putData("ScoreDouble", new PathPlannerAuto("ScoreDouble"));
