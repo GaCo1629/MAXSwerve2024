@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -15,7 +14,6 @@ import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -58,65 +56,39 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(),
-            m_robotDrive));
+    m_robotDrive.setDefaultCommand(m_robotDrive.driveCmd());
 
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
   private void configureButtonBindings() {
     new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+        .whileTrue(m_robotDrive.setXCmd());
 
    new JoystickButton(m_driverController, Button.kTouchpad.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.resetHeading(),
-            m_robotDrive));
+        .onTrue(m_robotDrive.resetHeadingCmd());
 
     new JoystickButton(m_copilot_1, Button.kCross.value)
-        .onTrue(new RunCommand(
-          () -> m_baton.stopCollector(), m_baton));
+        .onTrue(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kSquare.value)
-        .onTrue(new RunCommand(
-          () -> m_baton.collect(), m_baton));
+        .onTrue(m_baton.collectCmd());
 
     new JoystickButton(m_copilot_1, Button.kCircle.value)
-        .onTrue(new RunCommand(
-          () -> m_baton.eject(), m_baton));
+        .onTrue(m_baton.ejectCmd());
 
     new JoystickButton(m_copilot_1, Button.kTriangle.value)
-        .onTrue(new RunCommand(
-          () -> m_baton.fire(), m_baton));
+        .onTrue(m_baton.fireCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .onTrue(new RunCommand(
-          () -> m_baton.setShooterRPM(2000), m_baton))
-        .onFalse(new RunCommand(
-          () -> m_baton.setShooterRPM(0), m_baton));
+        .toggleOnTrue(m_baton.setShooterRPMCmd(2000))
+        .toggleOnFalse(m_baton.setShooterRPMCmd(0));
 
 
-    // Add a button to run the example auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("ScoreSingle", new PathPlannerAuto("ScoreSingle"));
-    SmartDashboard.putData("ScoreDouble", new PathPlannerAuto("ScoreDouble"));
+    // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
+    SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));
+    SmartDashboard.putData("ScoreDouble",  new PathPlannerAuto("ScoreDouble"));
     SmartDashboard.putData("ScoreTripple", new PathPlannerAuto("ScoreTripple"));
     SmartDashboard.putData("TwoOnTheWall", new PathPlannerAuto("TwoOnTheWall"));
-
-
   }
 
   /**

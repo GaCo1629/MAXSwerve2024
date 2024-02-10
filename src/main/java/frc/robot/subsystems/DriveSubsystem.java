@@ -34,6 +34,8 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -354,6 +356,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
+  public Command driveCmd() {return this.runOnce(() -> drive());}
+
 
   /**
    * Drives robot based on requested robot relative axis movements
@@ -387,6 +391,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
+  public Command setXCmd() {return this.runOnce(() -> setX());}
 
   /**
    * Sets the swerve ModuleStates.
@@ -455,6 +460,8 @@ public class DriveSubsystem extends SubsystemBase {
     resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), getRotation2d() )); 
     lockCurrentHeading();
   }
+  public Command resetHeadingCmd() {return this.runOnce(() -> resetHeading());}
+
   
   /**
    * Returns the turn rate of the robot.

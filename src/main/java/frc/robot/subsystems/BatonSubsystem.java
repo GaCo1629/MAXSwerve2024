@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BatonConstants;
 
@@ -61,35 +62,43 @@ public class BatonSubsystem extends SubsystemBase {
         shooterTop.set(-power);
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
-        SmartDashboard.putNumber("shooter bottom", shooterSpeedBottom);
-        SmartDashboard.putNumber("shooter top", shooterSpeedTop);
-        SmartDashboard.putNumber("shooter set point", shooterSpeedSetPoint);
+        SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
+
+        SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter power",power);   
+        SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBottom);
+        SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
     }
 
     public void setTiltAngle(double angle){
         tiltAngleSetPoint = angle;
     }
+    public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setTiltAngle(angle));}
 
     public void setShooterRPM(double speed){
         shooterSpeedSetPoint = speed;
     }
+    public Command setShooterRPMCmd(double speed) {return this.runOnce(() -> setShooterRPM(speed));}
     
     public void collect (){
         intake.set(BatonConstants.collect);
     }
+    public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void eject (){
         intake.set(BatonConstants.eject);
     }
+    public Command ejectCmd() {return this.runOnce(() -> eject());}
 
     public void fire (){
         intake.set(BatonConstants.fire);   
     }
+    public Command fireCmd() {return this.runOnce(() -> fire());}
 
     public void stopCollector (){
         intake.set(BatonConstants.stopCollector);
     }
+    public Command stopCollectorCmd() {return this.runOnce(() -> stopCollector());}
 
     
 
