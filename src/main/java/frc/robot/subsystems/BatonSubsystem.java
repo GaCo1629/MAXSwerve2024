@@ -15,13 +15,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 public class BatonSubsystem extends SubsystemBase {
-    private final CANSparkMax intake;
-    private final CANSparkMax tiltLeft;
-    private final CANSparkMax tiltRight;
-    private final CANSparkFlex shooterTop;
-    private final CANSparkFlex shooterBottom;
+    private CANSparkMax intake            = null;
+    private CANSparkMax tiltLeft          = null;
+    private CANSparkMax tiltRight         = null;
+    private CANSparkFlex shooterTop       = null;
+    private CANSparkFlex shooterBottom    = null;
 
-    private final AbsoluteEncoder tiltEncoder;
+    private AbsoluteEncoder tiltEncoder   = null;
     
     private double tiltAngle;
     private double tiltAngleSetPoint;
@@ -38,28 +38,32 @@ public class BatonSubsystem extends SubsystemBase {
         this.copilot_1 = copilot_1;
         this.copilot_2 = copilot_2;
 
-        intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
-        tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
-        tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
-        shooterBottom = new CANSparkFlex(BatonConstants.shooterBottomID, MotorType.kBrushless);
-        shooterTop = new CANSparkFlex(BatonConstants.shooterTopID, MotorType.kBrushless);
-        tiltEncoder = tiltLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        if (Globals.enableBatonSubsystem) {
+            intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
+            tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
+            tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
+            shooterBottom = new CANSparkFlex(BatonConstants.shooterBottomID, MotorType.kBrushless);
+            shooterTop = new CANSparkFlex(BatonConstants.shooterTopID, MotorType.kBrushless);
+            tiltEncoder = tiltLeft.getAbsoluteEncoder(Type.kDutyCycle);
 
-        tiltAngle = tiltEncoder.getPosition();
-        shooterSpeedSetPoint = 0;
+            tiltAngle = tiltEncoder.getPosition();
+            shooterSpeedSetPoint = 0;
+        }
     }
 
     @Override
     public void periodic() { 
-        double power;
+        double power = 0;
 
-        tiltAngle = tiltEncoder.getPosition();
-        shooterSpeedBottom = shooterBottom.getEncoder().getVelocity();
-        shooterSpeedTop = shooterTop.getEncoder().getVelocity();
+        if (Globals.enableBatonSubsystem) {
+            tiltAngle = tiltEncoder.getPosition();
+            shooterSpeedBottom = shooterBottom.getEncoder().getVelocity();
+            shooterSpeedTop = shooterTop.getEncoder().getVelocity();
 
-        power = shooterSpeedSetPoint / BatonConstants.maxShooterRPM;
-        shooterBottom.set(power);
-        shooterTop.set(-power);
+            power = shooterSpeedSetPoint / BatonConstants.maxShooterRPM;
+            shooterBottom.set(power);
+            shooterTop.set(-power);
+        }
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
@@ -81,22 +85,22 @@ public class BatonSubsystem extends SubsystemBase {
     public Command setShooterRPMCmd(double speed) {return this.runOnce(() -> setShooterRPM(speed));}
     
     public void collect (){
-        intake.set(BatonConstants.collect);
+        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.collect);
     }
     public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void eject (){
-        intake.set(BatonConstants.eject);
+        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.eject);
     }
     public Command ejectCmd() {return this.runOnce(() -> eject());}
 
     public void fire (){
-        intake.set(BatonConstants.fire);   
+        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.fire);   
     }
     public Command fireCmd() {return this.runOnce(() -> fire());}
 
     public void stopCollector (){
-        intake.set(BatonConstants.stopCollector);
+        if (Globals.enableBatonSubsystem)intake.set(BatonConstants.stopCollector);
     }
     public Command stopCollectorCmd() {return this.runOnce(() -> stopCollector());}
 

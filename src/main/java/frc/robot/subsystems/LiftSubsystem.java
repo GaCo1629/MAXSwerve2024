@@ -12,16 +12,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LiftConstants;
 
 public class LiftSubsystem extends SubsystemBase{
-    private final CANSparkFlex leftLift;
-    private final CANSparkFlex rightLift;
+    private CANSparkFlex leftLift = null;
+    private CANSparkFlex rightLift = null;
 
     private final AHRS balanceGyro = new AHRS(SPI.Port.kMXP);
 
-    private double robotAngle;
-    private double leftLiftSetpoint;
-    private double rightLiftSetpoint;
-    private double leftLiftSpeed;
-    private double rightLiftSpeed;
+    private double robotAngle       = 0;
+    private double leftLiftSetpoint = 0;
+    private double rightLiftSetpoint = 0;
+    private double leftLiftSpeed    = 0;
+    private double rightLiftSpeed   = 0;
     
     private PS4Controller driver;
     private Joystick copilot_1;
@@ -33,8 +33,10 @@ public class LiftSubsystem extends SubsystemBase{
         this.copilot_1 = copilot_1;
         this.copilot_2 = copilot_2;
 
-        leftLift = new CANSparkFlex(LiftConstants.leftLiftID, MotorType.kBrushless);
-        rightLift = new CANSparkFlex(LiftConstants.rightLiftID, MotorType.kBrushless);
+        if (Globals.enableLIftSubsystem) {
+            leftLift = new CANSparkFlex(LiftConstants.leftLiftID, MotorType.kBrushless);
+            rightLift = new CANSparkFlex(LiftConstants.rightLiftID, MotorType.kBrushless);
+        }
 
         robotAngle = balanceGyro.getRoll();
         leftLiftSetpoint = 0;
@@ -43,14 +45,15 @@ public class LiftSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-    robotAngle = balanceGyro.getRoll();
-    leftLiftSpeed = leftLift.getEncoder().getVelocity();
-    rightLiftSpeed = rightLift.getEncoder().getVelocity();
+        if (Globals.enableLIftSubsystem) {
+            robotAngle = balanceGyro.getRoll();
+            leftLiftSpeed = leftLift.getEncoder().getVelocity();
+            rightLiftSpeed = rightLift.getEncoder().getVelocity();
+        }
 
-    SmartDashboard.putNumber("Robot roll", robotAngle);
-    SmartDashboard.putNumber("Left Lift Speed", leftLiftSpeed);
-    SmartDashboard.putNumber("Right Lift Speed", rightLiftSpeed);
-
+        SmartDashboard.putNumber("Robot roll", robotAngle);
+        SmartDashboard.putNumber("Left Lift Speed", leftLiftSpeed);
+        SmartDashboard.putNumber("Right Lift Speed", rightLiftSpeed);
     }
-    }
+}
 
