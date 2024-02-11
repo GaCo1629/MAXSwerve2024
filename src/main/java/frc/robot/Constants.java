@@ -139,7 +139,7 @@ public final class Constants {
     public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
 
     // Used in Teleop Heading lock Command
-    public static final double kPHeadingLockController = 0.015;
+    public static final double kPHeadingLockController = 1.2;
     public static final double kIHeadingLockController = 0;
     public static final double kDHeadingLockController = 0; // try to slow down approach
 
@@ -176,21 +176,21 @@ public final class Constants {
   }
   
   public class BatonConstants {
-    public static int intakeID = 20;
-    public static int shooterTopID = 21;
-    public static int shooterBottomID = 22;
-    public static int tiltLeftID = 23;
-    public static int tiltRightID = 24;
-    public static double maxShooterRPM = 6500;
-    public static double collect = 0.5;
-    public static double eject = -0.25;
-    public static double fire = 1;
-    public static double stopCollector = 0;
     
+    public static int shooterTopID = 20;
+    public static int shooterBottomID = 21;
+    public static int tiltLeftID = 22;
+    public static int tiltRightID = 23;
+    public static int intakeID = 24;
+    public static double maxShooterRPM = 6500;
+    public static double collect = -0.5;
+    public static double eject = 0.3;
+    public static double fire = -1;
+    public static double stopCollector = 0;
   }
 
   public class LiftConstants{
-    public static int leftLiftID = 25;
-    public static int rightLiftID = 26;
+    public static int leftLiftID = 30;
+    public static int rightLiftID = 31;
   }
 }

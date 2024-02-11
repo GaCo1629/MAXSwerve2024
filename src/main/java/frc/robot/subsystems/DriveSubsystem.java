@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -22,20 +21,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -61,8 +56,7 @@ public class DriveSubsystem extends SubsystemBase {
     DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  //  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); 
+  private final IMUSubsystem imu = new IMUSubsystem();
   
   private PS4Controller driver;
   private Joystick copilot_1;
@@ -72,27 +66,19 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean m_targetTracking = false;
    
   private double  m_headingSetpoint = 0;
-  private double  m_currentHeading = 0;
-  private double gyro2FieldOffset = 0;
 
-
-  // Slew rate filter variables for controlling lateral acceleration
-  private double m_currentRotation = 0.0;
-  private double m_currentTranslationDir = 0.0;
-  private double m_currentTranslationMag = 0.0;
-
-  private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+  private SlewRateLimiter m_XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+  private SlewRateLimiter m_YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
-  private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   private ProfiledPIDController headingLockController;
-  private PIDController trackingController;
+  private PIDController         trackingController;
   
 
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
-    getRotation2d(),
+    imu.rotation2d,
     new SwerveModulePosition[] {
         m_frontLeft.getPosition(),
         m_frontRight.getPosition(),
@@ -144,9 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
     trackingController = new PIDController(AutoConstants.kPTrackingController, 
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
-                                                      
-  
-    
+       
   }
 
   /**
@@ -158,7 +142,6 @@ public class DriveSubsystem extends SubsystemBase {
       resetHeading();
     }
 
-    setFieldOffsets();
     lockCurrentHeading();
   }
 
@@ -167,8 +150,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
 
     // Update the odometry in the periodic block
+    imu.update();
     m_odometry.update(
-      getRotation2d(),
+      imu.rotation2d,
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -190,7 +174,7 @@ public class DriveSubsystem extends SubsystemBase {
           SmartDashboard.putString("BotPose", "No Targets");
         }
       }
-   }
+    }
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", m_odometry.getEstimatedPosition().toString());
@@ -212,7 +196,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-      getRotation2d(),
+      imu.rotation2d,
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -234,28 +218,34 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void drive() {
     
-    double xSpeed, xSpeedCommanded;
-    double ySpeed, ySpeedCommanded;
+    double xSpeed;
+    double ySpeed;
     double rotate;
     boolean fieldRelative = true;
-    boolean rateLimit = true;
     VisionTarget target;
 
+    // Read joystick values
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kSpeedFactor);
     ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband) * DriveConstants.kSpeedFactor);
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband) * DriveConstants.kTurnFactor);
  
-    getHeading();
-    m_targetTracking = driver.getL1Button();
+    // smooth out the translation requests
+    xSpeed = m_XLimiter.calculate(xSpeed);
+    ySpeed = m_YLimiter.calculate(ySpeed);
 
+    // Determine how the robot should be rotating.  Manual, Hading lock or target lock
+
+    m_targetTracking = driver.getL1Button();
     target = getTarget();
     SmartDashboard.putString("Target", target.toString());
 
-    if (target.valid && m_targetTracking) {
-      // turn towards target
+    // Should ve be tracking the target?
+    if (m_targetTracking && target.valid) {
+      
+      // Calculate static turn power
       rotate = -trackingController.calculate(target.bearing, 0);
 
-      // on blue side
+      // Add additional rotation based on robot's sideways motion 
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
         rotate += (ySpeed * 0.2);
       } else {
@@ -263,10 +253,9 @@ public class DriveSubsystem extends SubsystemBase {
       }
 
       lockCurrentHeading();
-      m_currentRotation = rotate;
-
     } else {
-      // determine if heading lock should be engaged
+
+      // No target tracking, so determine if heading lock should be engaged
       if (rotate != 0) {
         m_headingLocked = false;
       } else if (!m_headingLocked && isNotRotating()) {
@@ -276,78 +265,25 @@ public class DriveSubsystem extends SubsystemBase {
       // if Heading lock is engaged, override the user input with data from PID
       if (m_headingLocked) {
         // PID control.
-        rotate = headingLockController.calculate(m_currentHeading, m_headingSetpoint);
+        rotate = headingLockController.calculate(imu.heading, m_headingSetpoint);
         if (Math.abs(rotate) < 0.025) {
           rotate = 0;
         } 
-        m_currentRotation = rotate;
-
       } else {
         // plain driver control
-        if (rateLimit) {
-          m_currentRotation = m_rotLimiter.calculate(rotate);
-        } else {
-          m_currentRotation = rotate;
-        }
+        rotate = m_rotLimiter.calculate(rotate);
       }
     }
-
-    
-    if (rateLimit) {
-      // Convert XY to polar for rate limiting
-      double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-      double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-
-      // Calculate the direction slew rate based on an estimate of the lateral acceleration
-      double directionSlewRate;
-      if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
-      } else {
-        directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
-      }
-
-      double currentTime = WPIUtilJNI.now() * 1e-6;
-      double elapsedTime = currentTime - m_prevTime;
-      double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
-      if (angleDif < 0.45*Math.PI) {
-        m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
-        m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      }
-      else if (angleDif > 0.85*Math.PI) {
-        if (m_currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
-          // keep currentTranslationDir unchanged
-          m_currentTranslationMag = m_magLimiter.calculate(0.0);
-        }
-        else {
-          m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
-          m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-        }
-      }
-      else {
-        m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
-        m_currentTranslationMag = m_magLimiter.calculate(0.0);
-      }
-      m_prevTime = currentTime;
-      
-      xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
-      ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-
-
-    } else {
-      xSpeedCommanded = xSpeed;
-      ySpeedCommanded = ySpeed;
-      m_currentRotation = rotate;
-    }
-
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
+    double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotDelivered    = rotate * DriveConstants.kMaxAngularSpeed;
 
+    // Send required power to swerve drives
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, getRotation2d())
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, imu.fCDrotation2d)
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
 
     SwerveDriveKinematics.desaturateWheelSpeeds( swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -427,7 +363,6 @@ public class DriveSubsystem extends SubsystemBase {
     double elevation = 0;
     VisionTarget aTarget;
 
-
     Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
     
     x = targetLocation.getX();
@@ -453,84 +388,35 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. And zeros out heading for Odometry */
   public void resetHeading() {
-    m_gyro.reset();
-    Globals.gyroReset = true;
-
-    setFieldOffsets();
-    resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), getRotation2d() )); 
+    imu.reset();
+    resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), imu.rotation2d )); 
     lockCurrentHeading();
   }
   public Command resetHeadingCmd() {return this.runOnce(() -> resetHeading());}
 
   
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  public double getTurnRate() {
-    return -m_gyro.getRate();
-  }
-
   public void newHeadingSetpoint(double newSetpoint) {
     m_headingSetpoint = newSetpoint;
-    headingLockController.reset(m_currentHeading);
+    headingLockController.reset(imu.heading);
     m_headingLocked = true;
   }
 
   public void lockCurrentHeading() {
-    newHeadingSetpoint(getHeading());
+    newHeadingSetpoint(imu.heading);
   }
 
   public boolean isNotRotating() {
 
-    return (Math.abs(m_gyro.getRate()) < AutoConstants.kNotRotating);
+    return (Math.abs(imu.yawRate) < AutoConstants.kNotRotating);
   }
 
   //------------------------------
-  public void setFieldOffsets() {
-    if (DriverStation.getAlliance().get() == Alliance.Red){
-      gyro2FieldOffset = 0.0;
-    } else {
-      gyro2FieldOffset = Math.PI;  
-    }
-  }
-
-  public void squareUp() {
-    if (Math.abs(getHeading()) < Math.PI / 2) {
+    public void squareUp() {
+    if (Math.abs(imu.heading) < Math.PI / 2) {
       newHeadingSetpoint(0);
     } else {
       newHeadingSetpoint(Math.PI);
     }
-  }
-
-  /***
-   * Reads heading from gyro, adjusts for field orientation and sets current Heading member.
-   * @return
-   */
-  public double getHeading() {
-    m_currentHeading = Math.IEEEremainder(Math.toRadians(-m_gyro.getAngle()) + gyro2FieldOffset, Math.PI * 2);
-    return m_currentHeading;
-  }
-
-  public double getPitch() {
-    return -m_gyro.getRoll();
-  }
-
-  public double getRoll() {
-    return -m_gyro.getPitch();
-  }
-  
-  public double getFCDHeading() {
-      return Math.IEEEremainder(Math.toRadians(-m_gyro.getAngle()) + Math.PI, Math.PI * 2);
-  }
-
-  public Rotation2d getRotation2d() {
-      return Rotation2d.fromRadians(getHeading());
-  }
-
-  public Rotation2d getFCDRotation2d() {
-      return Rotation2d.fromRadians(getFCDHeading());
   }
 
 }

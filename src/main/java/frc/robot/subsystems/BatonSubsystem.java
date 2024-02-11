@@ -104,6 +104,13 @@ public class BatonSubsystem extends SubsystemBase {
     }
     public Command stopCollectorCmd() {return this.runOnce(() -> stopCollector());}
 
-    
+    public void toggleShooter(double rpm) {
+        if (shooterSpeedSetPoint == rpm) {
+            setShooterRPM(0);
+        } else {
+            setShooterRPM(rpm); 
+        }
+    }
+    public Command toggleShooterCmd(double speed) {return this.runOnce(() -> toggleShooter(speed));}
 
 }

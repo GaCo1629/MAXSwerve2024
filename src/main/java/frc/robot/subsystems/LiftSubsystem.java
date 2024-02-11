@@ -1,12 +1,10 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LiftConstants;
@@ -14,8 +12,6 @@ import frc.robot.Constants.LiftConstants;
 public class LiftSubsystem extends SubsystemBase{
     private CANSparkFlex leftLift = null;
     private CANSparkFlex rightLift = null;
-
-    private final AHRS balanceGyro = new AHRS(SPI.Port.kMXP);
 
     private double robotAngle       = 0;
     private double leftLiftSetpoint = 0;
@@ -38,20 +34,19 @@ public class LiftSubsystem extends SubsystemBase{
             rightLift = new CANSparkFlex(LiftConstants.rightLiftID, MotorType.kBrushless);
         }
 
-        robotAngle = balanceGyro.getRoll();
         leftLiftSetpoint = 0;
         rightLiftSetpoint = 0;
     }
 
     @Override
     public void periodic(){
+        robotAngle = Globals.roll;
+
         if (Globals.enableLIftSubsystem) {
-            robotAngle = balanceGyro.getRoll();
-            leftLiftSpeed = leftLift.getEncoder().getVelocity();
+             leftLiftSpeed = leftLift.getEncoder().getVelocity();
             rightLiftSpeed = rightLift.getEncoder().getVelocity();
         }
 
-        SmartDashboard.putNumber("Robot roll", robotAngle);
         SmartDashboard.putNumber("Left Lift Speed", leftLiftSpeed);
         SmartDashboard.putNumber("Right Lift Speed", rightLiftSpeed);
     }

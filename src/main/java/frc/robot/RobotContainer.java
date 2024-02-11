@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LiftSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,8 +36,9 @@ public class RobotContainer {
   Joystick  m_copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
 
   // The robot's subsystems
-  public final DriveSubsystem  m_robotDrive    = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final BatonSubsystem m_baton = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final DriveSubsystem m_robotDrive     = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final BatonSubsystem m_baton          = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final LiftSubsystem  m_lift           = new LiftSubsystem(m_driverController, m_copilot_1, m_copilot_2);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -64,24 +66,24 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kR1.value)
         .whileTrue(m_robotDrive.setXCmd());
 
-   new JoystickButton(m_driverController, Button.kTouchpad.value)
+    new JoystickButton(m_driverController, Button.kTouchpad.value)
         .onTrue(m_robotDrive.resetHeadingCmd());
 
-    new JoystickButton(m_copilot_1, Button.kCross.value)
-        .onTrue(m_baton.stopCollectorCmd());
+    new JoystickButton(m_copilot_1, Button.kCircle.value)
+        .onTrue(m_baton.collectCmd())
+        .onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kSquare.value)
-        .onTrue(m_baton.collectCmd());
-
-    new JoystickButton(m_copilot_1, Button.kCircle.value)
-        .onTrue(m_baton.ejectCmd());
+        .onTrue(m_baton.ejectCmd())
+        .onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kTriangle.value)
-        .onTrue(m_baton.fireCmd());
+        .onTrue(m_baton.fireCmd())
+        .onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.setShooterRPMCmd(2000))
-        .toggleOnFalse(m_baton.setShooterRPMCmd(0));
+        .toggleOnTrue(m_baton.toggleShooterCmd(3000));
+
 
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
