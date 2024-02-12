@@ -61,8 +61,8 @@ public class BatonSubsystem extends SubsystemBase {
             shooterSpeedTop = shooterTop.getEncoder().getVelocity();
 
             power = shooterSpeedSetPoint / BatonConstants.maxShooterRPM;
-            shooterBottom.set(power);
-            shooterTop.set(-power);
+            shooterBottom.set(-power);
+            shooterTop.set(power);
         }
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
