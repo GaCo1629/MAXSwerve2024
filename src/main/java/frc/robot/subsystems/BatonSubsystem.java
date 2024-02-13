@@ -18,16 +18,16 @@ public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake            = null;
     private CANSparkMax tiltLeft          = null;
     private CANSparkMax tiltRight         = null;
-    private CANSparkFlex shooterTop       = null;
-    private CANSparkFlex shooterBottom    = null;
+    private FLEXShooter shooterTop    ;
+    private FLEXShooter shooterBot    ;
 
     private AbsoluteEncoder tiltEncoder   = null;
     
-    private double tiltAngle;
     private double tiltAngleSetPoint;
+    private double tiltAngle;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
-    private double shooterSpeedBottom;
+    private double shooterSpeedBot;
 
     private PS4Controller driver;
     private Joystick copilot_1;
@@ -42,8 +42,8 @@ public class BatonSubsystem extends SubsystemBase {
             intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
             tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
             tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
-            shooterBottom = new CANSparkFlex(BatonConstants.shooterBottomID, MotorType.kBrushless);
-            shooterTop = new CANSparkFlex(BatonConstants.shooterTopID, MotorType.kBrushless);
+            shooterBot = new FLEXShooter(BatonConstants.shooterBotID, true);
+            shooterTop = new FLEXShooter(BatonConstants.shooterTopID, false);
             tiltEncoder = tiltLeft.getAbsoluteEncoder(Type.kDutyCycle);
 
             tiltAngle = tiltEncoder.getPosition();
@@ -57,12 +57,11 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.enableBatonSubsystem) {
             tiltAngle = tiltEncoder.getPosition();
-            shooterSpeedBottom = shooterBottom.getEncoder().getVelocity();
-            shooterSpeedTop = shooterTop.getEncoder().getVelocity();
+            shooterSpeedBot = shooterBot.getRPM();
+            shooterSpeedTop = shooterTop.getRPM();
 
-            power = shooterSpeedSetPoint / BatonConstants.maxShooterRPM;
-            shooterBottom.set(-power);
-            shooterTop.set(power);
+            shooterBot.setRPM(shooterSpeedSetPoint);
+            shooterTop.setRPM(shooterSpeedSetPoint);
         }
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
@@ -70,7 +69,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter power",power);   
-        SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBottom);
+        SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
     }
 

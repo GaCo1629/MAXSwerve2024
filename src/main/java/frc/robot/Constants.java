@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.FLEXShooter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -118,6 +119,20 @@ public final class Constants {
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
+  public static final class ShooterConstants { 
+
+    // Calculations required for driving motor conversion factors and feed forward
+    public static final double kShooterP = 0.04;
+    public static final double kShooterI = 0;
+    public static final double kShooterD = 0;
+    public static final double kShooterFF = 1 / FlexMotorConstants.kFreeSpeedRpm;
+    public static final double kShooterMinOutput = -1;
+    public static final double kShooterMaxOutput = 1;
+
+    public static final IdleMode kShooterMotorIdleMode = IdleMode.kCoast;
+    public static final int kShooterMotorCurrentLimit = 50; // amps
+  }
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoPilotController1Port= 1;
@@ -168,6 +183,10 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class FlexMotorConstants {
+    public static final double kFreeSpeedRpm = 6500;
+  }
+
   public class VisionConstants {
     public static double STANDARD_DEVIATION_ODOMETRY = 0.1;
     public static double STANDARD_DEVIATION_ODOMETRY_ANGLE = 0.01;
@@ -178,7 +197,7 @@ public final class Constants {
   public class BatonConstants {
     
     public static int shooterTopID = 20;
-    public static int shooterBottomID = 21;
+    public static int shooterBotID = 21;
     public static int tiltLeftID = 22;
     public static int tiltRightID = 23;
     public static int intakeID = 24;
