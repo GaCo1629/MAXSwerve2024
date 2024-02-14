@@ -30,7 +30,9 @@ public class IMUSubsystem{
         double angle = -m_robotIMU.getAngle();
         
         heading    = Math.IEEEremainder(Math.toRadians(angle) + m_gyro2FieldOffset, Math.PI * 2);
-        fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
+        // <ust adjust Field Centric driving if starting pointing backwards
+        // fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
+        fCDheading = heading;
         pitch      = -m_robotIMU.getPitch();
         roll       = -m_robotIMU.getRoll();
         yawRate    = m_robotIMU.getRate();
@@ -56,9 +58,9 @@ public class IMUSubsystem{
 
     public void setFieldOrientation() {
         if (DriverStation.getAlliance().get() == Alliance.Red){
-            m_gyro2FieldOffset = 0.0;
+            m_gyro2FieldOffset = Math.PI;
         } else {
-            m_gyro2FieldOffset = Math.PI;  
+            m_gyro2FieldOffset = 0.0;  
         }
     }
 }

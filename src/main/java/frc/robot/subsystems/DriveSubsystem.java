@@ -59,8 +59,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final IMUSubsystem imu = new IMUSubsystem();
   
   private PS4Controller driver;
-  private Joystick copilot_1;
-  private Joystick copilot_2;
+  //private Joystick copilot_1;
+  //private Joystick copilot_2;
   
   private boolean m_headingLocked = false;
   private boolean m_targetTracking = false;
@@ -91,8 +91,8 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
    public DriveSubsystem(PS4Controller driver, Joystick copilot_1, Joystick copilot_2) {
     this.driver = driver;
-    this.copilot_1 = copilot_1;
-    this.copilot_2 = copilot_2;
+    //this.copilot_1 = copilot_1;
+    //this.copilot_2 = copilot_2;
 
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(

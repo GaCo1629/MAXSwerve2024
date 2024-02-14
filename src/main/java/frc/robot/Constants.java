@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.FLEXShooter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -36,7 +35,7 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 2.0; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
@@ -204,8 +203,9 @@ public final class Constants {
     public static int intakeID = 24;
     public static double maxShooterRPM = 6500;
     public static double collect = -0.5;
-    public static double eject = 0.3;
     public static double fire = -1;
+    public static double eject = 0.3;
+
     public static double stopCollector = 0;
   }
 

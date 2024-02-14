@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -29,14 +28,14 @@ public class BatonSubsystem extends SubsystemBase {
     private double shooterSpeedTop;
     private double shooterSpeedBot;
 
-    private PS4Controller driver;
-    private Joystick copilot_1;
-    private Joystick copilot_2;
+    //private PS4Controller driver;
+    //private Joystick copilot_1;
+    //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        this.driver = driver;
-        this.copilot_1 = copilot_1;
-        this.copilot_2 = copilot_2;
+        //this.driver = driver;
+        //this.copilot_1 = copilot_1;
+        //this.copilot_2 = copilot_2;
 
         if (Globals.enableBatonSubsystem) {
             intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
@@ -44,7 +43,7 @@ public class BatonSubsystem extends SubsystemBase {
             tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
             shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
             shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
-            tiltEncoder = tiltLeft.getAbsoluteEncoder(Type.kDutyCycle);
+            tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
 
             tiltAngle = tiltEncoder.getPosition();
             shooterSpeedSetPoint = 0;
@@ -53,7 +52,6 @@ public class BatonSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() { 
-        double power = 0;
 
         if (Globals.enableBatonSubsystem) {
             tiltAngle = tiltEncoder.getPosition();
@@ -68,7 +66,6 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
-        SmartDashboard.putNumber("shooter power",power);   
         SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
     }
