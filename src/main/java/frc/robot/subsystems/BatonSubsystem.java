@@ -42,8 +42,8 @@ public class BatonSubsystem extends SubsystemBase {
             intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
             tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
             tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
-            shooterBot = new FLEXShooter(BatonConstants.shooterBotID, true);
-            shooterTop = new FLEXShooter(BatonConstants.shooterTopID, false);
+            shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
+            shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
             tiltEncoder = tiltLeft.getAbsoluteEncoder(Type.kDutyCycle);
 
             tiltAngle = tiltEncoder.getPosition();
@@ -104,7 +104,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command stopCollectorCmd() {return this.runOnce(() -> stopCollector());}
 
     public void toggleShooter(double rpm) {
-        if (shooterSpeedSetPoint == rpm) {
+        if (shooterSpeedSetPoint > 0) {
             setShooterRPM(0);
         } else {
             setShooterRPM(rpm); 

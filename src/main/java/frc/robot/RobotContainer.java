@@ -82,7 +82,7 @@ public class RobotContainer {
         .onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.toggleShooterCmd(3000));
+        .toggleOnTrue(m_baton.toggleShooterCmd(2000));
 
 
 

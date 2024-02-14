@@ -122,10 +122,11 @@ public final class Constants {
   public static final class ShooterConstants { 
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kShooterP = 0.04;
-    public static final double kShooterI = 0;
+    public static final double kShooterP = 0.0002;
+    public static final double kShooterI = 0.000001;
     public static final double kShooterD = 0;
     public static final double kShooterFF = 1 / FlexMotorConstants.kFreeSpeedRpm;
+    public static final double kZone = 100;
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
 

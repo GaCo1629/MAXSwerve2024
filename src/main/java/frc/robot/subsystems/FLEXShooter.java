@@ -5,23 +5,28 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class FLEXShooter {
-  private final CANSparkFlex    m_SparkFlex;
-  private final RelativeEncoder m_Encoder;
-  private final SparkPIDController m_PIDController;
+  private final CANSparkFlex        m_SparkFlex;
+  private final RelativeEncoder     m_Encoder;
+  private final SparkPIDController  m_PIDController;
   private boolean m_invert = false;
+  private String  m_name;
+  private double  m_setpoint = 0;
   
   /**
    * Constructs a Shooter module and configures the motor, encoder, and PID controller. 
    */
-  public FLEXShooter(int CANId, boolean invert) {
+  public FLEXShooter(String name, int CANId, boolean invert) {
+    m_name = name;
     m_invert = invert;
     m_SparkFlex = new CANSparkFlex(CANId, MotorType.kBrushless);
 
@@ -38,6 +43,7 @@ public class FLEXShooter {
     m_PIDController.setI(ShooterConstants.kShooterI);
     m_PIDController.setD(ShooterConstants.kShooterD);
     m_PIDController.setFF(ShooterConstants.kShooterFF);
+    m_PIDController.setIZone(ShooterConstants.kZone);
     m_PIDController.setOutputRange(ShooterConstants.kShooterMinOutput,  ShooterConstants.kShooterMaxOutput);
     stop();
     
@@ -55,7 +61,10 @@ public class FLEXShooter {
    * @return The current RPM of the module.
    */
   public double getRPM() {
-    return m_Encoder.getVelocity() * (m_invert ? -1 : 1);
+    double vel = m_Encoder.getVelocity() * (m_invert ? -1 : 1);
+    SmartDashboard.putNumber(m_name + " RPM", vel);
+    SmartDashboard.putNumber(m_name + " Error", m_setpoint - vel);
+    return vel;
   }
 
   /**
@@ -65,10 +74,11 @@ public class FLEXShooter {
    */
   public void setRPM(double  desiredRPM) {
     // Command shooter motor to respective setpoint.
-    m_PIDController.setReference(desiredRPM * (m_invert ? -1 : 1), CANSparkFlex.ControlType.kVelocity);
+    m_setpoint = desiredRPM;
+    m_PIDController.setReference(m_setpoint * (m_invert ? -1 : 1), CANSparkFlex.ControlType.kVelocity);
   }
 
   public void stop() {
-    setRPM(0);
+    m_SparkFlex.set(0);
   }
 }
