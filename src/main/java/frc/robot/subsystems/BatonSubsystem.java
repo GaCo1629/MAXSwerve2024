@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAnalogSensor;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -29,6 +28,7 @@ public class BatonSubsystem extends SubsystemBase {
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
     private double shooterSpeedBot;
+    private double noteSensor;
 
     //private PS4Controller driver;
     //private Joystick copilot_1;
@@ -62,6 +62,7 @@ public class BatonSubsystem extends SubsystemBase {
 
             shooterBot.setRPM(shooterSpeedSetPoint);
             shooterTop.setRPM(shooterSpeedSetPoint);
+            noteSensor = shooterTop.getVoltage();
         }
 
         SmartDashboard.putNumber("tilt angle", tiltAngle);
