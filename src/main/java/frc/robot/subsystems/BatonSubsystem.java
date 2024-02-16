@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,14 +30,15 @@ public class BatonSubsystem extends SubsystemBase {
     private double shooterSpeedTop;
     private double shooterSpeedBot;
     private double noteSensor;
+    private BatonState currentState = BatonState.IDLE;
 
     //private PS4Controller driver;
-    //private Joystick copilot_1;
+    private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
         //this.driver = driver;
-        //this.copilot_1 = copilot_1;
+        this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
         if (Globals.enableBatonSubsystem) {
@@ -65,12 +67,39 @@ public class BatonSubsystem extends SubsystemBase {
             noteSensor = shooterTop.getVoltage();
         }
 
+        runStateMachine();
+
         SmartDashboard.putNumber("tilt angle", tiltAngle);
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+    }
+
+    public void runStateMachine(){
+        switch (currentState) {
+            case IDLE:
+                break;
+
+            case COLLECTING:
+                 if (noteSensor > 0.6){
+                    stopCollector();
+                    currentState = BatonState.HOLDING;
+                 }
+                break;
+        
+            case HOLDING:
+                 
+                break;
+                
+            case SHOOTING:
+
+                 break;
+
+            default:
+                break;
+        }
     }
 
     public void setTiltAngle(double angle){
@@ -84,7 +113,8 @@ public class BatonSubsystem extends SubsystemBase {
     public Command setShooterRPMCmd(double speed) {return this.runOnce(() -> setShooterRPM(speed));}
     
     public void collect (){
-        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.collect);
+        intake.set(BatonConstants.collect);
+        currentState = BatonState.COLLECTING;
     }
     public Command collectCmd() {return this.runOnce(() -> collect());}
 
@@ -94,7 +124,10 @@ public class BatonSubsystem extends SubsystemBase {
     public Command ejectCmd() {return this.runOnce(() -> eject());}
 
     public void fire (){
-        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.fire);   
+        if (  (shooterSpeedSetPoint > 10) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < 20)     ){
+            intake.set(BatonConstants.fire);
+            currentState = BatonState.SHOOTING;
+        } 
     }
     public Command fireCmd() {return this.runOnce(() -> fire());}
 
