@@ -130,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
     trackingController = new PIDController(AutoConstants.kPTrackingController, 
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
-       
+    trackingController.enableContinuousInput(-180, 180);
   }
 
   /**
@@ -243,7 +243,7 @@ public class DriveSubsystem extends SubsystemBase {
     if (m_targetTracking && target.valid) {
       
       // Calculate static turn power
-      rotate = -trackingController.calculate(target.bearing, 0);
+      rotate = -trackingController.calculate(target.bearing, 180);
 
       // Add additional rotation based on robot's sideways motion 
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
