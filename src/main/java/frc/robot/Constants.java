@@ -230,6 +230,7 @@ public final class Constants {
     public static double eject = 0.3;
 
     public static double stopCollector = 0;
+    public static double seeingNote = 0.6;
   }
 
   public class LiftConstants{

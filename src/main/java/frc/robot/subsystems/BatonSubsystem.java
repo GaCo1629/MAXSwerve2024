@@ -18,8 +18,8 @@ import com.revrobotics.SparkAnalogSensor;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake            = null;
-    private MAXTilt     tiltLeft          = null;
-    private MAXTilt     tiltRight         = null;
+    //private MAXTilt     tiltLeft          = null;
+    //private MAXTilt     tiltRight         = null;
     private FLEXShooter shooterTop    ;
     private FLEXShooter shooterBot    ;
 
@@ -48,8 +48,8 @@ public class BatonSubsystem extends SubsystemBase {
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
         
-        tiltLeft  = new MAXTilt("Left Pos",    BatonConstants.tiltLeftID, false);
-        tiltRight = new MAXTilt("Right Pos",   BatonConstants.tiltRightID, true);
+        //tiltLeft  = new MAXTilt("Left Pos",    BatonConstants.tiltLeftID, false);
+        //tiltRight = new MAXTilt("Right Pos",   BatonConstants.tiltRightID, true);
 
         shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
         shooterTop = new FLEXShooter("Top",    BatonConstants.shooterTopID, false);
@@ -62,8 +62,8 @@ public class BatonSubsystem extends SubsystemBase {
     @Override
     public void periodic() { 
 
-        leftTiltAngle   = tiltLeft.getAngle();
-        rightTiltAngle  = tiltRight.getAngle();
+       // leftTiltAngle   = tiltLeft.getAngle();
+       // rightTiltAngle  = tiltRight.getAngle();
 
         shooterSpeedBot = shooterBot.getRPM();
         shooterSpeedTop = shooterTop.getRPM();
@@ -91,7 +91,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case COLLECTING:
-                 if (noteSensor > 0.6){
+                 if (noteSensor > BatonConstants.seeingNote){
                     stopCollector();
                     currentState = BatonState.HOLDING;
                  }
@@ -102,7 +102,11 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
                 
             case SHOOTING:
-
+                if (noteSensor < BatonConstants.seeingNote){
+                    stopCollector();
+                    stopShooter();
+                    currentState = BatonState.IDLE;
+                }
                  break;
 
             default:
@@ -127,7 +131,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void eject (){
-        if (Globals.enableBatonSubsystem) intake.set(BatonConstants.eject);
+        intake.set(BatonConstants.eject);
     }
     public Command ejectCmd() {return this.runOnce(() -> eject());}
 
@@ -140,7 +144,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command fireCmd() {return this.runOnce(() -> fire());}
 
     public void stopCollector (){
-        if (Globals.enableBatonSubsystem)intake.set(BatonConstants.stopCollector);
+       intake.set(BatonConstants.stopCollector);
     }
     public Command stopCollectorCmd() {return this.runOnce(() -> stopCollector());}
 
@@ -153,4 +157,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
     public Command toggleShooterCmd(double speed) {return this.runOnce(() -> toggleShooter(speed));}
 
+    public void stopShooter(){
+        setShooterRPM(0);
+    }
 }
