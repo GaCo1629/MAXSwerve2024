@@ -44,16 +44,16 @@ public class FLEXShooter {
     m_PIDController.setFeedbackDevice(m_Encoder);
 
     // Set the PID gains for the motor.
-    m_PIDController.setP(ShooterConstants.kShooterP);
-    m_PIDController.setI(ShooterConstants.kShooterI);
-    m_PIDController.setD(ShooterConstants.kShooterD);
+    m_PIDController.setP(ShooterConstants.kP);
+    m_PIDController.setI(ShooterConstants.kI);
+    m_PIDController.setD(ShooterConstants.kD);
     m_PIDController.setFF(ShooterConstants.kShooterFF);
     m_PIDController.setIZone(ShooterConstants.kZone);
-    m_PIDController.setOutputRange(ShooterConstants.kShooterMinOutput,  ShooterConstants.kShooterMaxOutput);
+    m_PIDController.setOutputRange(ShooterConstants.kMinOutput,  ShooterConstants.kMaxOutput);
     stop();
     
-    m_SparkFlex.setIdleMode(ShooterConstants.kShooterMotorIdleMode);
-    m_SparkFlex.setSmartCurrentLimit(ShooterConstants.kShooterMotorCurrentLimit);
+    m_SparkFlex.setIdleMode(ShooterConstants.kMotorIdleMode);
+    m_SparkFlex.setSmartCurrentLimit(ShooterConstants.kMotorCurrentLimit);
     
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.

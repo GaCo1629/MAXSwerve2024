@@ -121,16 +121,39 @@ public final class Constants {
   public static final class ShooterConstants { 
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kShooterP = 0.0002;
-    public static final double kShooterI = 0.000001;
-    public static final double kShooterD = 0;
+    public static final double kP = 0.0002;
+    public static final double kI = 0.000001;
+    public static final double kD = 0;
     public static final double kShooterFF = 1 / FlexMotorConstants.kFreeSpeedRpm;
     public static final double kZone = 100;
-    public static final double kShooterMinOutput = -1;
-    public static final double kShooterMaxOutput = 1;
+    public static final double kMinOutput = -1;
+    public static final double kMaxOutput = 1;
 
-    public static final IdleMode kShooterMotorIdleMode = IdleMode.kCoast;
-    public static final int kShooterMotorCurrentLimit = 50; // amps
+    public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
+    public static final int kMotorCurrentLimit = 50; // amps
+  }
+
+  public static final class TiltConstants { 
+
+    // Calculations required for driving motor conversion factors and feed forward
+    public static final double kP = 0.001;
+    public static final double kI = 0.0;
+    public static final double kD = 0;
+    public static final double kFF = 0;
+    public static final double kZone = 10;
+    public static final double kMinOutput = -0.2;
+    public static final double kMaxOutput = 1;
+
+    public static final double minEncoderPosition = 0.0;
+    public static final double maxEncoderPosition = 90.0;
+    public static final double homeAngle    = 50.0;
+    
+
+    public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
+    public static final int kMotorCurrentLimit = 30; // amps
+
+    public static final double kEncoderPositionFactor = 360; // degrees
+    public static final double kEncoderVelocityFactor = 360 / 60.0; // degrees per second
   }
 
   public static final class OIConstants {

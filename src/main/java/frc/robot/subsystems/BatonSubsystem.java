@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BatonConstants;
+import frc.robot.Constants.TiltConstants;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
@@ -17,8 +18,8 @@ import com.revrobotics.SparkAnalogSensor;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake            = null;
-    private CANSparkMax tiltLeft          = null;
-    private CANSparkMax tiltRight         = null;
+    private MAXTilt     tiltLeft          = null;
+    private MAXTilt     tiltRight         = null;
     private FLEXShooter shooterTop    ;
     private FLEXShooter shooterBot    ;
 
@@ -26,7 +27,8 @@ public class BatonSubsystem extends SubsystemBase {
     
 
     private double tiltAngleSetPoint;
-    private double tiltAngle;
+    private double leftTiltAngle;
+    private double rightTiltAngle;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
     private double shooterSpeedBot;
@@ -45,38 +47,41 @@ public class BatonSubsystem extends SubsystemBase {
         //this.copilot_2 = copilot_2;
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
-        tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
-        tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
-        shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
-        shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
-        tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
+        
+        tiltLeft  = new MAXTilt("Left Pos",    BatonConstants.tiltLeftID, false);
+        tiltRight = new MAXTilt("Right Pos",   BatonConstants.tiltRightID, true);
 
-        tiltAngle = tiltEncoder.getPosition();
+        shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
+        shooterTop = new FLEXShooter("Top",    BatonConstants.shooterTopID, false);
+
         m_rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
         shooterSpeedSetPoint = 0;
-        
+        tiltAngleSetPoint    = TiltConstants.homeAngle;
     }
 
     @Override
     public void periodic() { 
 
-        tiltAngle = tiltEncoder.getPosition();
+        leftTiltAngle   = tiltLeft.getAngle();
+        rightTiltAngle  = tiltRight.getAngle();
+
         shooterSpeedBot = shooterBot.getRPM();
         shooterSpeedTop = shooterTop.getRPM();
 
         shooterBot.setRPM(shooterSpeedSetPoint);
         shooterTop.setRPM(shooterSpeedSetPoint);
-        //noteSensor = shooterTop.getVoltage();
         noteSensor = m_rangeFinder.getVoltage();
 
         runStateMachine();
 
-        SmartDashboard.putNumber("tilt angle", tiltAngle);
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
+        SmartDashboard.putNumber("left tilt angle",  leftTiltAngle);
+        SmartDashboard.putNumber("right tilt angle", rightTiltAngle);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+
         SmartDashboard.putNumber("Intake Range", m_rangeFinder.getVoltage());
     }
 
