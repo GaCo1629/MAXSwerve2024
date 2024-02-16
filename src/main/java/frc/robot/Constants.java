@@ -146,7 +146,7 @@ public final class Constants {
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 90.0;
-   // public static final double homeAngle    = 50.0;
+    public static final double homeAngle    = 0;
     
 
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
