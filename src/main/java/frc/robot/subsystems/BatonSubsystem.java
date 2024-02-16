@@ -13,6 +13,7 @@ import frc.robot.Constants.BatonConstants;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkAnalogSensor;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake            = null;
@@ -32,6 +33,8 @@ public class BatonSubsystem extends SubsystemBase {
     private double noteSensor;
     private BatonState currentState = BatonState.IDLE;
 
+     private final SparkAnalogSensor   m_rangeFinder; //////////
+
     //private PS4Controller driver;
     private Joystick copilot_1;
     //private Joystick copilot_2;
@@ -41,31 +44,30 @@ public class BatonSubsystem extends SubsystemBase {
         this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
-        if (Globals.enableBatonSubsystem) {
-            intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
-            tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
-            tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
-            shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
-            shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
-            tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
+        intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
+        tiltLeft = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
+        tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
+        shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
+        shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
+        tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
 
-            tiltAngle = tiltEncoder.getPosition();
-            shooterSpeedSetPoint = 0;
-        }
+        tiltAngle = tiltEncoder.getPosition();
+        m_rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
+        shooterSpeedSetPoint = 0;
+        
     }
 
     @Override
     public void periodic() { 
 
-        if (Globals.enableBatonSubsystem) {
-            tiltAngle = tiltEncoder.getPosition();
-            shooterSpeedBot = shooterBot.getRPM();
-            shooterSpeedTop = shooterTop.getRPM();
+        tiltAngle = tiltEncoder.getPosition();
+        shooterSpeedBot = shooterBot.getRPM();
+        shooterSpeedTop = shooterTop.getRPM();
 
-            shooterBot.setRPM(shooterSpeedSetPoint);
-            shooterTop.setRPM(shooterSpeedSetPoint);
-            noteSensor = shooterTop.getVoltage();
-        }
+        shooterBot.setRPM(shooterSpeedSetPoint);
+        shooterTop.setRPM(shooterSpeedSetPoint);
+        //noteSensor = shooterTop.getVoltage();
+        noteSensor = m_rangeFinder.getVoltage();
 
         runStateMachine();
 
@@ -75,6 +77,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bottom RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+        SmartDashboard.putNumber("Intake Range", m_rangeFinder.getVoltage());
     }
 
     public void runStateMachine(){
