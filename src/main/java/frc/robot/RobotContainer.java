@@ -70,19 +70,23 @@ public class RobotContainer {
         .onTrue(m_robotDrive.resetHeadingCmd());
 
     new JoystickButton(m_copilot_1, Button.kCircle.value)
-        .onTrue(m_baton.collectCmd())
-        .onFalse(m_baton.stopCollectorCmd());
+        .onTrue(m_baton.collectCmd());
+        //.onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kSquare.value)
         .onTrue(m_baton.ejectCmd())
         .onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kTriangle.value)
-        .onTrue(m_baton.fireCmd())
-        .onFalse(m_baton.stopCollectorCmd());
+        .onTrue(m_baton.fireCmd());
+        //.onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
         .toggleOnTrue(m_baton.toggleShooterCmd(2500));
+
+    new JoystickButton(m_copilot_1, Button.kSquare.value)
+        .onTrue(m_baton.stopCollectorCmd());
+        
 
 
 
