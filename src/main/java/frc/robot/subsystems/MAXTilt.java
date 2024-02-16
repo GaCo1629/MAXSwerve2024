@@ -21,7 +21,7 @@ public class MAXTilt {
   private final SparkPIDController m_tiltPIDController;
   
   private String m_name;
-  private double m_tiltOffset = TiltConstants.homeAngle;
+  //private double m_tiltOffset = TiltConstants.homeAngle;
   private double m_positionSetpoint = 0;
 
   /**
@@ -46,11 +46,7 @@ public class MAXTilt {
     // Apply position and velocity conversion factors for the tilt encoder. We
     m_tiltEncoder.setPositionConversionFactor(TiltConstants.kEncoderPositionFactor);
     m_tiltEncoder.setVelocityConversionFactor(TiltConstants.kEncoderVelocityFactor);
-
-    // Invert the tilt encoder if requested
-    if (invert) {
-      m_tiltEncoder.setInverted(ModuleConstants.kTurningEncoderInverted);
-    }
+    
 
     // Set the PID gains for the tilt motor.
     m_tiltPIDController.setP(TiltConstants.kP);
@@ -78,7 +74,7 @@ public class MAXTilt {
   public double getAngle() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return m_tiltOffset - getPosition();
+    return getPosition();
   }
 
   public double getPosition() {
@@ -97,7 +93,7 @@ public class MAXTilt {
   public double getSetPoint() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return m_tiltOffset - m_positionSetpoint;
+    return m_positionSetpoint;
   }
 
   /**
@@ -108,9 +104,9 @@ public class MAXTilt {
   public void setAngle(double angle) {
 
     // Apply chassis angular offset to the desired angle.
-    m_positionSetpoint = m_tiltOffset - angle;
+    m_positionSetpoint = angle;
 
-    m_positionSetpoint = Math.max(TiltConstants.maxEncoderPosition, Math.min(m_positionSetpoint, TiltConstants.minEncoderPosition));
+   // m_positionSetpoint = Math.max(TiltConstants.maxEncoderPosition, Math.min(m_positionSetpoint, TiltConstants.minEncoderPosition));
     m_tiltPIDController.setReference(m_positionSetpoint, CANSparkMax.ControlType.kPosition);
   }
 

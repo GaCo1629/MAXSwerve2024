@@ -18,8 +18,8 @@ import com.revrobotics.SparkAnalogSensor;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake            = null;
-    //private MAXTilt     tiltLeft          = null;
-    //private MAXTilt     tiltRight         = null;
+    private MAXTilt     tiltLeft          = null;
+    private MAXTilt     tiltRight         = null;
     private FLEXShooter shooterTop    ;
     private FLEXShooter shooterBot    ;
 
@@ -48,22 +48,22 @@ public class BatonSubsystem extends SubsystemBase {
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
         
-        //tiltLeft  = new MAXTilt("Left Pos",    BatonConstants.tiltLeftID, false);
-        //tiltRight = new MAXTilt("Right Pos",   BatonConstants.tiltRightID, true);
+        tiltLeft  = new MAXTilt("Left Pos",    BatonConstants.tiltLeftID, false);
+        tiltRight = new MAXTilt("Right Pos",   BatonConstants.tiltRightID, true);
 
         shooterBot = new FLEXShooter("Bottom", BatonConstants.shooterBotID, true);
         shooterTop = new FLEXShooter("Top",    BatonConstants.shooterTopID, false);
 
         m_rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
         shooterSpeedSetPoint = 0;
-        tiltAngleSetPoint    = TiltConstants.homeAngle;
+        tiltAngleSetPoint    = 0;
     }
 
     @Override
     public void periodic() { 
 
-       // leftTiltAngle   = tiltLeft.getAngle();
-       // rightTiltAngle  = tiltRight.getAngle();
+        leftTiltAngle   = tiltLeft.getAngle();
+        rightTiltAngle  = tiltRight.getAngle();
 
         shooterSpeedBot = shooterBot.getRPM();
         shooterSpeedTop = shooterTop.getRPM();
@@ -71,6 +71,8 @@ public class BatonSubsystem extends SubsystemBase {
         shooterBot.setRPM(shooterSpeedSetPoint);
         shooterTop.setRPM(shooterSpeedSetPoint);
         noteSensor = m_rangeFinder.getVoltage();
+
+        tiltRight.setAngle(tiltAngleSetPoint);
 
         runStateMachine();
 

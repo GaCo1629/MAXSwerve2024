@@ -86,6 +86,12 @@ public class RobotContainer {
 
     new JoystickButton(m_copilot_1, Button.kSquare.value)
         .onTrue(m_baton.stopCollectorCmd());
+
+    new JoystickButton(m_driverController, Button.kTriangle.value)
+        .onTrue(m_baton.setTiltAngleCmd(5));
+
+    new JoystickButton(m_driverController, Button.kCross.value)
+        .onTrue(m_baton.setTiltAngleCmd(0));
         
 
 
