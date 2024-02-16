@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAnalogSensor;
 
 import frc.robot.Constants.ShooterConstants;
 
@@ -18,6 +19,8 @@ public class FLEXShooter {
   private final CANSparkFlex        m_SparkFlex;
   private final RelativeEncoder     m_Encoder;
   private final SparkPIDController  m_PIDController;
+  private final SparkAnalogSensor   m_rangeFinder;
+
   private boolean m_invert = false;
   private String  m_name;
   private double  m_setpoint = 0;
@@ -32,6 +35,8 @@ public class FLEXShooter {
 
     // Factory reset, so we get the SPARK FLEX to a known state before configuring
     m_SparkFlex.restoreFactoryDefaults();
+
+    m_rangeFinder = m_SparkFlex.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
 
     // Setup encoder and PID controller
     m_Encoder = m_SparkFlex.getEncoder();
@@ -76,6 +81,12 @@ public class FLEXShooter {
     // Command shooter motor to respective setpoint.
     m_setpoint = desiredRPM;
     m_PIDController.setReference(m_setpoint * (m_invert ? -1 : 1), CANSparkFlex.ControlType.kVelocity);
+  }
+
+  public double getVoltage (){
+    double voltage = m_rangeFinder.getVoltage();
+    SmartDashboard.putNumber(m_name + " Voltage", voltage);
+    return voltage;
   }
 
   public void stop() {

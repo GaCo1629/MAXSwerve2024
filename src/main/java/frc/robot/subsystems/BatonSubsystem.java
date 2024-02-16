@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAnalogSensor;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -22,6 +23,7 @@ public class BatonSubsystem extends SubsystemBase {
 
     private AbsoluteEncoder tiltEncoder   = null;
     
+
     private double tiltAngleSetPoint;
     private double tiltAngle;
     private double shooterSpeedSetPoint;
