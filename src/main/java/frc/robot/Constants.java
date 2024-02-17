@@ -25,9 +25,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double kSpeedFactor     = 0.95; //was 0.95
-    public static final double kSafeSpeedFactor = 0.70;
-    public static final double kTurnFactor      = 0.70; //was 0.70
+    public static final double kAtleeSpeedFactor     = 0.6;
+    public static final double kAtleeTurnFactor      = 0.5;
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -131,6 +130,7 @@ public final class Constants {
 
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
+    public static final double speedThresholdRPM = 20;
   }
 
   public static final class TiltConstants { 
@@ -147,13 +147,12 @@ public final class Constants {
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 90.0;
     public static final double homeAngle    = 0;
-    
+    public static final double tiltThresholdDeg = 2.0;
 
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
     public static final int kMotorCurrentLimit = 30; // amps
 
     public static final double kEncoderPositionFactor = 1; // degrees
-    public static final double kEncoderVelocityFactor = 360 / 60.0; // degrees per second
   }
 
   public static final class OIConstants {

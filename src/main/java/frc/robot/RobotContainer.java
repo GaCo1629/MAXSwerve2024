@@ -71,21 +71,19 @@ public class RobotContainer {
 
     new JoystickButton(m_copilot_1, Button.kCircle.value)
         .onTrue(m_baton.collectCmd());
-        //.onFalse(m_baton.stopCollectorCmd());
 
     new JoystickButton(m_copilot_1, Button.kSquare.value)
         .onTrue(m_baton.ejectCmd())
-        .onFalse(m_baton.stopCollectorCmd());
+        .onFalse(m_baton.stopIntakeCmd());
 
     new JoystickButton(m_copilot_1, Button.kTriangle.value)
-        .onTrue(m_baton.fireCmd());
-        //.onFalse(m_baton.stopCollectorCmd());
+        .whileTrue(m_baton.fireCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.toggleShooterCmd(2500));
+        .toggleOnTrue(m_baton.toggleShooterCmd(3000));
 
-    new JoystickButton(m_copilot_1, Button.kSquare.value)
-        .onTrue(m_baton.stopCollectorCmd());
+    new JoystickButton(m_copilot_1, Button.kCross.value)
+        .onTrue(m_baton.stopIntakeCmd());
 
     new JoystickButton(m_driverController, Button.kTriangle.value)
         .onTrue(m_baton.setTiltAngleCmd(5));
@@ -93,8 +91,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kCross.value)
         .onTrue(m_baton.setTiltAngleCmd(0));
         
-
-
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
     SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));

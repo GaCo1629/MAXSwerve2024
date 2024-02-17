@@ -4,5 +4,6 @@ public enum BatonState {
     IDLE,
     COLLECTING,
     HOLDING,
-    SHOOTING
+    SHOOTING,
+    WAITING
 }

@@ -15,19 +15,19 @@ public class LiftSubsystem extends SubsystemBase{
 
     private double robotAngle       = 0;
     private double leftLiftSetpoint = 0;
-    private double rightLiftSetpoint = 0;
-    private double leftLiftSpeed    = 0;
-    private double rightLiftSpeed   = 0;
+    private double rightLiftSetpoint= 0;
+    private double leftLiftHeight   = 0;
+    private double rightLiftHeight  = 0;
     
-    private PS4Controller driver;
-    private Joystick copilot_1;
-    private Joystick copilot_2;
+    //private PS4Controller driver;
+    //private Joystick copilot_1;
+    //private Joystick copilot_2;
 
 
     public LiftSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        this.driver = driver;
-        this.copilot_1 = copilot_1;
-        this.copilot_2 = copilot_2;
+        //this.driver = driver;
+        //this.copilot_1 = copilot_1;
+        //this.copilot_2 = copilot_2;
 
         if (Globals.enableLIftSubsystem) {
             leftLift = new CANSparkFlex(LiftConstants.leftLiftID, MotorType.kBrushless);
@@ -43,12 +43,15 @@ public class LiftSubsystem extends SubsystemBase{
         robotAngle = Globals.roll;
 
         if (Globals.enableLIftSubsystem) {
-             leftLiftSpeed = leftLift.getEncoder().getVelocity();
-            rightLiftSpeed = rightLift.getEncoder().getVelocity();
+            leftLiftHeight  = leftLift.getEncoder().getPosition();
+            rightLiftHeight = rightLift.getEncoder().getPosition();
         }
 
-        SmartDashboard.putNumber("Left Lift Speed", leftLiftSpeed);
-        SmartDashboard.putNumber("Right Lift Speed", rightLiftSpeed);
+        SmartDashboard.putNumber("Lift Setpoint Left",  leftLiftSetpoint);
+        SmartDashboard.putNumber("Lift Height Left",  leftLiftHeight);
+        SmartDashboard.putNumber("Lift Setpoint Right", rightLiftSetpoint);
+        SmartDashboard.putNumber("Lift Height Right", rightLiftHeight);
+        SmartDashboard.putNumber("Lift Robot Angle", robotAngle);
     }
 }
 
