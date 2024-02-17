@@ -59,6 +59,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_robotDrive.resetHeading();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    m_robotContainer.m_robotDrive.init();
+    m_robotContainer.m_baton.init();
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -81,6 +84,7 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.m_robotDrive.init();
+    m_robotContainer.m_baton.init();
   }
 
   /** This function is called periodically during operator control. */

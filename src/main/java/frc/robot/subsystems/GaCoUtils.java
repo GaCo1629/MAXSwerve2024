@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
-public final class Utils {
+public final class GaCoUtils {
 
     /**
      * Don't let anyone instantiate this class.
      */
-    private Utils() {}
+    public GaCoUtils() {}
 
     public static double clip(double input, double min, double max) {
         return Math.max(min, Math.min(input, max));

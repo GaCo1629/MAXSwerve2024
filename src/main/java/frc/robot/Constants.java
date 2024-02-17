@@ -134,25 +134,25 @@ public final class Constants {
   }
 
   public static final class TiltConstants { 
-
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.1;
-    public static final double kI = 0.0;
-    public static final double kD = 0;
+    public static final double kP = 0.010;
+    public static final double kI = 0.020;
+    public static final double kD = 0.00;
     public static final double kFF = 0;
-    public static final double kZone = 10;
-    public static final double kMinOutput = -0.2;
-    public static final double kMaxOutput = 1;
+    public static final double kZone = 5;    
+    public static final double kIDeadband = 0.5;
+    public static final double kMinOutput = -0.01;
+    public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 90.0;
     public static final double homeAngle    = 0;
-    public static final double tiltThresholdDeg = 2.0;
+    public static final double tiltThresholdDeg = 1.0;
 
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
-    public static final int kMotorCurrentLimit = 30; // amps
+    public static final int kMotorCurrentLimit = 40; // amps
 
-    public static final double kEncoderPositionFactor = 1; // degrees
+    public static final double kEncoderPositionFactor = 360; // degrees
   }
 
   public static final class OIConstants {

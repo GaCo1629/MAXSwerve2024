@@ -24,8 +24,8 @@ public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax tiltRight;
     private FLEXShooter shooterTop;
     private FLEXShooter shooterBot;
-    private PIDController tiltControl;
-    private Timer       stateTimer;
+    private GPIDController tiltControl;
+    private Timer       stateTimer = new Timer();
 
     private AbsoluteEncoder tiltEncoder;
 
@@ -41,12 +41,12 @@ public class BatonSubsystem extends SubsystemBase {
     private final SparkAnalogSensor   m_rangeFinder; 
 
     //private PS4Controller driver;
-    //private Joystick copilot_1;
+    private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
         //this.driver = driver;
-        //this.copilot_1 = copilot_1;
+        this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
@@ -58,7 +58,7 @@ public class BatonSubsystem extends SubsystemBase {
         tiltLeft.restoreFactoryDefaults();
         tiltLeft.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltLeft.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
-        tiltRight.burnFlash();
+        tiltLeft.burnFlash();
     
 
         tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
@@ -70,23 +70,28 @@ public class BatonSubsystem extends SubsystemBase {
         tiltEncoder.setPositionConversionFactor(TiltConstants.kEncoderPositionFactor);
         tiltRight.burnFlash();
 
-        tiltControl = new PIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD);    
+        tiltControl = new GPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD);    
         tiltControl.setIZone(TiltConstants.kZone);
+        tiltControl.setIntegralDeadband(TiltConstants.kIDeadband);
         tiltControl.setSetpoint(0);
 
         shooterBot = new FLEXShooter("Bot", BatonConstants.shooterBotID, true);
         shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
 
+        init();
+    }
+
+    public void init(){
         setState(BatonState.IDLE);
         setShooterRPM(0);
         setTiltAngle(0);
-        tiltPower = 0;
     }
+
 
     @Override
     public void periodic() { 
 
-        tiltAngle  = tiltEncoder.getPosition();
+        tiltAngle  = getSafeTiltAngle(); 
         runTiltPID(tiltAngle);
 
         shooterSpeedBot = shooterBot.getRPM();
@@ -155,13 +160,22 @@ public class BatonSubsystem extends SubsystemBase {
     // ===== TILT Commands
 
     public void setTiltAngle(double angle){
-        tiltAngleSetPoint = angle;
+        tiltAngleSetPoint = GaCoUtils.clip(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
     }
     public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setTiltAngle(angle));}
 
     public boolean tiltInPosition() {
-        return (Math.abs(tiltAngleSetPoint - tiltAngle) < TiltConstants.tiltThresholdDeg);
+        boolean inPosition = (Math.abs(tiltAngleSetPoint - tiltAngle) < TiltConstants.tiltThresholdDeg);
+        SmartDashboard.putBoolean("Tilt In position", inPosition);
+        return inPosition;
+    }
+
+    public double getSafeTiltAngle() {
+        double safe = tiltEncoder.getPosition();
+        if (safe > 180) safe = 0;
+
+        return safe;
     }
 
     /**
@@ -173,12 +187,16 @@ public class BatonSubsystem extends SubsystemBase {
         double output = tiltControl.calculate(currentAngle);
 
         // clip output to acceptable range
-        output = Utils.clip(output, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
+        output = GaCoUtils.clip(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
-        // if we are lowering to a zero setpoint, kill power at lower than 5 degrees.
-        if ((output < 0) && (tiltAngleSetPoint == 0) && (currentAngle < 5)) {
+        // if we are lowering to a zero setpoint, kill power at lower than 20 degrees.
+        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 10)) {
             output = 0;
         }
+
+        //output = -copilot_1.getY() / 2;
+
+        SmartDashboard.putNumber("Tilt Out", output);
 
         tiltPower = output;
         tiltLeft.set(-tiltPower);

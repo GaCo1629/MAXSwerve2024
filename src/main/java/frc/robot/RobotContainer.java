@@ -80,13 +80,19 @@ public class RobotContainer {
         .whileTrue(m_baton.fireCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.toggleShooterCmd(3000));
+        .toggleOnTrue(m_baton.toggleShooterCmd(5000));
 
     new JoystickButton(m_copilot_1, Button.kCross.value)
         .onTrue(m_baton.stopIntakeCmd());
 
     new JoystickButton(m_driverController, Button.kTriangle.value)
-        .onTrue(m_baton.setTiltAngleCmd(5));
+        .onTrue(m_baton.setTiltAngleCmd(30));
+
+    new JoystickButton(m_driverController, Button.kCircle.value)
+        .onTrue(m_baton.setTiltAngleCmd(25));
+
+    new JoystickButton(m_driverController, Button.kSquare.value)
+        .onTrue(m_baton.setTiltAngleCmd(10));
 
     new JoystickButton(m_driverController, Button.kCross.value)
         .onTrue(m_baton.setTiltAngleCmd(0));
