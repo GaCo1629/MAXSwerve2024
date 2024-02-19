@@ -85,6 +85,7 @@ public class RobotContainer {
     new JoystickButton(m_copilot_1, Button.kCross.value)
         .onTrue(m_baton.stopIntakeCmd());
 
+    // Some preset tilt angles for testing.    
     new JoystickButton(m_driverController, Button.kTriangle.value)
         .onTrue(m_baton.setTiltAngleCmd(30));
 

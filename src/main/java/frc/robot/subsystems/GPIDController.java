@@ -415,6 +415,13 @@ public class GPIDController implements Sendable, AutoCloseable {
     if (Math.abs(m_positionError) > m_iZone) {
       m_totalError = 0;
     } else if ((m_ki != 0) && (Math.abs(m_positionError) > m_integralDeadband)) {
+      
+      // make sure integrated error is not forcing us down if we are below setpoint.
+      if ((m_positionError > 0) && (m_totalError < 0)) {
+        m_totalError = 0;
+      }
+
+      // Integrate total error
       m_totalError =
           MathUtil.clamp(
               m_totalError + m_positionError * m_period,

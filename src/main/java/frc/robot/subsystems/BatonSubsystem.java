@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -160,7 +161,7 @@ public class BatonSubsystem extends SubsystemBase {
     // ===== TILT Commands
 
     public void setTiltAngle(double angle){
-        tiltAngleSetPoint = GaCoUtils.clip(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
+        tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
     }
     public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setTiltAngle(angle));}
@@ -187,10 +188,10 @@ public class BatonSubsystem extends SubsystemBase {
         double output = tiltControl.calculate(currentAngle);
 
         // clip output to acceptable range
-        output = GaCoUtils.clip(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
+        output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
-        // if we are lowering to a zero setpoint, kill power at lower than 20 degrees.
-        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 10)) {
+        // if we are lowering, and are close to our target, just set power to zero to brake
+        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 5)) {
             output = 0;
         }
 
