@@ -232,6 +232,8 @@ public final class Constants {
 
     public static double stopCollector = 0;
     public static double seeingNote = 0.6;
+    public static double minTargetRange = 1.6;  // meters    
+    public static double maxTargetRange = 5.0;  // meters
   }
 
   public class LiftConstants{

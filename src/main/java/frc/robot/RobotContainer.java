@@ -64,7 +64,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(m_robotDrive.setXCmd());
+        .whileTrue(m_baton.fireCmd());
 
     new JoystickButton(m_driverController, Button.kTouchpad.value)
         .onTrue(m_robotDrive.resetHeadingCmd());
@@ -87,13 +87,13 @@ public class RobotContainer {
 
     // Some preset tilt angles for testing.    
     new JoystickButton(m_driverController, Button.kTriangle.value)
-        .onTrue(m_baton.setTiltAngleCmd(40));
+        .onTrue(m_baton.setTiltAngleCmd(25));
 
     new JoystickButton(m_driverController, Button.kCircle.value)
-        .onTrue(m_baton.setTiltAngleCmd(35));
+        .onTrue(m_baton.setTiltAngleCmd(20));
 
     new JoystickButton(m_driverController, Button.kSquare.value)
-        .onTrue(m_baton.setTiltAngleCmd(10));
+        .onTrue(m_baton.setTiltAngleCmd(15));
 
     new JoystickButton(m_driverController, Button.kCross.value)
         .onTrue(m_baton.setTiltAngleCmd(0));

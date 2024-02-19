@@ -236,6 +236,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Determine how the robot should be rotating.  Manual, Hading lock or target lock
 
     m_targetTracking = driver.getL1Button();
+    
     target = getTarget();
     SmartDashboard.putString("Target", target.toString());
 
@@ -251,6 +252,7 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         rotate += (ySpeed * 0.2);   //  change sign ???        
       }
+
 
       lockCurrentHeading();
     } else {

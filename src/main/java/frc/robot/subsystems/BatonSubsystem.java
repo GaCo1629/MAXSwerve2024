@@ -26,10 +26,10 @@ public class BatonSubsystem extends SubsystemBase {
     private FLEXShooter shooterTop;
     private FLEXShooter shooterBot;
     private GPIDController tiltControl;
-    private Timer       stateTimer = new Timer();
-
     private AbsoluteEncoder tiltEncoder;
-
+    private Timer       stateTimer = new Timer();
+    
+    private boolean targetTrackingActive;
     private double tiltAngleSetPoint;
     private double tiltAngle;
     private double tiltPower;
@@ -41,13 +41,13 @@ public class BatonSubsystem extends SubsystemBase {
 
     private final SparkAnalogSensor   m_rangeFinder; 
 
-    //private PS4Controller driver;
-    private Joystick copilot_1;
+    private PS4Controller driver;
+    //private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        //this.driver = driver;
-        this.copilot_1 = copilot_1;
+        this.driver = driver;
+        //this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
@@ -87,6 +87,7 @@ public class BatonSubsystem extends SubsystemBase {
         setState(BatonState.IDLE);
         setShooterRPM(0);
         setTiltAngle(0);
+        targetTrackingActive = false;
     }
 
 
@@ -94,6 +95,18 @@ public class BatonSubsystem extends SubsystemBase {
     public void periodic() { 
 
         tiltAngle  = getSafeTiltAngle(); 
+        setTargetTracking(driver.getL1Button());  // Enable Target Tracking with Tilt angel
+
+        if (targetTrackingActive) {
+            if  (Globals.visionTarget.valid) {
+                setTiltAngle(rangeToAngle(Globals.visionTarget.range));
+            }
+            setShooterRPM(3500);
+        } else {
+            setTiltAngle(0);
+            setShooterRPM(0);
+        }
+
         runTiltPID(tiltAngle);
 
         shooterSpeedBot = shooterBot.getRPM();
@@ -115,6 +128,17 @@ public class BatonSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Intake Range", m_rangeFinder.getVoltage());
     }
+
+    public  void setTargetTracking(boolean on){
+        targetTrackingActive = on;
+    }
+
+    public double rangeToAngle(double range) {
+        double angle = (-4.65 * range * range) + (38.1 * range) - 38.4;
+        SmartDashboard.putNumber("Intake Trajectory angle", angle);
+        return angle;
+    }
+
 
     /**
      * Baton state machine.  Manages the sequencing of intake, aim and fire.
