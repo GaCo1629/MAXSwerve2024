@@ -80,7 +80,7 @@ public class RobotContainer {
         .whileTrue(m_baton.fireCmd());
 
     new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.toggleShooterCmd(5000));
+        .toggleOnTrue(m_baton.toggleShooterCmd(3500));
 
     new JoystickButton(m_copilot_1, Button.kCross.value)
         .onTrue(m_baton.stopIntakeCmd());
