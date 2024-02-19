@@ -135,13 +135,15 @@ public final class Constants {
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.010;
-    public static final double kI = 0.030;
-    public static final double kD = 0.00;
+    public static final double kP = 0.013;
+    public static final double kI = 0.027;
+    public static final double kD = 0.001;
     public static final double kFF = 0;
-    public static final double kZone = 5;    
+    public static final double kZone = 10;    
+    public static final double kIMin = 0.0;    
+    public static final double kIMax = 0.5;
     public static final double kIDeadband = 0.5;
-    public static final double kMinOutput = -0.01;
+    public static final double kMinOutput = -0.02;
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;

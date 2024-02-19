@@ -416,20 +416,15 @@ public class GPIDController implements Sendable, AutoCloseable {
       m_totalError = 0;
     } else if ((m_ki != 0) && (Math.abs(m_positionError) > m_integralDeadband)) {
       
-      // make sure integrated error is not forcing us down if we are below setpoint.
-      if ((m_positionError > 0) && (m_totalError < 0)) {
-        m_totalError = 0;
-      }
-
       // Integrate total error
       m_totalError =
           MathUtil.clamp(
-              m_totalError + m_positionError * m_period,
+              m_totalError + (m_positionError * m_period),
               m_minimumIntegral / m_ki,
               m_maximumIntegral / m_ki);
     }
 
-    return m_kp * m_positionError + m_ki * m_totalError + m_kd * m_velocityError;
+    return (m_kp * m_positionError) + (m_ki * m_totalError) + (m_kd * m_velocityError);
   }
 
   /** Resets the previous error and the integral term. */

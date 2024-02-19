@@ -74,6 +74,7 @@ public class BatonSubsystem extends SubsystemBase {
         tiltControl = new GPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD);    
         tiltControl.setIZone(TiltConstants.kZone);
         tiltControl.setIntegralDeadband(TiltConstants.kIDeadband);
+        tiltControl.setIntegratorRange(TiltConstants.kIMin,TiltConstants.kIMax);
         tiltControl.setSetpoint(0);
 
         shooterBot = new FLEXShooter("Bot", BatonConstants.shooterBotID, true);
@@ -106,6 +107,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",  tiltAngle);
+        SmartDashboard.putNumber("tilt Power", tiltRight.getOutputCurrent());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
@@ -239,10 +241,10 @@ public class BatonSubsystem extends SubsystemBase {
     public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void fire (){
-        if (shooterUpToSpeed()){
+       // if (shooterUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-        } 
+       // } 
     }
     public Command fireCmd() {return this.runOnce(() -> fire());}
 

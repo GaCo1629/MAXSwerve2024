@@ -87,10 +87,10 @@ public class RobotContainer {
 
     // Some preset tilt angles for testing.    
     new JoystickButton(m_driverController, Button.kTriangle.value)
-        .onTrue(m_baton.setTiltAngleCmd(30));
+        .onTrue(m_baton.setTiltAngleCmd(40));
 
     new JoystickButton(m_driverController, Button.kCircle.value)
-        .onTrue(m_baton.setTiltAngleCmd(25));
+        .onTrue(m_baton.setTiltAngleCmd(35));
 
     new JoystickButton(m_driverController, Button.kSquare.value)
         .onTrue(m_baton.setTiltAngleCmd(10));
