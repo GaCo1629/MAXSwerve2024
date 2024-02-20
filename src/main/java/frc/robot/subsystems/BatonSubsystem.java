@@ -101,7 +101,7 @@ public class BatonSubsystem extends SubsystemBase {
             if  (Globals.visionTarget.valid) {
                 setTiltAngle(rangeToAngle(Globals.visionTarget.range));
             }
-            setShooterRPM(3500);
+            setShooterRPM(4000);
         } else {
             setTiltAngle(0);
             setShooterRPM(0);
@@ -169,8 +169,8 @@ public class BatonSubsystem extends SubsystemBase {
             case WAITING:    
                 if (stateTimer.hasElapsed(0.5)){
                     stopIntake();
-                    stopShooter();
-                    setState(BatonState.WAITING);
+                    // stopShooter();
+                    setState(BatonState.IDLE);
                 }
                  break;
 
