@@ -99,9 +99,9 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (targetTrackingActive) {
             if  (Globals.visionTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.visionTarget.range));
+                setTiltAngle(rangeToAngle(Globals.visionTarget.range) - 1.0); // tweak shooter up 1 deg
             }
-            setShooterRPM(4000);
+            setShooterRPM(3500);
         } else {
             setTiltAngle(0);
             setShooterRPM(0);
@@ -134,7 +134,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToAngle(double range) {
-        double angle = (-4.65 * range * range) + (38.1 * range) - 38.4;
+        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
         SmartDashboard.putNumber("Intake Trajectory angle", angle);
         return angle;
     }

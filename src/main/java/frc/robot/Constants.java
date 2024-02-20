@@ -117,8 +117,30 @@ public final class Constants {
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
-  public static final class ShooterConstants { 
+  public class BatonConstants {
+    
+    public static int shooterTopID = 20;
+    public static int shooterBotID = 21;
+    public static int tiltLeftID = 22;
+    public static int tiltRightID = 23;
+    public static int intakeID = 24;
+    public static double maxShooterRPM = 6500;
+    public static double collect = -0.5;
+    public static double fire = -1;
+    public static double eject = 0.3;
 
+    public static double stopCollector = 0;
+    public static double seeingNote = 0.6;
+    public static double minTargetRange = 1.6;  // meters    
+    public static double maxTargetRange = 5.0;  // meters
+  }
+
+  public class LiftConstants{
+    public static int leftLiftID = 30;
+    public static int rightLiftID = 31;
+  }
+
+  public static final class ShooterConstants { 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kP = 0.0002;
     public static final double kI = 0.000001;
@@ -135,7 +157,7 @@ public final class Constants {
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.013;
+    public static final double kP = 0.012;
     public static final double kI = 0.027;
     public static final double kD = 0.001;
     public static final double kFF = 0;
@@ -143,7 +165,7 @@ public final class Constants {
     public static final double kIMin = 0.0;    
     public static final double kIMax = 0.5;
     public static final double kIDeadband = 0.5;
-    public static final double kMinOutput = -0.02;
+    public static final double kMinOutput = -0.03;
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
@@ -218,26 +240,5 @@ public final class Constants {
     public static double STANDARD_DEVIATION_VISION_ANGLE = 010;
   }
   
-  public class BatonConstants {
-    
-    public static int shooterTopID = 20;
-    public static int shooterBotID = 21;
-    public static int tiltLeftID = 22;
-    public static int tiltRightID = 23;
-    public static int intakeID = 24;
-    public static double maxShooterRPM = 6500;
-    public static double collect = -0.5;
-    public static double fire = -1;
-    public static double eject = 0.3;
 
-    public static double stopCollector = 0;
-    public static double seeingNote = 0.6;
-    public static double minTargetRange = 1.6;  // meters    
-    public static double maxTargetRange = 5.0;  // meters
-  }
-
-  public class LiftConstants{
-    public static int leftLiftID = 30;
-    public static int rightLiftID = 31;
-  }
 }

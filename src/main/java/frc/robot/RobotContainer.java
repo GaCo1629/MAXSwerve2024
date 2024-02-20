@@ -69,6 +69,9 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kTouchpad.value)
         .onTrue(m_robotDrive.resetHeadingCmd());
 
+    new JoystickButton(m_driverController, Button.kCircle.value)
+        .onTrue(m_baton.collectCmd());
+
     new JoystickButton(m_copilot_1, Button.kCircle.value)
         .onTrue(m_baton.collectCmd());
 
