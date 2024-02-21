@@ -4,7 +4,6 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,7 +30,7 @@ public class BatonSubsystem extends SubsystemBase {
     
     private boolean targetTrackingActive;
     private double tiltAngleSetPoint;
-    private double tiltAngle;
+    private double currentTiltAngle;
     private double tiltPower;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
@@ -86,28 +85,26 @@ public class BatonSubsystem extends SubsystemBase {
     public void init(){
         setState(BatonState.IDLE);
         setShooterRPM(0);
-        setTiltAngle(0);
+        setCurrentTiltAngle(0);
         targetTrackingActive = false;
     }
-
 
     @Override
     public void periodic() { 
 
-        tiltAngle  = getSafeTiltAngle(); 
-        setTargetTracking(driver.getL1Button());  // Enable Target Tracking with Tilt angel
+        currentTiltAngle  = getSafeTiltAngle(); 
 
         if (targetTrackingActive) {
-            if  (Globals.visionTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.visionTarget.range) - 1.0); // tweak shooter up 1 deg
+            if  (Globals.apriltagTarget.valid) {
+                setCurrentTiltAngle(rangeToAngle(Globals.apriltagTarget.range) - 1.0); // tweak shooter up 1 deg
+                setShooterRPM(rangeToRPM(Globals.apriltagTarget.range));
             }
-            setShooterRPM(3500);
         } else {
-            setTiltAngle(0);
+            setCurrentTiltAngle(0);
             setShooterRPM(0);
         }
 
-        runTiltPID(tiltAngle);
+        runTiltPID(currentTiltAngle);
 
         shooterSpeedBot = shooterBot.getRPM();
         shooterSpeedTop = shooterTop.getRPM();
@@ -119,7 +116,7 @@ public class BatonSubsystem extends SubsystemBase {
         runStateMachine();
 
         SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
-        SmartDashboard.putNumber("tilt angle",  tiltAngle);
+        SmartDashboard.putNumber("tilt angle",  currentTiltAngle);
         SmartDashboard.putNumber("tilt Power", tiltRight.getOutputCurrent());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
@@ -132,13 +129,18 @@ public class BatonSubsystem extends SubsystemBase {
     public  void setTargetTracking(boolean on){
         targetTrackingActive = on;
     }
+    public Command setTargetTrackingCmd(boolean on) {return this.runOnce(() -> setTargetTracking(on));}
+
 
     public double rangeToAngle(double range) {
         double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
-        SmartDashboard.putNumber("Intake Trajectory angle", angle);
         return angle;
     }
 
+    public double rangeToRPM(double range) {
+        double speed = 3000 + (range * 200);
+        return speed;
+    }
 
     /**
      * Baton state machine.  Manages the sequencing of intake, aim and fire.
@@ -186,14 +188,14 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Commands
 
-    public void setTiltAngle(double angle){
+    public void setCurrentTiltAngle(double angle){
         tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
     }
-    public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setTiltAngle(angle));}
+    public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setCurrentTiltAngle(angle));}
 
     public boolean tiltInPosition() {
-        boolean inPosition = (Math.abs(tiltAngleSetPoint - tiltAngle) < TiltConstants.tiltThresholdDeg);
+        boolean inPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
         SmartDashboard.putBoolean("Tilt In position", inPosition);
         return inPosition;
     }

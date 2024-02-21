@@ -63,6 +63,10 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    new JoystickButton(m_driverController, Button.kL1.value)
+        .onTrue(m_baton.setTargetTrackingCmd(true))
+        .onFalse(m_baton.setTargetTrackingCmd(false));
+
     new JoystickButton(m_driverController, Button.kR1.value)
         .whileTrue(m_baton.fireCmd());
 

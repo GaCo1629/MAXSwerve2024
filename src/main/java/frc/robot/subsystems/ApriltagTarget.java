@@ -1,20 +1,20 @@
 package frc.robot.subsystems;
 
-public class VisionTarget {
+public class ApriltagTarget {
     
     public boolean valid;
     public double range;
     public double bearing;
     public double elevation;
 
-    public VisionTarget(boolean valid, double range, double bearing, double elevation) {
+    public ApriltagTarget(boolean valid, double range, double bearing, double elevation) {
         this.valid = valid;
         this.range = range;
         this.bearing = bearing;
         this.elevation = elevation;
     }
 
-    public VisionTarget() {
+    public ApriltagTarget() {
         this.valid = false;
         this.range = 0;
         this.bearing = 0;

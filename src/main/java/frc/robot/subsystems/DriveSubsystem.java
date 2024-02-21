@@ -222,7 +222,7 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeed;
     double rotate;
     boolean fieldRelative = true;
-    VisionTarget target;
+    ApriltagTarget target;
 
     // Read joystick values
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kAtleeSpeedFactor);
@@ -358,12 +358,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   //  ======================  Vision processing
-  public VisionTarget getTarget() {
+  public ApriltagTarget getTarget() {
     double x,y,z = 0;
     double range = 0;
     double bearing = 0;
     double elevation = 0;
-    VisionTarget aTarget;
+    ApriltagTarget aTarget;
 
     Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
     
@@ -378,11 +378,11 @@ public class DriveSubsystem extends SubsystemBase {
     elevation = Math.atan2(z, range);
 
     if (range > 0.5) {
-      aTarget = new VisionTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
+      aTarget = new ApriltagTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
     }else{
-      aTarget = new VisionTarget();
+      aTarget = new ApriltagTarget();
     }
-    Globals.visionTarget = aTarget;
+    Globals.apriltagTarget = aTarget;
     return aTarget;
   }
 
