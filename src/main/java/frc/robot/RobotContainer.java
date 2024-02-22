@@ -77,7 +77,7 @@ public class RobotContainer {
         .onTrue(m_robotDrive.setNoteTrackingCmd(true))
         .onFalse(m_baton.stopIntakeCmd())
         .onFalse(m_robotDrive.setNoteTrackingCmd(false));
-
+        
     new JoystickButton(m_driverController, Button.kR1.value)
         .whileTrue(m_baton.fireCmd());
 
@@ -91,18 +91,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kCircle.value)
         .onTrue(m_baton.collectCmd());
 
-    // Some preset pilot tilt angles for testing.    
-    new JoystickButton(m_driverController, Button.kTriangle.value)
-        .onTrue(m_baton.setTiltAngleCmd(25));
-
-    new JoystickButton(m_driverController, Button.kCircle.value)
-        .onTrue(m_baton.setTiltAngleCmd(20));
-
-    new JoystickButton(m_driverController, Button.kSquare.value)
-        .onTrue(m_baton.setTiltAngleCmd(15));
-
-    new JoystickButton(m_driverController, Button.kCross.value)
-        .onTrue(m_baton.setTiltAngleCmd(0));
 
     // Co-Pilot Functions
     new JoystickButton(m_copilot_1, Button.kSquare.value)
@@ -111,9 +99,6 @@ public class RobotContainer {
 
     new JoystickButton(m_copilot_1, Button.kTriangle.value)
         .whileTrue(m_baton.fireCmd());
-
-    new JoystickButton(m_copilot_1, Button.kR1.value)
-        .toggleOnTrue(m_baton.toggleShooterCmd());
 
     new JoystickButton(m_copilot_1, Button.kCross.value)
         .onTrue(m_baton.stopIntakeCmd());

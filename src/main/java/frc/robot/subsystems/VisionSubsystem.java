@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -15,9 +16,12 @@ public class VisionSubsystem extends SubsystemBase{
     public void periodic(){
         if (DriverStation.isDisabled()){
             getRobotPoseFromApriltag();
+            SmartDashboard.putString("BotPose", Globals.robotPoseFromApriltag.toString());
         } else {
             getSpeakerTarget();
             getNoteTarget();
+            SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
+            SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
         }
     }
 

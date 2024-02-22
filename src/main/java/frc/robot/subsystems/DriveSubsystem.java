@@ -159,10 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Look for AprilTags on the Speakers to update static position when disabled.
     if (DriverStation.isDisabled() && Globals.robotPoseFromApriltag.valid) {
       Pose2d robotPose = Globals.robotPoseFromApriltag.robotPose;          
-      SmartDashboard.putString("BotPose", robotPose.toString());
       odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
-    } else {
-      SmartDashboard.putString("BotPose", "No Targets");
     }
 
     // Display Estimated Position
@@ -222,11 +219,13 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeed = YLimiter.calculate(ySpeed);
 
     // Determine how the robot should be rotating.  Manual, Heading lock or target lock (peaker or note)
+    
 
-    // Should we be tracking something?
+    // TARGET TRACKING =======================================================
     if (Globals.speakerTrackingEnabled && Globals.speakerTarget.valid) {
-      SmartDashboard.putString("Target", "Speaker: " + Globals.speakerTarget.toString());
-      
+
+      SmartDashboard.putString("Mode", "Speaker")  ;
+
       // Calculate turn power to point to speaker.
       rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
 
@@ -238,13 +237,22 @@ public class DriveSubsystem extends SubsystemBase {
       }
       lockCurrentHeading();
 
-    } else if (Globals.noteTrackingEnabled && Globals.noteTarget.valid) {
-
-      // Calculate turn power to point to note.
-      rotate = trackingController.calculate(Globals.noteTarget.bearing, 0);
-
+    } else if (Globals.noteTrackingEnabled) {
+      SmartDashboard.putString("Mode", "Node")  ;
+      if (Globals.noteTarget.valid){
+        // Calculate turn power to point to note.
+        rotate = trackingController.calculate(Globals.noteTarget.bearing, 0) / 2.0;
+        if (Math.abs(trackingController.getPositionError()) < 10){
+          fieldRelative = false;
+          xSpeed = Globals.noteTarget.range / 4.0;
+        }
+      } else {
+        fieldRelative = false;
+        xSpeed = 0.12;
+      }
       lockCurrentHeading();
     } else {
+
 
       // No target tracking, so determine if heading lock should be engaged
       if (rotate != 0) {
@@ -255,6 +263,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       // if Heading lock is engaged, override the user input with data from PID
       if (headingLocked) {
+        SmartDashboard.putString("Mode", "Auto")  ;
         // PID control.
         rotate = headingLockController.calculate(imu.heading, headingSetpoint);
         if (Math.abs(rotate) < 0.025) {
@@ -262,6 +271,7 @@ public class DriveSubsystem extends SubsystemBase {
         } 
       } else {
         // plain driver control
+        SmartDashboard.putString("Mode", "Manual")  ;
         rotate = rotLimiter.calculate(rotate);
       }
     }
@@ -349,12 +359,12 @@ public class DriveSubsystem extends SubsystemBase {
   //  ======================  Tracking Commands
 
   public  void setSpeakerTracking(boolean on){
-    Globals.speakerTrackingEnabled = on;
+    Globals.setSpeakerTracking(on);
   }
   public Command setSpeakerTrackingCmd(boolean on) {return this.runOnce(() -> setSpeakerTracking(on));}
 
   public  void setNoteTracking(boolean on){
-    Globals.noteTrackingEnabled = on;
+    Globals.setNoteTracking(on);
   }
   public Command setNoteTrackingCmd(boolean on) {return this.runOnce(() -> setNoteTracking(on));}
 

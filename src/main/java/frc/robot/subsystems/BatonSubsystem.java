@@ -99,7 +99,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.speakerTrackingEnabled) {
             if  (Globals.speakerTarget.valid) {
-                setCurrentTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 1.0); // tweak shooter up 1 deg
+                setCurrentTiltAngle(rangeToAngle(Globals.speakerTarget.range) ); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
