@@ -26,7 +26,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final class DriveConstants {
     public static final double kAtleeSpeedFactor     = 0.6;
-    public static final double kAtleeTurnFactor      = 0.5;
+    public static final double kAtleeTurnFactor      = 0.75;
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -35,7 +35,7 @@ public final class Constants {
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 2.0; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26.5);

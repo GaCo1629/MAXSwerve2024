@@ -176,7 +176,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToRPM(double range) {
-        double speed = 3000 + (range * 200);
+        double speed = MathUtil.clamp(3000 + (range * 200), 3000, 3900);
         return speed;
     }
 
@@ -266,9 +266,9 @@ public class BatonSubsystem extends SubsystemBase {
         if (shooterUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-            driver.setRumble(RumbleType.kLeftRumble, 1);
-        }  else {
             driver.setRumble(RumbleType.kLeftRumble, 0);
+        }  else {
+            driver.setRumble(RumbleType.kLeftRumble, 1);
         }
     }
     public Command fireCmd() {return this.runOnce(() -> fire());}

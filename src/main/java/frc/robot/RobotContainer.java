@@ -88,9 +88,8 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kTouchpad.value)
         .onTrue(m_robotDrive.resetHeadingCmd());
 
-    new JoystickButton(m_driverController, Button.kCircle.value)
-        .onTrue(m_baton.collectCmd());
-
+    new JoystickButton(m_driverController, Button.kCross.value)
+        .onTrue(m_baton.stopIntakeCmd());
 
     // Co-Pilot Functions
     new JoystickButton(m_copilot_1, Button.kSquare.value)
@@ -102,8 +101,6 @@ public class RobotContainer {
 
     new JoystickButton(m_copilot_1, Button.kCross.value)
         .onTrue(m_baton.stopIntakeCmd());
-
-        
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
     SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));
