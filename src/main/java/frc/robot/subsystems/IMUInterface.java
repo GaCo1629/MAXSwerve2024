@@ -51,7 +51,7 @@ public class IMUInterface{
 
     public void reset() {
         m_robotIMU.reset();
-        Globals.gyroReset = true;
+        Globals.gyroHasBeenReset = true;
         setFieldOrientation();
         update();
     }

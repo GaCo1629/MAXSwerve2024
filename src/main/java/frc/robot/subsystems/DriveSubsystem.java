@@ -61,21 +61,18 @@ public class DriveSubsystem extends SubsystemBase {
   //private Joystick copilot_1;
   //private Joystick copilot_2;
   
-  private boolean m_headingLocked = false;
-  private boolean m_targetTracking = false;
-   
-  private double  m_headingSetpoint = 0;
+  private boolean headingLocked = false;
+  private double  headingSetpoint = 0;
 
-  private SlewRateLimiter m_XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
-  private SlewRateLimiter m_YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
-  private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
+  private SlewRateLimiter XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+  private SlewRateLimiter YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+  private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 
   private ProfiledPIDController headingLockController;
   private PIDController         trackingController;
   
-
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
-  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
+  SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
     imu.rotation2d,
     new SwerveModulePosition[] {
@@ -137,7 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void init() {
 
-    if (!Globals.gyroReset) {
+    if (!Globals.gyroHasBeenReset) {
       resetHeading();
     }
 
@@ -150,7 +147,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Update the odometry in the periodic block
     imu.update();
-    m_odometry.update(
+    odometry.update(
       imu.rotation2d,
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -163,13 +160,13 @@ public class DriveSubsystem extends SubsystemBase {
     if (DriverStation.isDisabled() && Globals.robotPoseFromApriltag.valid) {
       Pose2d robotPose = Globals.robotPoseFromApriltag.robotPose;          
       SmartDashboard.putString("BotPose", robotPose.toString());
-      m_odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
+      odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
     } else {
       SmartDashboard.putString("BotPose", "No Targets");
     }
 
     // Display Estimated Position
-    SmartDashboard.putString("Estimated Pos", m_odometry.getEstimatedPosition().toString());
+    SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
   }
 
   /**
@@ -178,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getEstimatedPosition();
+    return odometry.getEstimatedPosition();
   }
 
   /**
@@ -187,7 +184,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
+    odometry.resetPosition(
       imu.rotation2d,
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -214,7 +211,6 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeed;
     double rotate;
     boolean fieldRelative = true;
-    SpeakerTarget target;
 
     // Read joystick values
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kAtleeSpeedFactor);
@@ -222,21 +218,17 @@ public class DriveSubsystem extends SubsystemBase {
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband) * DriveConstants.kAtleeTurnFactor);
  
     // smooth out the translation requests
-    xSpeed = m_XLimiter.calculate(xSpeed);
-    ySpeed = m_YLimiter.calculate(ySpeed);
+    xSpeed = XLimiter.calculate(xSpeed);
+    ySpeed = YLimiter.calculate(ySpeed);
 
-    // Determine how the robot should be rotating.  Manual, Hading lock or target lock
+    // Determine how the robot should be rotating.  Manual, Heading lock or target lock (peaker or note)
 
-    m_targetTracking = driver.getL1Button();
-    
-    target = Globals.speakerTarget;
-    SmartDashboard.putString("Target", target.toString());
-
-    // Should ve be tracking the target?
-    if (m_targetTracking && target.valid) {
+    // Should we be tracking something?
+    if (Globals.speakerTrackingEnabled && Globals.speakerTarget.valid) {
+      SmartDashboard.putString("Target", "Speaker: " + Globals.speakerTarget.toString());
       
-      // Calculate static turn power
-      rotate = -trackingController.calculate(target.bearing, 180);
+      // Calculate turn power to point to speaker.
+      rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
 
       // Add additional rotation based on robot's sideways motion 
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
@@ -244,28 +236,33 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         rotate += (ySpeed * 0.2);   //  change sign ???        
       }
+      lockCurrentHeading();
 
+    } else if (Globals.noteTrackingEnabled && Globals.noteTarget.valid) {
+
+      // Calculate turn power to point to note.
+      rotate = trackingController.calculate(Globals.noteTarget.bearing, 0);
 
       lockCurrentHeading();
     } else {
 
       // No target tracking, so determine if heading lock should be engaged
       if (rotate != 0) {
-        m_headingLocked = false;
-      } else if (!m_headingLocked && isNotRotating()) {
+        headingLocked = false;
+      } else if (!headingLocked && isNotRotating()) {
         lockCurrentHeading();
       }
 
       // if Heading lock is engaged, override the user input with data from PID
-      if (m_headingLocked) {
+      if (headingLocked) {
         // PID control.
-        rotate = headingLockController.calculate(imu.heading, m_headingSetpoint);
+        rotate = headingLockController.calculate(imu.heading, headingSetpoint);
         if (Math.abs(rotate) < 0.025) {
           rotate = 0;
         } 
       } else {
         // plain driver control
-        rotate = m_rotLimiter.calculate(rotate);
+        rotate = rotLimiter.calculate(rotate);
       }
     }
 
@@ -345,9 +342,21 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
-    public double squareJoystick(double joystickIn) {
+  public double squareJoystick(double joystickIn) {
     return Math.signum(joystickIn) * joystickIn * joystickIn;
   }
+
+  //  ======================  Tracking Commands
+
+  public  void setSpeakerTracking(boolean on){
+    Globals.speakerTrackingEnabled = on;
+  }
+  public Command setSpeakerTrackingCmd(boolean on) {return this.runOnce(() -> setSpeakerTracking(on));}
+
+  public  void setNoteTracking(boolean on){
+    Globals.noteTrackingEnabled = on;
+  }
+  public Command setNoteTrackingCmd(boolean on) {return this.runOnce(() -> setNoteTracking(on));}
 
   //  ======================  Heading related utilities.
 
@@ -361,9 +370,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   
   public void newHeadingSetpoint(double newSetpoint) {
-    m_headingSetpoint = newSetpoint;
+    headingSetpoint = newSetpoint;
     headingLockController.reset(imu.heading);
-    m_headingLocked = true;
+    headingLocked = true;
   }
 
   public void lockCurrentHeading() {

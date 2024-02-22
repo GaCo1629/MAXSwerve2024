@@ -133,6 +133,7 @@ public final class Constants {
     public static double seeingNote = 0.6;
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
+    public static double baseShooterSpeed = 3000;  // RPM
   }
 
   public class LiftConstants{

@@ -7,6 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +29,6 @@ public class BatonSubsystem extends SubsystemBase {
     private AbsoluteEncoder tiltEncoder;
     private Timer       stateTimer = new Timer();
     
-    private boolean targetTrackingActive;
     private double tiltAngleSetPoint;
     private double currentTiltAngle;
     private double tiltPower;
@@ -40,12 +40,12 @@ public class BatonSubsystem extends SubsystemBase {
 
     private final SparkAnalogSensor   m_rangeFinder; 
 
-    //private PS4Controller driver;
+    private PS4Controller driver;
     //private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        //this.driver = driver;
+        this.driver = driver;
         //this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
@@ -86,15 +86,18 @@ public class BatonSubsystem extends SubsystemBase {
         setState(BatonState.IDLE);
         setShooterRPM(0);
         setCurrentTiltAngle(0);
-        targetTrackingActive = false;
     }
 
     @Override
     public void periodic() { 
 
-        currentTiltAngle  = getSafeTiltAngle(); 
+        // Read baton sensors
+        currentTiltAngle    = getSafeTiltAngle(); 
+        noteSensor          = m_rangeFinder.getVoltage();
+        shooterSpeedBot     = shooterBot.getRPM();
+        shooterSpeedTop     = shooterTop.getRPM();
 
-        if (targetTrackingActive) {
+        if (Globals.speakerTrackingEnabled) {
             if  (Globals.speakerTarget.valid) {
                 setCurrentTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 1.0); // tweak shooter up 1 deg
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
@@ -104,42 +107,18 @@ public class BatonSubsystem extends SubsystemBase {
             setShooterRPM(0);
         }
 
-        runTiltPID(currentTiltAngle);
-
-        shooterSpeedBot = shooterBot.getRPM();
-        shooterSpeedTop = shooterTop.getRPM();
-
-        shooterBot.setRPM(shooterSpeedSetPoint);
-        shooterTop.setRPM(shooterSpeedSetPoint);
-        noteSensor = m_rangeFinder.getVoltage();
-
+        runTiltPID();
         runStateMachine();
 
-        SmartDashboard.putNumber("tilt setpoint", tiltAngleSetPoint);
-        SmartDashboard.putNumber("tilt angle",  currentTiltAngle);
-        SmartDashboard.putNumber("tilt Power", tiltRight.getOutputCurrent());
+        SmartDashboard.putNumber("Intake Range",    m_rangeFinder.getVoltage());
+
+        SmartDashboard.putNumber("tilt setpoint",   tiltAngleSetPoint);
+        SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
+        SmartDashboard.putNumber("tilt Power",      tiltRight.getOutputCurrent());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
-
-        SmartDashboard.putNumber("Intake Range", m_rangeFinder.getVoltage());
-    }
-
-    public  void setTargetTracking(boolean on){
-        targetTrackingActive = on;
-    }
-    public Command setTargetTrackingCmd(boolean on) {return this.runOnce(() -> setTargetTracking(on));}
-
-
-    public double rangeToAngle(double range) {
-        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
-        return angle;
-    }
-
-    public double rangeToRPM(double range) {
-        double speed = 3000 + (range * 200);
-        return speed;
     }
 
     /**
@@ -155,6 +134,7 @@ public class BatonSubsystem extends SubsystemBase {
                 if (noteSensor > BatonConstants.seeingNote){
                     stopIntake();
                     setState(BatonState.HOLDING);
+                    Globals.setNoteTracking(false);
                 }
                 break;
         
@@ -173,6 +153,7 @@ public class BatonSubsystem extends SubsystemBase {
                     stopIntake();
                     // stopShooter();
                     setState(BatonState.IDLE);
+                    Globals.setSpeakerTracking(false);
                 }
                  break;
 
@@ -184,6 +165,19 @@ public class BatonSubsystem extends SubsystemBase {
     public void  setState(BatonState state) {
         currentState = state;
         stateTimer.restart();
+    }
+
+
+    // ===== Conversions
+
+    public double rangeToAngle(double range) {
+        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
+        return angle;
+    }
+
+    public double rangeToRPM(double range) {
+        double speed = 3000 + (range * 200);
+        return speed;
     }
 
     // ===== TILT Commands
@@ -212,8 +206,8 @@ public class BatonSubsystem extends SubsystemBase {
      *  Run the PID and then limit the output power.
      * @param currentAngle
      */
-    public void runTiltPID(double currentAngle) {
-        double output = tiltControl.calculate(currentAngle);
+    public void runTiltPID() {
+        double output = tiltControl.calculate(currentTiltAngle);
 
         // clip output to acceptable range
         output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
@@ -223,13 +217,12 @@ public class BatonSubsystem extends SubsystemBase {
             output = 0;
         }
 
-        //output = -copilot_1.getY() / 2;
-
-        SmartDashboard.putNumber("Tilt Out", output);
-
+        // Send power to motors.  Flip the power for the left side.
         tiltPower = output;
         tiltLeft.set(-tiltPower);
         tiltRight.set(tiltPower);
+
+        SmartDashboard.putNumber("Tilt Out", output);
     }
 
     // ===== SHOOTER Commands  ===============================
@@ -238,17 +231,20 @@ public class BatonSubsystem extends SubsystemBase {
         shooterSpeedSetPoint = speed;
         shooterBot.setRPM(shooterSpeedSetPoint);
         shooterTop.setRPM(shooterSpeedSetPoint);
+        if (speed > 0) {
+            Globals.lastShooterSpeed = shooterSpeedSetPoint;            
+        }
     }
     public Command setShooterRPMCmd(double speed) {return this.runOnce(() -> setShooterRPM(speed));}
     
-    public void toggleShooter(double rpm) {
+    public void toggleShooter() {
         if (shooterSpeedSetPoint > 0) {
             setShooterRPM(0);
         } else {
-            setShooterRPM(rpm); 
+            setShooterRPM(Globals.lastShooterSpeed); 
         }
     }
-    public Command toggleShooterCmd(double speed) {return this.runOnce(() -> toggleShooter(speed));}
+    public Command toggleShooterCmd() {return this.runOnce(() -> toggleShooter());}
 
     public void stopShooter(){
         setShooterRPM(0);
@@ -267,14 +263,18 @@ public class BatonSubsystem extends SubsystemBase {
     public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void fire (){
-       // if (shooterUpToSpeed()){
+        if (shooterUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-       // } 
+            driver.setRumble(RumbleType.kLeftRumble, 1);
+        }  else {
+            driver.setRumble(RumbleType.kLeftRumble, 0);
+        }
     }
     public Command fireCmd() {return this.runOnce(() -> fire());}
 
     public void stopIntake (){
+       driver.setRumble(RumbleType.kLeftRumble, 0);
        intake.set(BatonConstants.stopCollector);
     }
     public Command stopIntakeCmd() {return this.runOnce(() -> stopIntake());}
