@@ -19,6 +19,6 @@ public class NoteTarget {
     }
 
     public String toString() {
-        return String.format("R:B %5.2f %5.1f Deg", range, bearing);
+        return String.format("V R:B %s %5.2f %5.1f Deg", valid, range, bearing);
     }
 }

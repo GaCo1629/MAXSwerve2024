@@ -234,10 +234,9 @@ public final class Constants {
   }
 
   public class VisionConstants {
-    public static double STANDARD_DEVIATION_ODOMETRY = 0.1;
-    public static double STANDARD_DEVIATION_ODOMETRY_ANGLE = 0.01;
-    public static double STANDARD_DEVIATION_VISION2D = 0.9;
-    public static double STANDARD_DEVIATION_VISION_ANGLE = 010;
+    public static double noteCameraAngle  = 60;    // degrees
+    public static double noteCameraHeight = 0.61;  // meters
+    public static double noteRollerOffset = 0.13;  // meters
   }
   
 

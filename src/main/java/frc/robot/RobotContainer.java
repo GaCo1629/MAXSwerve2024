@@ -13,6 +13,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -36,14 +37,14 @@ public class RobotContainer {
   Joystick  m_copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
 
   // The robot's subsystems
-  public final DriveSubsystem m_robotDrive     = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final BatonSubsystem m_baton          = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final LiftSubsystem  m_lift           = new LiftSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final DriveSubsystem  m_robotDrive     = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final BatonSubsystem  m_baton          = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final LiftSubsystem   m_lift           = new LiftSubsystem(m_driverController, m_copilot_1, m_copilot_2);
+  public final VisionSubsystem m_vision         = new VisionSubsystem();
 
   private final SendableChooser<Command> autoChooser;
 
-  
-  /**
+    /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {

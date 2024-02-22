@@ -1,20 +1,20 @@
 package frc.robot.subsystems;
 
-public class ApriltagTarget {
+public class SpeakerTarget {
     
     public boolean valid;
     public double range;
     public double bearing;
     public double elevation;
 
-    public ApriltagTarget(boolean valid, double range, double bearing, double elevation) {
+    public SpeakerTarget(boolean valid, double range, double bearing, double elevation) {
         this.valid = valid;
         this.range = range;
         this.bearing = bearing;
         this.elevation = elevation;
     }
 
-    public ApriltagTarget() {
+    public SpeakerTarget() {
         this.valid = false;
         this.range = 0;
         this.bearing = 0;
@@ -22,6 +22,6 @@ public class ApriltagTarget {
     }
 
     public String toString() {
-        return String.format("R:B:E %5.2f %5.1f Deg, %5.1f Deg", range, bearing, elevation);
+        return String.format("V R:B:E %s %5.2f %5.1f Deg, %5.1f Deg", valid, range, bearing, elevation);
     }
 }

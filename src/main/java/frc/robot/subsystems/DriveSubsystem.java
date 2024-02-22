@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -56,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
     DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final IMUSubsystem imu = new IMUSubsystem();
+  private final IMUInterface imu = new IMUInterface();
   
   private PS4Controller driver;
   //private Joystick copilot_1;
@@ -161,19 +160,12 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     // Look for AprilTags on the Speakers to update static position when disabled.
-    if (DriverStation.isDisabled()) {
-      LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
-      if (llresults.targetingResults.valid) {
-        // We have a target and we're Disabled, so Update Odometry
-        Pose2d robotPosition = llresults.targetingResults.getBotPose2d_wpiBlue();
-
-        if ((robotPosition.getX() != 0) && (robotPosition.getY() != 0)) {
-          SmartDashboard.putString("BotPose", robotPosition.toString());
-          m_odometry.addVisionMeasurement(robotPosition, Timer.getFPGATimestamp());
-         } else {
-          SmartDashboard.putString("BotPose", "No Targets");
-        }
-      }
+    if (DriverStation.isDisabled() && Globals.robotPoseFromApriltag.valid) {
+      Pose2d robotPose = Globals.robotPoseFromApriltag.robotPose;          
+      SmartDashboard.putString("BotPose", robotPose.toString());
+      m_odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
+    } else {
+      SmartDashboard.putString("BotPose", "No Targets");
     }
 
     // Display Estimated Position
@@ -222,7 +214,7 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeed;
     double rotate;
     boolean fieldRelative = true;
-    ApriltagTarget target;
+    SpeakerTarget target;
 
     // Read joystick values
     xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kAtleeSpeedFactor);
@@ -237,7 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_targetTracking = driver.getL1Button();
     
-    target = getTarget();
+    target = Globals.speakerTarget;
     SmartDashboard.putString("Target", target.toString());
 
     // Should ve be tracking the target?
@@ -355,35 +347,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double squareJoystick(double joystickIn) {
     return Math.signum(joystickIn) * joystickIn * joystickIn;
-  }
-
-  //  ======================  Vision processing
-  public ApriltagTarget getTarget() {
-    double x,y,z = 0;
-    double range = 0;
-    double bearing = 0;
-    double elevation = 0;
-    ApriltagTarget aTarget;
-
-    Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
-    
-    x = targetLocation.getX();
-    y = targetLocation.getZ();
-    z = -targetLocation.getY();
-
-    // SmartDashboard.putString("Target Coord", String.format("X:Y:Z %5.2f  %5.2f  %5.2f ", x,y,z));
-
-    range = Math.hypot(x, y);
-    bearing = -Math.atan2(x, y);
-    elevation = Math.atan2(z, range);
-
-    if (range > 0.5) {
-      aTarget = new ApriltagTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
-    }else{
-      aTarget = new ApriltagTarget();
-    }
-    Globals.apriltagTarget = aTarget;
-    return aTarget;
   }
 
   //  ======================  Heading related utilities.

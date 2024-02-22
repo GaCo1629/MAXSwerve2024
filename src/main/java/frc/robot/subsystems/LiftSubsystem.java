@@ -40,7 +40,7 @@ public class LiftSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        robotAngle = Globals.roll;
+        robotAngle = Globals.robotRoll;
 
         if (Globals.enableLIftSubsystem) {
             leftLiftHeight  = leftLift.getEncoder().getPosition();

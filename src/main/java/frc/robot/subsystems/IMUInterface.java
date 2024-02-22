@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IMUSubsystem{
+public class IMUInterface{
 
     public double      heading = 0;
     public double      fCDheading = 0;
@@ -21,7 +21,7 @@ public class IMUSubsystem{
     private double m_gyro2FieldOffset = 0;
     private final AHRS m_robotIMU = new AHRS(SPI.Port.kMXP);
 
-    public IMUSubsystem() {
+    public IMUInterface() {
      
     }
   
@@ -40,8 +40,8 @@ public class IMUSubsystem{
         rotation2d = Rotation2d.fromRadians(heading);
         fCDrotation2d = Rotation2d.fromRadians(fCDheading);
 
-        Globals.pitch = pitch;
-        Globals.roll  = roll;
+        Globals.robotPitch = pitch;
+        Globals.robotRoll  = roll;
 
         SmartDashboard.putNumber("Robot Heading", Math.toDegrees(heading));
         SmartDashboard.putNumber("Robot Pitch", pitch);

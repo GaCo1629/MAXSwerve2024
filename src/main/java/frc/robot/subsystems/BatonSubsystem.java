@@ -40,12 +40,12 @@ public class BatonSubsystem extends SubsystemBase {
 
     private final SparkAnalogSensor   m_rangeFinder; 
 
-    private PS4Controller driver;
+    //private PS4Controller driver;
     //private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        this.driver = driver;
+        //this.driver = driver;
         //this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 
@@ -95,9 +95,9 @@ public class BatonSubsystem extends SubsystemBase {
         currentTiltAngle  = getSafeTiltAngle(); 
 
         if (targetTrackingActive) {
-            if  (Globals.apriltagTarget.valid) {
-                setCurrentTiltAngle(rangeToAngle(Globals.apriltagTarget.range) - 1.0); // tweak shooter up 1 deg
-                setShooterRPM(rangeToRPM(Globals.apriltagTarget.range));
+            if  (Globals.speakerTarget.valid) {
+                setCurrentTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 1.0); // tweak shooter up 1 deg
+                setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
             setCurrentTiltAngle(0);
