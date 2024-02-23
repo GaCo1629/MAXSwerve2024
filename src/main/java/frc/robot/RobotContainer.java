@@ -70,7 +70,8 @@ public class RobotContainer {
 
     // Pilot Functions
     new JoystickButton(m_driverController, Button.kR1.value)    
-        .onTrue(m_baton.collectCmd());
+        .onTrue(m_robotDrive.setTurboModeCmd(true))
+        .onFalse(m_robotDrive.setTurboModeCmd(false));
     
     new JoystickButton(m_driverController, Button.kL1.value)    
         .onTrue(m_baton.collectCmd())

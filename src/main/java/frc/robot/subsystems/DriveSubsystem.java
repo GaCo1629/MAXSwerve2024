@@ -63,6 +63,7 @@ public class DriveSubsystem extends SubsystemBase {
   
   private boolean headingLocked = false;
   private double  headingSetpoint = 0;
+  private double speedFactor = DriveConstants.kAtleeSpeedFactor;
 
   private SlewRateLimiter XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -210,8 +211,8 @@ public class DriveSubsystem extends SubsystemBase {
     boolean fieldRelative = true;
 
     // Read joystick values
-    xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  DriveConstants.kAtleeSpeedFactor);
-    ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband) * DriveConstants.kAtleeSpeedFactor);
+    xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  speedFactor);
+    ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband) * speedFactor);
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband) * DriveConstants.kAtleeTurnFactor);
  
     // smooth out the translation requests
@@ -367,6 +368,15 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setNoteTracking(on);
   }
   public Command setNoteTrackingCmd(boolean on) {return this.runOnce(() -> setNoteTracking(on));}
+
+  public  void setTurboMode(boolean on){
+    if (on){
+      speedFactor = DriveConstants.kAlexSpeedFactor;
+    } else {
+      speedFactor = DriveConstants.kAtleeSpeedFactor;
+    }
+  }
+  public Command setTurboModeCmd(boolean on) {return this.runOnce(() -> setTurboMode(on));}
 
   //  ======================  Heading related utilities.
 

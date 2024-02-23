@@ -27,6 +27,7 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double kAtleeSpeedFactor     = 0.75; //was .6
     public static final double kAtleeTurnFactor      = 0.75;
+    public static final double kAlexSpeedFactor      = 0.85; //turbo mode
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
