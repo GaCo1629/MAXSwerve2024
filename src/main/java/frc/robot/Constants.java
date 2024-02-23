@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double kAtleeSpeedFactor     = 0.6;
+    public static final double kAtleeSpeedFactor     = 0.75; //was .6
     public static final double kAtleeTurnFactor      = 0.75;
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
