@@ -69,19 +69,19 @@ public class RobotContainer {
     // 
 
     // Pilot Functions
-    new JoystickButton(m_driverController, Button.kL1.value)    
+    new JoystickButton(m_driverController, Button.kR1.value)    
         .onTrue(m_baton.collectCmd());
     
-    new JoystickButton(m_driverController, Button.kL2.value)    
+    new JoystickButton(m_driverController, Button.kL1.value)    
         .onTrue(m_baton.collectCmd())
         .onTrue(m_robotDrive.setNoteTrackingCmd(true))
         .onFalse(m_baton.stopIntakeCmd())
         .onFalse(m_robotDrive.setNoteTrackingCmd(false));
         
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, Button.kR2.value)
         .whileTrue(m_baton.fireCmd());
 
-    new JoystickButton(m_driverController, Button.kR2.value)    
+    new JoystickButton(m_driverController, Button.kL2.value)    
         .onTrue(m_robotDrive.setSpeakerTrackingCmd(true))
         .onFalse(m_robotDrive.setSpeakerTrackingCmd(false));
 
