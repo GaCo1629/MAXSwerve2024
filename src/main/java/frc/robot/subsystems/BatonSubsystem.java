@@ -119,6 +119,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+     
     }
 
     /**
@@ -180,13 +181,12 @@ public class BatonSubsystem extends SubsystemBase {
         return speed;
     }
 
-    // ===== TILT Commands
+    // ===== TILT Commands  ===================================
 
     public void setCurrentTiltAngle(double angle){
         tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
     }
-    public Command setTiltAngleCmd(double angle) {return this.runOnce(() -> setCurrentTiltAngle(angle));}
 
     public boolean tiltInPosition() {
         boolean inPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
@@ -200,6 +200,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         return safe;
     }
+
 
     /**
      *  Determine power to send to two tilt motors.
@@ -225,7 +226,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Tilt Out", output);
     }
 
-    // ===== SHOOTER Commands  ===============================
+    // ===== SHOOTER Methods  ===============================
 
     public void setShooterRPM(double speed){
         shooterSpeedSetPoint = speed;
@@ -235,17 +236,7 @@ public class BatonSubsystem extends SubsystemBase {
             Globals.lastShooterSpeed = shooterSpeedSetPoint;            
         }
     }
-    public Command setShooterRPMCmd(double speed) {return this.runOnce(() -> setShooterRPM(speed));}
     
-    public void toggleShooter() {
-        if (shooterSpeedSetPoint > 0) {
-            setShooterRPM(0);
-        } else {
-            setShooterRPM(Globals.lastShooterSpeed); 
-        }
-    }
-    public Command toggleShooterCmd() {return this.runOnce(() -> toggleShooter());}
-
     public void stopShooter(){
         setShooterRPM(0);
     }
@@ -254,13 +245,12 @@ public class BatonSubsystem extends SubsystemBase {
         return (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
     }
 
-    // ===== INTAKE commands ==================
+    // ===== INTAKE Methods ==================
 
     public void collect (){
         intake.set(BatonConstants.collect);
         setState(BatonState.COLLECTING);
     }
-    public Command collectCmd() {return this.runOnce(() -> collect());}
 
     public void fire (){
         if (shooterUpToSpeed()){
@@ -271,18 +261,22 @@ public class BatonSubsystem extends SubsystemBase {
             driver.setRumble(RumbleType.kLeftRumble, 1);
         }
     }
-    public Command fireCmd() {return this.runOnce(() -> fire());}
 
     public void stopIntake (){
        driver.setRumble(RumbleType.kLeftRumble, 0);
        intake.set(BatonConstants.stopCollector);
     }
-    public Command stopIntakeCmd() {return this.runOnce(() -> stopIntake());}
 
     public void eject (){
         intake.set(BatonConstants.eject);
     }
-    public Command ejectCmd() {return this.runOnce(() -> eject());}
 
+    // ============ Public Command Interface  ========================================
+    public Command collectCmd()                     {return runOnce(() -> collect());}
+    public Command ejectCmd()                       {return runOnce(() -> eject());}
+    public Command fireCmd()                        {return runOnce(() -> fire());}
+    public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
+    public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setCurrentTiltAngle(angle));}
+    public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
     
 }

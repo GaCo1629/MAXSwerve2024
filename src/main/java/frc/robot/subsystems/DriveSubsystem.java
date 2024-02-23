@@ -77,10 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
     DriveConstants.kDriveKinematics,
     imu.rotation2d,
     new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
-        m_rearRight.getPosition()
+        m_frontLeft.getPosition(), m_frontRight.getPosition(), m_rearLeft.getPosition(),  m_rearRight.getPosition()
     },
     new Pose2d());
  
@@ -219,12 +216,10 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeed = XLimiter.calculate(xSpeed);
     ySpeed = YLimiter.calculate(ySpeed);
 
-    // Determine how the robot should be rotating.  Manual, Heading lock or target lock (peaker or note)
-    
 
     // TARGET TRACKING =======================================================
     if (Globals.speakerTrackingEnabled && Globals.speakerTarget.valid) {
-
+      //  TRACKING SPEAKER 
       SmartDashboard.putString("Mode", "Speaker")  ;
 
       // Calculate turn power to point to speaker.
@@ -236,26 +231,28 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         rotate += (ySpeed * 0.2);   //  change sign ???        
       }
-      lockCurrentHeading();
+      lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.noteTrackingEnabled) {
+      //  TRACKING NOTE 
       SmartDashboard.putString("Mode", "Node")  ;
+
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearing, 0) / 2.0;
         if (Math.abs(trackingController.getPositionError()) < 10){
           fieldRelative = false;
-          xSpeed = Globals.noteTarget.range / 4.0;
+          xSpeed = Globals.noteTarget.range / 3.0;
         }
       } else {
         fieldRelative = false;
         xSpeed = 0.12;
       }
-      lockCurrentHeading();
+      lockCurrentHeading();  // prepare for return to heading hold
+
     } else {
 
-
-      // No target tracking, so determine if heading lock should be engaged
+      //  NO TRACKING
       if (rotate != 0) {
         headingLocked = false;
       } else if (!headingLocked && isNotRotating()) {
@@ -283,19 +280,25 @@ public class DriveSubsystem extends SubsystemBase {
     double rotDelivered    = rotate * DriveConstants.kMaxAngularSpeed;
 
     // Send required power to swerve drives
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, imu.fCDrotation2d)
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+    driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
 
-    SwerveDriveKinematics.desaturateWheelSpeeds( swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
-  public Command driveCmd() {return this.runOnce(() -> drive());}
 
+  /**
+   * Drives robot based on requested axis movements
+   * Can be field relative or robot relative
+   * 
+   * @param xSpeed  Fwd speed in mps
+   * @param ySpeed  Left speed in mps
+   * @param rot     CCW rotation in RPS
+   * @param fieldRelative false if robot relative
+   */
+  public void driveRobot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    ChassisSpeeds chassisSpeeds = fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, imu.fCDrotation2d)
+            : new ChassisSpeeds(xSpeed, ySpeed, rot);
+    driveRobotRelative(chassisSpeeds);          
+  }
 
   /**
    * Drives robot based on requested robot relative axis movements
@@ -329,7 +332,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
-  public Command setXCmd() {return this.runOnce(() -> setX());}
 
   /**
    * Sets the swerve ModuleStates.
@@ -362,12 +364,10 @@ public class DriveSubsystem extends SubsystemBase {
   public  void setSpeakerTracking(boolean on){
     Globals.setSpeakerTracking(on);
   }
-  public Command setSpeakerTrackingCmd(boolean on) {return this.runOnce(() -> setSpeakerTracking(on));}
 
   public  void setNoteTracking(boolean on){
     Globals.setNoteTracking(on);
   }
-  public Command setNoteTrackingCmd(boolean on) {return this.runOnce(() -> setNoteTracking(on));}
 
   public  void setTurboMode(boolean on){
     if (on){
@@ -376,7 +376,6 @@ public class DriveSubsystem extends SubsystemBase {
       speedFactor = DriveConstants.kAtleeSpeedFactor;
     }
   }
-  public Command setTurboModeCmd(boolean on) {return this.runOnce(() -> setTurboMode(on));}
 
   //  ======================  Heading related utilities.
 
@@ -386,7 +385,6 @@ public class DriveSubsystem extends SubsystemBase {
     resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), imu.rotation2d )); 
     lockCurrentHeading();
   }
-  public Command resetHeadingCmd() {return this.runOnce(() -> resetHeading());}
 
   
   public void newHeadingSetpoint(double newSetpoint) {
@@ -412,5 +410,14 @@ public class DriveSubsystem extends SubsystemBase {
       newHeadingSetpoint(Math.PI);
     }
   }
+
+  // ============ Public Command Interface  ========================================
+  public Command driveCmd()                       {return runOnce(() -> drive());}
+
+  public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
+  public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
+  public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
+  public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
+  public Command setXCmd()                        {return runOnce(() -> setX());}
 
 }

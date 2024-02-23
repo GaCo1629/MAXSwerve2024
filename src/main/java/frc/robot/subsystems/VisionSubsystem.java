@@ -25,7 +25,7 @@ public class VisionSubsystem extends SubsystemBase{
         }
     }
 
-    //  ======================  Vision processing
+    //  ======================  AprilTag 3D Vision processing
     public RobotPoseFromApriltag getRobotPoseFromApriltag() {
 
         if (LimelightHelpers.getTV("")) {
@@ -37,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase{
         return  Globals.robotPoseFromApriltag;
     }
 
-    //  ======================  Vision processing
+    //  ======================  Speaker Tracking Vision processing
     public SpeakerTarget getSpeakerTarget() {
         double x,y,z = 0;
         double range = 0;
@@ -66,7 +66,7 @@ public class VisionSubsystem extends SubsystemBase{
         return aTarget;
     }
 
-    //  ======================  Vision processing
+    //  ======================  Note Tracking Vision processing
     public NoteTarget getNoteTarget() {
         double y = 0;
         double range = 0;
@@ -86,7 +86,5 @@ public class VisionSubsystem extends SubsystemBase{
         Globals.noteTarget = aTarget;
         return aTarget;
     }
-
-
 }
 
