@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5847640884470957,
-        "y": 6.813346239305091
+        "x": 2.6450227445909436,
+        "y": 6.828642020920406
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5513735635547294,
-        "y": 7.000326399702681
+        "x": 3.6116322196985773,
+        "y": 7.015622181317996
       },
       "isLocked": false,
       "linkedName": "AtOne"
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -174.4724598483438,
+    "rotation": 3.907969674736283,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -148.702794774759,
+    "rotation": 31.4768393495839,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -38,7 +38,7 @@ public class BatonSubsystem extends SubsystemBase {
     private double noteSensor;
     private BatonState currentState;
 
-    private final SparkAnalogSensor   m_rangeFinder; 
+    private final SparkAnalogSensor   rangeFinder; 
 
     private PS4Controller driver;
     //private Joystick copilot_1;
@@ -51,7 +51,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
         intake.restoreFactoryDefaults(true);
-        m_rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
+        rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
         intake.burnFlash();
         
         tiltLeft  = new CANSparkMax(BatonConstants.tiltLeftID, MotorType.kBrushless);
@@ -93,7 +93,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
-        noteSensor          = m_rangeFinder.getVoltage();
+        noteSensor          = getNoteSensorValue();
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
 
@@ -110,7 +110,7 @@ public class BatonSubsystem extends SubsystemBase {
         runTiltPID();
         runStateMachine();
 
-        SmartDashboard.putNumber("Intake Range",    m_rangeFinder.getVoltage());
+        SmartDashboard.putNumber("Intake Range",    rangeFinder.getVoltage());
 
         SmartDashboard.putNumber("tilt setpoint",   tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
@@ -143,6 +143,14 @@ public class BatonSubsystem extends SubsystemBase {
                 // Exits by button press.
                 break;
                 
+            case AUTO_SHOOT:
+                // Exits by being on target
+                if (readyToShoot()){
+                   intake.set(BatonConstants.fire);
+                   setState(BatonState.WAITING); 
+                }
+                break;
+                
             case SHOOTING:
                 if (noteSensor < BatonConstants.seeingNote){
                     setState(BatonState.WAITING);
@@ -152,7 +160,7 @@ public class BatonSubsystem extends SubsystemBase {
             case WAITING:    
                 if (stateTimer.hasElapsed(0.5)){
                     stopIntake();
-                    // stopShooter();
+                    stopShooter();
                     setState(BatonState.IDLE);
                     Globals.setSpeakerTracking(false);
                 }
@@ -168,6 +176,13 @@ public class BatonSubsystem extends SubsystemBase {
         stateTimer.restart();
     }
 
+    public BatonState  getState() {
+        return currentState;
+    }
+
+    public boolean readyToShoot() {
+        return tiltInPosition() && shooterUpToSpeed();
+    }
 
     // ===== Conversions
 
@@ -181,7 +196,7 @@ public class BatonSubsystem extends SubsystemBase {
         return speed;
     }
 
-    // ===== TILT Commands  ===================================
+    // ===== TILT Methods  ===================================
 
     public void setCurrentTiltAngle(double angle){
         tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
@@ -246,6 +261,10 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     // ===== INTAKE Methods ==================
+
+    public double getNoteSensorValue(){
+        return rangeFinder.getVoltage();
+    }
 
     public void collect (){
         intake.set(BatonConstants.collect);

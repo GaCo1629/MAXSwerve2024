@@ -134,7 +134,6 @@ public final class Constants {
     public static double seeingNote = 0.6;
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
-    public static double baseShooterSpeed = 3000;  // RPM
   }
 
   public class LiftConstants{
@@ -152,6 +151,7 @@ public final class Constants {
     public static final double kMinOutput = -1;
     public static final double kMaxOutput = 1;
 
+    public static double baseShooterSpeed = 3000;  // RPM
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
     public static final double speedThresholdRPM = 20;
