@@ -11,6 +11,7 @@ public final class Globals{
     public static SpeakerTarget speakerTarget   = new SpeakerTarget();
     public static NoteTarget noteTarget         = new NoteTarget();
     public static RobotPoseFromApriltag robotPoseFromApriltag = new RobotPoseFromApriltag();
+    public static LEDmode ledMode               = LEDmode.ALLIANCE;
 
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;
@@ -30,4 +31,6 @@ public final class Globals{
     public static boolean getSpeakerTracking() {
         return speakerTrackingEnabled;
     }
+
+    
 }

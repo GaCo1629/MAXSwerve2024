@@ -283,6 +283,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void collect (){
         intake.set(BatonConstants.collect);
         setState(BatonState.COLLECTING);
+        Globals.ledMode = LEDmode.COLLECTING;
     }
 
     public void fire (){
@@ -296,9 +297,10 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void stopIntake (){
-       driver.setRumble(RumbleType.kLeftRumble, 0);
-       intake.set(BatonConstants.stopCollector);
-       Globals.setNoteTracking(false);
+        driver.setRumble(RumbleType.kLeftRumble, 0);
+        intake.set(BatonConstants.stopCollector);
+        Globals.setNoteTracking(false);
+        Globals.ledMode = LEDmode.DEFAULT;
     }
 
     public void eject (){

@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDSubsystem extends SubsystemBase {
-  private LEDmode              mode = LEDmode.RAINBOW;
+  private LEDmode              lastMode = LEDmode.ALLIANCE;
   private int                  stripLength;
   private AddressableLED       led;
   private AddressableLEDBuffer ledBuffer;
 
+  
   // members for different modes
   private int patternMarker = 0;
   private int direction = 1;
@@ -31,17 +32,25 @@ public class LEDSubsystem extends SubsystemBase {
     // Set the data
     led.setData(ledBuffer);
     led.start();
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    switch (mode) {
+
+    if (Globals.ledMode != lastMode) {
+      clear();
+      lastMode = Globals.ledMode;
+    }
+
+    switch (Globals.ledMode) {
       case ALLIANCE:
         showAlliance();
         break;
 
       case RAINBOW:
+      case DEFAULT:
         showRainbow();
         break;
     }
@@ -65,8 +74,9 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Set the LED color based on alliance color
     patternMarker += direction; // up or down  
+
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-      ledBuffer.setRGB(patternMarker, 128,0,0);
+      ledBuffer.setRGB(patternMarker, 0,128,0);
     } else {
       ledBuffer.setRGB(patternMarker, 0,0,128);
     }
@@ -91,10 +101,6 @@ public class LEDSubsystem extends SubsystemBase {
   // -----------------------------------------------------------------------------------
     
   //  Utility methods
-  public void setMode(LEDmode mode) {
-    clear();
-    this.mode = mode;
-  }
 
   private void clear(){
     for (var i = 0; i < stripLength; i++) {
