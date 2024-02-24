@@ -100,7 +100,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.speakerTrackingEnabled) {
             if  (Globals.speakerTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 1); 
+                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) + 1.250); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
@@ -150,6 +150,10 @@ public class BatonSubsystem extends SubsystemBase {
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
+                } else if (!noteInIntake() && stateTimer.hasElapsed(2)){
+                    intake.set(BatonConstants.seeingNote);
+                    Globals.setSpeakerTracking(false);
+                    setState(BatonState.IDLE);                     
                 }
                 break;
                 
@@ -185,7 +189,8 @@ public class BatonSubsystem extends SubsystemBase {
     // ===== Conversions
 
     public double rangeToAngle(double range) {
-        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
+        //double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
+        double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
         return angle;
     }
 
@@ -213,7 +218,6 @@ public class BatonSubsystem extends SubsystemBase {
 
         return safe;
     }
-
 
     /**
      *  Determine power to send to two tilt motors.
