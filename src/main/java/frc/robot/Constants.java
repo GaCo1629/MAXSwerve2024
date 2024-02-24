@@ -151,7 +151,8 @@ public final class Constants {
     public static final double kMinOutput = -1;
     public static final double kMaxOutput = 1;
 
-    public static double baseShooterSpeed = 3000;  // RPM
+    public static double baseShooterSpeed = 3300;  // RPM    
+    public static double topShooterSpeed  = 4000;  // RPM
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
     public static final double speedThresholdRPM = 20;

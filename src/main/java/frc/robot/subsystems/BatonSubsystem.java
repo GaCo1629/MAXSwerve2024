@@ -100,7 +100,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.speakerTrackingEnabled) {
             if  (Globals.speakerTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) + 1.250); 
+                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) + 1.5); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
@@ -121,7 +121,6 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
         SmartDashboard.putString("BatonState", currentState.toString());
-     
     }
 
     /**
@@ -189,14 +188,9 @@ public class BatonSubsystem extends SubsystemBase {
     // ===== Conversions
 
     public double rangeToAngle(double range) {
-        //double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
-        double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
+        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
+        //double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
         return angle;
-    }
-
-    public double rangeToRPM(double range) {
-        double speed = MathUtil.clamp(3000 + (range * 200), 3000, 3900);
-        return speed;
     }
 
     // ===== TILT Methods  ===================================
@@ -252,6 +246,13 @@ public class BatonSubsystem extends SubsystemBase {
         if (speed > 0) {
             Globals.lastShooterSpeed = shooterSpeedSetPoint;            
         }
+    }
+
+    public double rangeToRPM(double range) {
+        double speed = MathUtil.clamp(ShooterConstants.baseShooterSpeed + (range * 200), 
+                                      ShooterConstants.baseShooterSpeed, 
+                                      ShooterConstants.topShooterSpeed);
+        return speed;
     }
     
     public void stopShooter(){
