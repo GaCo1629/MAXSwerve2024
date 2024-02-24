@@ -102,7 +102,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.getSpeakerTracking()) {
             if  (Globals.speakerTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) + 1.5); 
+                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
@@ -117,7 +117,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("tilt setpoint",   tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
-        SmartDashboard.putNumber("tilt Power",      tiltRight.getOutputCurrent());
+        SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);

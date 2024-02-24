@@ -59,6 +59,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Collect", new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("CollectorOn",   baton.collectCmd());
     NamedCommands.registerCommand("CollectorOff",  baton.stopIntakeCmd());
+    NamedCommands.registerCommand("RaiseShooter",  robotDrive.setSpeakerTrackingCmd(true));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -80,7 +81,7 @@ public class RobotContainer {
     
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(baton.collectCmd())
-        .onFalse(robotDrive.setNoteTrackingCmd(true))
+        .onTrue(robotDrive.setNoteTrackingCmd(true))
         .onFalse(baton.stopIntakeCmd())
         .onFalse(robotDrive.setNoteTrackingCmd(false));
         

@@ -168,7 +168,7 @@ public final class Constants {
     public static final double kIMin = 0.0;    
     public static final double kIMax = 0.5;
     public static final double kIDeadband = 0.5;
-    public static final double kMinOutput = -0.05;
+    public static final double kMinOutput = -0.1;
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
