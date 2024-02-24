@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Shoot;
+import frc.robot.commands.AutoCollect;
+import frc.robot.commands.AutoShoot;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -54,8 +55,10 @@ public class RobotContainer {
   public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("Shoot", new Shoot(baton));
+    NamedCommands.registerCommand("Shoot", new AutoShoot(baton, robotDrive));
+    NamedCommands.registerCommand("Collect", new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("CollectorOn",   baton.collectCmd());
+    NamedCommands.registerCommand("CollectorOff",  baton.stopIntakeCmd());
     
     // Configure the button bindings
     configureButtonBindings();
@@ -77,7 +80,7 @@ public class RobotContainer {
     
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(baton.collectCmd())
-        .onTrue(robotDrive.setNoteTrackingCmd(true))
+        .onFalse(robotDrive.setNoteTrackingCmd(true))
         .onFalse(baton.stopIntakeCmd())
         .onFalse(robotDrive.setNoteTrackingCmd(false));
         

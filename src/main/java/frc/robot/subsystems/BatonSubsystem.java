@@ -87,6 +87,8 @@ public class BatonSubsystem extends SubsystemBase {
         setShooterRPM(0);
         setTiltAngle(0);
         intake.set(BatonConstants.stopCollector);
+        Globals.setNoteTracking(false);
+        Globals.setSpeakerTracking(false);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class BatonSubsystem extends SubsystemBase {
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
 
-        if (Globals.speakerTrackingEnabled) {
+        if (Globals.getSpeakerTracking()) {
             if  (Globals.speakerTarget.valid) {
                 setTiltAngle(rangeToAngle(Globals.speakerTarget.range) + 1.5); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
@@ -225,7 +227,7 @@ public class BatonSubsystem extends SubsystemBase {
         output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
         // if we are lowering, and are close to our target, just set power to zero to brake
-        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 5)) {
+        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 2)) {
             output = 0;
         }
 
@@ -296,6 +298,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void stopIntake (){
        driver.setRumble(RumbleType.kLeftRumble, 0);
        intake.set(BatonConstants.stopCollector);
+       Globals.setNoteTracking(false);
     }
 
     public void eject (){

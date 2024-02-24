@@ -74,6 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   private ProfiledPIDController headingLockController;
   private PIDController         trackingController;
+
+  private Timer       trackTimer = new Timer();
+  private Rotation2d  lastHeadingOverride;
   
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(
@@ -143,8 +146,12 @@ public class DriveSubsystem extends SubsystemBase {
     if (!Globals.gyroHasBeenReset) {
       resetHeading();
     }
-
     lockCurrentHeading();
+
+    Globals.setNoteTracking(false);
+    Globals.setSpeakerTracking(false);
+    trackTimer.start();
+    lastHeadingOverride = new Rotation2d();
   }
 
 
@@ -226,7 +233,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     // TARGET TRACKING =======================================================
-    if (Globals.speakerTrackingEnabled && Globals.speakerTarget.valid) {
+    if (Globals.getSpeakerTracking() && Globals.speakerTarget.valid) {
       //  TRACKING SPEAKER 
       SmartDashboard.putString("Mode", "Speaker")  ;
 
@@ -241,7 +248,7 @@ public class DriveSubsystem extends SubsystemBase {
       }
       lockCurrentHeading();  // prepare for return to heading hold
 
-    } else if (Globals.noteTrackingEnabled) {
+    } else if (Globals.getNoteTracking()) {
       //  TRACKING NOTE 
       SmartDashboard.putString("Mode", "Node")  ;
 
@@ -369,15 +376,25 @@ public class DriveSubsystem extends SubsystemBase {
 
   //  ======================  Tracking Commands
 
+  // override heading wjile tracking and just a bit longer
   public Optional<Rotation2d> getRotationTargetOverride(){
     // Some condition that should decide if we want to override rotation
-    if(Globals.noteTrackingEnabled && Globals.noteTarget.valid) {
+    if(Globals.getNoteTracking() && Globals.noteTarget.valid) {
         // Return an optional containing the rotation override (this should be a field relative rotation)
-        Rotation2d correctedHeading = Rotation2d.fromDegrees(normalizeHeadingDeg(imu.headingDeg + Globals.noteTarget.bearingDeg)) ;
+        Rotation2d correctedHeading = Rotation2d.fromDegrees(normalizeHeadingDeg(imu.headingDeg - Globals.noteTarget.bearingDeg)) ;
+        lastHeadingOverride = correctedHeading;
+        trackTimer.reset();
         return Optional.of(correctedHeading);
     } else {
         // return an empty optional when we don't want to override the path's rotation
-        return Optional.empty();
+        //  keep last override for short time
+        if (trackTimer.hasElapsed(1.0)) {
+          lastHeadingOverride = new Rotation2d();
+          return Optional.empty();
+        } else {
+          return Optional.of(lastHeadingOverride);
+        }
+
     }
   }
 
