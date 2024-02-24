@@ -25,17 +25,17 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double kAtleeSpeedFactor     = 0.75; //was .6
-    public static final double kAtleeTurnFactor      = 0.75;
-    public static final double kAlexSpeedFactor      = 0.85; //turbo mode
+    public static final double kAtleeSpeedFactor     = 0.6; // Revised down due to new Joystick math
+    public static final double kAtleeTurnFactor      = 0.5; // Revised down due to new Joystick math
+    public static final double kAlexSpeedFactor      = 0.8; // Revised down due to new Joystick math
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed    = 2 * Math.PI; // radians per second
 
-    public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate  = 1.2; // radians per second
+    public static final double kMagnitudeSlewRate  = 2.0; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
 
     // Chassis configuration
@@ -186,7 +186,7 @@ public final class Constants {
     public static final int kCoPilotController1Port= 1;
     public static final int kCoPilotController2Port= 2;
  
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.02;
   }
 
   public static final class AutoConstants {

@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -125,7 +128,12 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
     trackingController.enableContinuousInput(-180, 180);
+
+    // Set the method that will be used to get rotation overrides
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+
   }
+
 
   /**
    * Initialize everything needed when Teleop first starts up.
@@ -208,9 +216,9 @@ public class DriveSubsystem extends SubsystemBase {
     boolean fieldRelative = true;
 
     // Read joystick values
-    xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband) *  speedFactor);
-    ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband) * speedFactor);
-    rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband) * DriveConstants.kAtleeTurnFactor);
+    xSpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftY(), OIConstants.kDriveDeadband)) *  speedFactor;
+    ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband)) *  speedFactor;
+    rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband)) * DriveConstants.kAtleeTurnFactor;
  
     // smooth out the translation requests
     xSpeed = XLimiter.calculate(xSpeed);
@@ -239,7 +247,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearing, 0) / 2.0;
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2.0;
         if (Math.abs(trackingController.getPositionError()) < 10){
           fieldRelative = false;
           xSpeed = Globals.noteTarget.range / 3.0;
@@ -263,7 +271,7 @@ public class DriveSubsystem extends SubsystemBase {
       if (headingLocked) {
         SmartDashboard.putString("Mode", "Auto")  ;
         // PID control.
-        rotate = headingLockController.calculate(imu.heading, headingSetpoint);
+        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
         if (Math.abs(rotate) < 0.025) {
           rotate = 0;
         } 
@@ -361,6 +369,18 @@ public class DriveSubsystem extends SubsystemBase {
 
   //  ======================  Tracking Commands
 
+  public Optional<Rotation2d> getRotationTargetOverride(){
+    // Some condition that should decide if we want to override rotation
+    if(Globals.noteTrackingEnabled && Globals.noteTarget.valid) {
+        // Return an optional containing the rotation override (this should be a field relative rotation)
+        Rotation2d correctedHeading = Rotation2d.fromDegrees(normalizeHeadingDeg(imu.headingDeg + Globals.noteTarget.bearingDeg)) ;
+        return Optional.of(correctedHeading);
+    } else {
+        // return an empty optional when we don't want to override the path's rotation
+        return Optional.empty();
+    }
+  }
+
   public  void setSpeakerTracking(boolean on){
     Globals.setSpeakerTracking(on);
   }
@@ -385,16 +405,21 @@ public class DriveSubsystem extends SubsystemBase {
     resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), imu.rotation2d )); 
     lockCurrentHeading();
   }
-
   
-  public void newHeadingSetpoint(double newSetpoint) {
-    headingSetpoint = newSetpoint;
-    headingLockController.reset(imu.heading);
+  public void newHeadingSetpoint(double newSetpointRad) {
+    headingSetpoint = newSetpointRad;
+    headingLockController.reset(imu.headingRad);
     headingLocked = true;
   }
 
+  private double normalizeHeadingDeg(double headingDeg) {
+    while (headingDeg > 180) {headingDeg -= 360;}
+    while (headingDeg < 180) {headingDeg += 360;}
+    return headingDeg;
+  }
+
   public void lockCurrentHeading() {
-    newHeadingSetpoint(imu.heading);
+    newHeadingSetpoint(imu.headingRad);
   }
 
   public boolean isNotRotating() {
@@ -404,7 +429,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   //------------------------------
     public void squareUp() {
-    if (Math.abs(imu.heading) < Math.PI / 2) {
+    if (Math.abs(imu.headingRad) < Math.PI / 2) {
       newHeadingSetpoint(0);
     } else {
       newHeadingSetpoint(Math.PI);

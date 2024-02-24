@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IMUInterface{
 
-    public double      heading = 0;
-    public double      fCDheading = 0;
+    public double      headingRad = 0;
+    public double      headingDeg = 0;
+    public double      fCDheadingRad = 0;
     public double      pitch = 0;
     public double      roll = 0;
     public double      yawRate = 0;
@@ -29,21 +30,22 @@ public class IMUInterface{
           
         double angle = -m_robotIMU.getAngle();
         
-        heading    = Math.IEEEremainder(Math.toRadians(angle) + m_gyro2FieldOffset, Math.PI * 2);
+        headingRad    = Math.IEEEremainder(Math.toRadians(angle) + m_gyro2FieldOffset, Math.PI * 2);
+        headingDeg    = Math.toDegrees(headingRad);
         // <ust adjust Field Centric driving if starting pointing backwards
         // fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
-        fCDheading = heading;
+        fCDheadingRad = headingRad;
         pitch      = -m_robotIMU.getPitch();
         roll       = -m_robotIMU.getRoll();
         yawRate    = m_robotIMU.getRate();
 
-        rotation2d = Rotation2d.fromRadians(heading);
-        fCDrotation2d = Rotation2d.fromRadians(fCDheading);
+        rotation2d = Rotation2d.fromRadians(headingRad);
+        fCDrotation2d = Rotation2d.fromRadians(fCDheadingRad);
 
         Globals.robotPitch = pitch;
         Globals.robotRoll  = roll;
 
-        SmartDashboard.putNumber("Robot Heading", Math.toDegrees(heading));
+        SmartDashboard.putNumber("Robot Heading", Math.toDegrees(headingRad));
         SmartDashboard.putNumber("Robot Pitch", pitch);
         SmartDashboard.putNumber("Robot roll", roll);
         SmartDashboard.putNumber("Robot rate", Math.toDegrees(yawRate));
