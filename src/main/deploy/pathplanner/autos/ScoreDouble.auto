@@ -5,12 +5,18 @@
       "x": 1.2350374250298048,
       "y": 5.546821904454621
     },
-    "rotation": -178.3634229583831
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
         {
           "type": "path",
           "data": {

@@ -18,7 +18,6 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -54,7 +53,7 @@ public class RobotContainer {
 
         // Register named commands
     NamedCommands.registerCommand("Shoot", new Shoot(m_baton));
-    NamedCommands.registerCommand("Collector On",   m_baton.collectCmd());
+    NamedCommands.registerCommand("CollectorOn",   m_baton.collectCmd());
     
     // Configure the button bindings
     configureButtonBindings();

@@ -85,7 +85,8 @@ public class BatonSubsystem extends SubsystemBase {
     public void init(){
         setState(BatonState.IDLE);
         setShooterRPM(0);
-        setCurrentTiltAngle(0);
+        setTiltAngle(0);
+        intake.set(BatonConstants.stopCollector);
     }
 
     @Override
@@ -99,11 +100,11 @@ public class BatonSubsystem extends SubsystemBase {
 
         if (Globals.speakerTrackingEnabled) {
             if  (Globals.speakerTarget.valid) {
-                setCurrentTiltAngle(rangeToAngle(Globals.speakerTarget.range) ); 
+                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 1); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
-            setCurrentTiltAngle(0);
+            setTiltAngle(0);
             setShooterRPM(0);
         }
 
@@ -119,6 +120,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+        SmartDashboard.putString("BatonState", currentState.toString());
      
     }
 
@@ -132,7 +134,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case COLLECTING:
-                if (noteSensor > BatonConstants.seeingNote){
+                if (noteInIntake()){
                     stopIntake();
                     setState(BatonState.HOLDING);
                     Globals.setNoteTracking(false);
@@ -147,12 +149,12 @@ public class BatonSubsystem extends SubsystemBase {
                 // Exits by being on target
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
-                   setState(BatonState.WAITING); 
+                   setState(BatonState.SHOOTING); 
                 }
                 break;
                 
             case SHOOTING:
-                if (noteSensor < BatonConstants.seeingNote){
+                if (!noteInIntake()){
                     setState(BatonState.WAITING);
                 }
                 break;
@@ -180,10 +182,6 @@ public class BatonSubsystem extends SubsystemBase {
         return currentState;
     }
 
-    public boolean readyToShoot() {
-        return tiltInPosition() && shooterUpToSpeed();
-    }
-
     // ===== Conversions
 
     public double rangeToAngle(double range) {
@@ -198,7 +196,7 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
 
-    public void setCurrentTiltAngle(double angle){
+    public void setTiltAngle(double angle){
         tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
     }
@@ -259,11 +257,20 @@ public class BatonSubsystem extends SubsystemBase {
     public boolean shooterUpToSpeed() {
         return (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
     }
+    
+    public boolean readyToShoot() {
+        return noteInIntake() && tiltInPosition() && shooterUpToSpeed();
+    }
+
 
     // ===== INTAKE Methods ==================
 
     public double getNoteSensorValue(){
         return rangeFinder.getVoltage();
+    }
+
+    public boolean noteInIntake(){
+        return (noteSensor > BatonConstants.seeingNote);
     }
 
     public void collect (){
@@ -291,11 +298,11 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     // ============ Public Command Interface  ========================================
-    public Command collectCmd()                     {return runOnce(() -> collect());}
+    public Command collectCmd()                     {return this.runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
     public Command fireCmd()                        {return runOnce(() -> fire());}
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
-    public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setCurrentTiltAngle(angle));}
+    public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
     public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
     
 }
