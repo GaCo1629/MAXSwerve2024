@@ -20,6 +20,7 @@ public class LEDSubsystem extends SubsystemBase {
   // members for different modes
   private int patternMarker = 0;
   private int direction = 1;
+  private int collectingLEDSpeed = 3;
 
   /** Creates a new LED. */
   public LEDSubsystem(int LEDs, int port) {
@@ -50,8 +51,12 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case RAINBOW:
-      case DEFAULT:
         showRainbow();
+        break;
+
+      case COLLECTING:
+      case DEFAULT:
+        showCollecting();
         break;
     }
 
@@ -99,6 +104,25 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   // -----------------------------------------------------------------------------------
+
+  private void showCollecting(){
+    //Clear the beginning of the light cluster
+    for (int i = 0; i < collectingLEDSpeed; i++){
+      setCorrectRGB((patternMarker + i) % stripLength, 0, 0, 0);
+    }
+    //Wrap around at the end of the strand
+    if (patternMarker >= (stripLength - 1)) {
+      setCorrectRGB(patternMarker, 0, 0, 0);
+      patternMarker = 0; 
+    }
+    //Increment pattern marker and checking bounds
+    patternMarker += collectingLEDSpeed;
+    patternMarker %= stripLength;
+    //Paint light cluster
+    for (int i = 0; i < 15; i++){
+      setCorrectRGB((patternMarker + i)%stripLength, 200, 20, 0);
+    }
+  }
     
   //  Utility methods
 
@@ -107,5 +131,9 @@ public class LEDSubsystem extends SubsystemBase {
       ledBuffer.setRGB(i, 0, 0, 0);
     }    
     led.setData(ledBuffer);
+  }
+
+  private void setCorrectRGB(int index, int red, int green, int blue){
+      ledBuffer.setRGB(index, green, red, blue);
   }
 }
