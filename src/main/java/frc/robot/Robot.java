@@ -56,11 +56,11 @@ public class Robot extends TimedRobot {
   /** This runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.m_robotDrive.resetHeading();
+    m_robotContainer.robotDrive.resetHeading();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.m_robotDrive.init();
-    m_robotContainer.m_baton.init();
+    m_robotContainer.robotDrive.init();
+    m_robotContainer.baton.init();
     
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.m_robotDrive.init();
-    m_robotContainer.m_baton.init();
+    m_robotContainer.robotDrive.init();
+    m_robotContainer.baton.init();
   }
 
   /** This function is called periodically during operator control. */

@@ -14,6 +14,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -34,15 +35,16 @@ public class RobotContainer {
 
 
 // The driver's controller
-  PS4Controller m_driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
-  Joystick  m_copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
-  Joystick  m_copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
+  PS4Controller driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
+  Joystick  copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
+  Joystick  copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
 
   // The robot's subsystems
-  public final DriveSubsystem  m_robotDrive     = new DriveSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final BatonSubsystem  m_baton          = new BatonSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final LiftSubsystem   m_lift           = new LiftSubsystem(m_driverController, m_copilot_1, m_copilot_2);
-  public final VisionSubsystem m_vision         = new VisionSubsystem();
+  public final DriveSubsystem  robotDrive     = new DriveSubsystem(driverController, copilot_1, copilot_2);
+  public final BatonSubsystem  baton          = new BatonSubsystem(driverController, copilot_1, copilot_2);
+  public final LiftSubsystem   lift           = new LiftSubsystem(driverController, copilot_1, copilot_2);
+  public final VisionSubsystem vision         = new VisionSubsystem();
+  public final LEDSubsystem    LEDstrip       = new LEDSubsystem(60, 0);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -52,8 +54,8 @@ public class RobotContainer {
   public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("Shoot", new Shoot(m_baton));
-    NamedCommands.registerCommand("CollectorOn",   m_baton.collectCmd());
+    NamedCommands.registerCommand("Shoot", new Shoot(baton));
+    NamedCommands.registerCommand("CollectorOn",   baton.collectCmd());
     
     // Configure the button bindings
     configureButtonBindings();
@@ -62,46 +64,46 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(m_robotDrive.driveCmd());
+    robotDrive.setDefaultCommand(robotDrive.driveCmd());
 
   }
 
   private void configureButtonBindings() {
 
     // Pilot Functions
-    new JoystickButton(m_driverController, Button.kR1.value)    
-        .onTrue(m_robotDrive.setTurboModeCmd(true))
-        .onFalse(m_robotDrive.setTurboModeCmd(false));
+    new JoystickButton(driverController, Button.kR1.value)    
+        .onTrue(robotDrive.setTurboModeCmd(true))
+        .onFalse(robotDrive.setTurboModeCmd(false));
     
-    new JoystickButton(m_driverController, Button.kL1.value)    
-        .onTrue(m_baton.collectCmd())
-        .onTrue(m_robotDrive.setNoteTrackingCmd(true))
-        .onFalse(m_baton.stopIntakeCmd())
-        .onFalse(m_robotDrive.setNoteTrackingCmd(false));
+    new JoystickButton(driverController, Button.kL1.value)    
+        .onTrue(baton.collectCmd())
+        .onTrue(robotDrive.setNoteTrackingCmd(true))
+        .onFalse(baton.stopIntakeCmd())
+        .onFalse(robotDrive.setNoteTrackingCmd(false));
         
-    new JoystickButton(m_driverController, Button.kR2.value)
-        .whileTrue(m_baton.fireCmd());
+    new JoystickButton(driverController, Button.kR2.value)
+        .whileTrue(baton.fireCmd());
 
-    new JoystickButton(m_driverController, Button.kL2.value)    
-        .onTrue(m_robotDrive.setSpeakerTrackingCmd(true))
-        .onFalse(m_robotDrive.setSpeakerTrackingCmd(false));
+    new JoystickButton(driverController, Button.kL2.value)    
+        .onTrue(robotDrive.setSpeakerTrackingCmd(true))
+        .onFalse(robotDrive.setSpeakerTrackingCmd(false));
 
-    new JoystickButton(m_driverController, Button.kTouchpad.value)
-        .onTrue(m_robotDrive.resetHeadingCmd());
+    new JoystickButton(driverController, Button.kTouchpad.value)
+        .onTrue(robotDrive.resetHeadingCmd());
 
-    new JoystickButton(m_driverController, Button.kCross.value)
-        .onTrue(m_baton.stopIntakeCmd());
+    new JoystickButton(driverController, Button.kCross.value)
+        .onTrue(baton.stopIntakeCmd());
 
     // Co-Pilot Functions
-    new JoystickButton(m_copilot_1, Button.kSquare.value)
-        .onTrue(m_baton.ejectCmd())
-        .onFalse(m_baton.stopIntakeCmd());
+    new JoystickButton(copilot_1, Button.kSquare.value)
+        .onTrue(baton.ejectCmd())
+        .onFalse(baton.stopIntakeCmd());
 
-    new JoystickButton(m_copilot_1, Button.kTriangle.value)
-        .whileTrue(m_baton.fireCmd());
+    new JoystickButton(copilot_1, Button.kTriangle.value)
+        .whileTrue(baton.fireCmd());
 
-    new JoystickButton(m_copilot_1, Button.kCross.value)
-        .onTrue(m_baton.stopIntakeCmd());
+    new JoystickButton(copilot_1, Button.kCross.value)
+        .onTrue(baton.stopIntakeCmd());
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
     SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));
