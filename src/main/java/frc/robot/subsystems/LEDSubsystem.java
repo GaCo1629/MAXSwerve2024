@@ -10,11 +10,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class LEDSubsystem extends SubsystemBase {
   private LEDmode              lastMode = LEDmode.ALLIANCE;
   private int                  stripLength;
-  private AddressableLED       led;
-  private AddressableLEDBuffer ledBuffer;
+  private AddressableLED       ledStrip;
+  private Addressable2815LEDBuffer ledBuffer;
 
   
   // members for different modes
@@ -22,18 +23,17 @@ public class LEDSubsystem extends SubsystemBase {
   private int direction = 1;
   private int collectingLEDSpeed = 3;
 
-  /** Creates a new LED. */
+  /** Creates a new LED Strip. */
   public LEDSubsystem(int LEDs, int port) {
     stripLength = LEDs;
-    led = new AddressableLED(port);
+    ledStrip = new AddressableLED(port);
     
-    ledBuffer = new AddressableLEDBuffer(stripLength);
-    led.setLength(stripLength);
+    ledBuffer = new Addressable2815LEDBuffer(stripLength);
+    ledStrip.setLength(stripLength);
 
     // Set the data
-    led.setData(ledBuffer);
-    led.start();
-    
+    ledStrip.setData(ledBuffer);
+    ledStrip.start();
   }
 
   @Override
@@ -61,29 +61,33 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     // Set the LEDs
-    led.setData(ledBuffer);
+    ledStrip.setData(ledBuffer);
   }
 
   // ===================================================================================
   // Show MODE methods.
   // ===================================================================================
   
+  // -----------------------------------------------------------------------------------
   private void showAlliance() {
-    // turn off the last LED and then move to thenext location.  Bounce at ends
+    // turn off the last LED and then move to the next location.  Bounce at ends
     ledBuffer.setRGB(patternMarker, 0,0,0);
     if (patternMarker == 0) {
       direction = 1;
     } else if (patternMarker == (stripLength - 1)) {
       direction = -1;
     }
-
-    // Set the LED color based on alliance color
     patternMarker += direction; // up or down  
 
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
+    // Set the LED color based on alliance color.  Green if unknown.
+    if (DriverStation.getAlliance().isEmpty()) {
       ledBuffer.setRGB(patternMarker, 0,128,0);
     } else {
-      ledBuffer.setRGB(patternMarker, 0,0,128);
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        ledBuffer.setRGB(patternMarker, 128,0,0);
+      } else {
+        ledBuffer.setRGB(patternMarker, 0,0,128);
+      }
     }
   }
 
@@ -104,36 +108,49 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   // -----------------------------------------------------------------------------------
-
   private void showCollecting(){
     //Clear the beginning of the light cluster
     for (int i = 0; i < collectingLEDSpeed; i++){
-      setCorrectRGB((patternMarker + i) % stripLength, 0, 0, 0);
+      ledBuffer.setRGB((patternMarker + i) % stripLength, 0, 0, 0);
     }
+
     //Wrap around at the end of the strand
     if (patternMarker >= (stripLength - 1)) {
-      setCorrectRGB(patternMarker, 0, 0, 0);
+      ledBuffer.setRGB(patternMarker, 0, 0, 0);
       patternMarker = 0; 
     }
+
     //Increment pattern marker and checking bounds
     patternMarker += collectingLEDSpeed;
     patternMarker %= stripLength;
     //Paint light cluster
     for (int i = 0; i < 15; i++){
-      setCorrectRGB((patternMarker + i)%stripLength, 200, 20, 0);
+      ledBuffer.setRGB((patternMarker + i)%stripLength, 200, 20, 0);
     }
   }
     
+  // ==========================================================================
   //  Utility methods
-
+  // ==========================================================================
+ 
   private void clear(){
     for (var i = 0; i < stripLength; i++) {
       ledBuffer.setRGB(i, 0, 0, 0);
     }    
-    led.setData(ledBuffer);
-  }
-
-  private void setCorrectRGB(int index, int red, int green, int blue){
-      ledBuffer.setRGB(index, green, red, blue);
   }
 }
+
+// ==========================================================================
+// Create a sub-class that flips the red/green LEDs for the 12V 2815 LED strip
+class Addressable2815LEDBuffer extends AddressableLEDBuffer {
+
+  public Addressable2815LEDBuffer (int stripLength) {
+    super(stripLength)  ;
+  }
+
+  @Override
+  public void setRGB(int index, int r, int g, int b) {
+    super.setRGB(index, g, r, b);
+  }
+}
+
