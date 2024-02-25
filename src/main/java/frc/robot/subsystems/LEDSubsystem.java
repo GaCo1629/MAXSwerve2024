@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class LEDSubsystem extends SubsystemBase {
-  private LEDmode              lastMode = LEDmode.ALLIANCE;
-  private int                  stripLength;
-  private AddressableLED       ledStrip;
-  private Addressable2815LEDBuffer ledBuffer;
+  private LEDmode                 lastMode = LEDmode.ALLIANCE;
+  private int                     stripLength;
+  private AddressableLED          ledStrip;
+  private Addressable2815LEDBuffer ledBuffer;  // Use the new class that flips the R&G LEDs
 
   
   // members for different modes
@@ -144,10 +144,13 @@ public class LEDSubsystem extends SubsystemBase {
 // Create a sub-class that flips the red/green LEDs for the 12V 2815 LED strip
 class Addressable2815LEDBuffer extends AddressableLEDBuffer {
 
+  // constructor that calls the base constructor.
   public Addressable2815LEDBuffer (int stripLength) {
     super(stripLength)  ;
   }
 
+  // Override setRGB() so it flips the red and green LEDs.  
+  // Now any base class methods will also get this change
   @Override
   public void setRGB(int index, int r, int g, int b) {
     super.setRGB(index, g, r, b);
