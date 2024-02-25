@@ -46,18 +46,40 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     switch (Globals.ledMode) {
-      case ALLIANCE:
+      case ALLIANCE:    // Display Alliance color
+      case DEFAULT:
         showAlliance();
         break;
 
-      case RAINBOW:
+      case RAINBOW:     // Show a pretty Rainbow
         showRainbow();
         break;
 
-      case COLLECTING:
-      case DEFAULT:
+      case COLLECTING:  // Seeking a Note to collect
         showCollecting();
         break;
+
+      case NOTE_DETECTED:      // Note is visible
+        break;
+
+      case NOTE_COLLECTED:     // Note is in robot
+        break;
+
+      case AIMING:             // Seeling a speaker to score
+        break;
+
+      case SPEAKER_DETECTED:   // Speaker Apriltag has been detected
+        break;
+
+      case SHOOTING:           // In the process of preparing to shoot and waiting to shoot 
+        break;
+
+      case SPEEDOMETER:        // Displaying robot speed on power meter.
+        break;
+
+      case SYSTEM_ERROR:       // Displaying system error code
+        break;
+
     }
 
     // Set the LEDs
