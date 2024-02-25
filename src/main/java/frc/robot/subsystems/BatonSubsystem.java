@@ -43,12 +43,12 @@ public class BatonSubsystem extends SubsystemBase {
 
     private final SparkAnalogSensor   rangeFinder; 
 
-    private PS4Controller driver;
+    //private PS4Controller driver;
     //private Joystick copilot_1;
     //private Joystick copilot_2;
 
     public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
-        this.driver = driver;
+        //this.driver = driver;
         //this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
 

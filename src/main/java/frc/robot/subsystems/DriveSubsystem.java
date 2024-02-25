@@ -24,7 +24,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
@@ -241,11 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
       rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
 
       // Add additional rotation based on robot's sideways motion 
-      if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        rotate += (ySpeed * 0.2);
-      } else {
-        rotate += (ySpeed * 0.2);   //  change sign ???        
-      }
+      rotate += (ySpeed * 0.2);
       lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.getNoteTracking()) {
@@ -254,7 +249,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2.0;
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
         if (Math.abs(trackingController.getPositionError()) < 10){
           fieldRelative = false;
           xSpeed = Globals.noteTarget.range / 3.0;

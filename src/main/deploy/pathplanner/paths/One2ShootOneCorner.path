@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2474001573995137,
-        "y": 6.6041089356646685
+        "x": 2.2153009534240202,
+        "y": 6.765177163574248
       },
       "isLocked": false,
       "linkedName": "AtOne"
     },
     {
       "anchor": {
-        "x": 1.4844248215812361,
-        "y": 5.615860732909115
+        "x": 1.5019743863715769,
+        "y": 6.442640229698513
       },
       "prevControl": {
-        "x": 1.7300020648724754,
-        "y": 6.095321065049152
+        "x": 2.0167616202215792,
+        "y": 6.674684475259688
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ShootOne"
+      "linkedName": "CornerShoot"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -0.637774542644697,
+    "rotation": 29.779149103569857,
     "rotateFast": false
   },
   "reversed": false,

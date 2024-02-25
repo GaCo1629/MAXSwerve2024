@@ -1,20 +1,20 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.2630356689284812,
-      "y": 5.55593454044051
-    },
-    "rotation": 0.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SpeakerToOne"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
           }
         },
         {
@@ -26,13 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "One2Four"
+            "pathName": "3 to 6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Four2Shoot"
+            "pathName": "6 to score"
           }
         },
         {

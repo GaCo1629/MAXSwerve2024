@@ -23,7 +23,6 @@ public class IMUInterface{
     private final AHRS m_robotIMU = new AHRS(SPI.Port.kMXP);
 
     public IMUInterface() {
-     
     }
   
     public void update(){
@@ -34,7 +33,7 @@ public class IMUInterface{
         headingDeg    = Math.toDegrees(headingRad);
         // <ust adjust Field Centric driving if starting pointing backwards
         // fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
-        fCDheadingRad = headingRad;
+        fCDheadingRad = Math.IEEEremainder(headingRad + m_gyro2FieldOffset, Math.PI * 2);
         pitch      = -m_robotIMU.getPitch();
         roll       = -m_robotIMU.getRoll();
         yawRate    = m_robotIMU.getRate();

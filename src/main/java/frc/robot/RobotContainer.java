@@ -104,31 +104,32 @@ public RobotContainer() {
         .onTrue(baton.stopIntakeCmd());
 
     // Co-Pilot Functions
-    new JoystickButton(copilot_1, Button.kSquare.value)
-        .onTrue(baton.ejectCmd())
+    new JoystickButton(copilot_1, Button.kL1.value)    
+        .onTrue(baton.collectCmd())
         .onFalse(baton.stopIntakeCmd());
 
     new JoystickButton(copilot_1, Button.kCross.value)
-        .onTrue(baton.stopIntakeCmd());
+        .onTrue(baton.ejectCmd())
+        .onFalse(baton.stopIntakeCmd());
 
     // Manual shooting controls
-    new JoystickButton(copilot_1, Button.kR2.value)
+    new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(baton.enableManualShootingCmd(true))
         .onFalse(baton.enableManualShootingCmd(false));
 
-    new JoystickButton(copilot_1, Button.kL2.value)
+    new JoystickButton(copilot_1, Button.kR2.value)
         .whileTrue(baton.fireCmd());
 
-    new POVButton(driverController, 0)
+    new POVButton(copilot_1, 0)
         .onTrue(baton.bumpTiltCmd(2));
 
-    new POVButton(driverController, 180)
+    new POVButton(copilot_1, 180)
         .onTrue(baton.bumpTiltCmd(-2));
 
-    new POVButton(driverController, 90)
+    new POVButton(copilot_1, 90)
         .onTrue(baton.bumpShooterCmd(200));
 
-    new POVButton(driverController, 270)
+    new POVButton(copilot_1, 270)
         .onTrue(baton.bumpShooterCmd(-200));
 
 

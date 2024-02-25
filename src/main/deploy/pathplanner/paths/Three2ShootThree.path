@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2057312583093633,
-        "y": 4.3080316791264215
+        "x": 2.3787415324118393,
+        "y": 4.296432342152435
       },
       "isLocked": false,
       "linkedName": "AtThree"
     },
     {
       "anchor": {
-        "x": 1.5770914424711733,
-        "y": 5.537577201280529
+        "x": 2.140180781786066,
+        "y": 4.581769710547967
       },
       "prevControl": {
-        "x": 1.9283901630866325,
-        "y": 5.019873823531431
+        "x": 2.392774517742768,
+        "y": 4.291754680375458
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ShootTwo"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -13.650419134757085,
     "rotateFast": false
   },
   "reversed": false,

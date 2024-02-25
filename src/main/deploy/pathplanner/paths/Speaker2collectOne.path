@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0109117652914654,
-        "y": 5.625610491125971
+        "x": 1.7776619940704268,
+        "y": 5.928936302317049
       },
       "isLocked": false,
       "linkedName": "AtSpeaker"
     },
     {
       "anchor": {
-        "x": 2.3814025775319974,
-        "y": 6.288594049872185
+        "x": 2.1542137671169925,
+        "y": 6.284438597367222
       },
       "prevControl": {
-        "x": 2.026984386508047,
-        "y": 5.766007009448699
+        "x": 1.7987114720668185,
+        "y": 5.8353830667775295
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 52.62419250445181,
+    "rotation": 37.726932870753906,
     "rotateFast": false
   },
   "reversed": false,
