@@ -21,7 +21,6 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -38,24 +37,24 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 public class RobotContainer {
 
 
-// The driver's controller
-  PS4Controller driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
-  Joystick  copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
-  Joystick  copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
+        // The driver's controller
+    PS4Controller driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
+    Joystick  copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
+    Joystick  copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
 
-  // The robot's subsystems
-  public final DriveSubsystem  robotDrive     = new DriveSubsystem(driverController, copilot_1, copilot_2);
-  public final BatonSubsystem  baton          = new BatonSubsystem(driverController, copilot_1, copilot_2);
-  public final LiftSubsystem   lift           = new LiftSubsystem(driverController, copilot_1, copilot_2);
-  public final VisionSubsystem vision         = new VisionSubsystem();
-  public final LEDSubsystem    LEDstrip       = new LEDSubsystem(60, 0);
+    // The robot's subsystems
+    public final DriveSubsystem  robotDrive     = new DriveSubsystem(driverController, copilot_1, copilot_2);
+    public final BatonSubsystem  baton          = new BatonSubsystem(driverController, copilot_1, copilot_2);
+    public final LiftSubsystem   lift           = new LiftSubsystem(driverController, copilot_1, copilot_2);
+    public final VisionSubsystem vision         = new VisionSubsystem();
+    public final LEDSubsystem    LEDstrip       = new LEDSubsystem(60, 0);
 
-  private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
+public RobotContainer() {
 
         // Register named commands
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
