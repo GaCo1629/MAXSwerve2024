@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2156566878454442,
-        "y": 4.484888779753807
+        "x": 2.2057312583093633,
+        "y": 4.3080316791264215
       },
       "isLocked": false,
       "linkedName": "AtThree"
     },
     {
       "anchor": {
-        "x": 1.2630356689284812,
-        "y": 5.55593454044051
+        "x": 1.5770914424711733,
+        "y": 5.537577201280529
       },
       "prevControl": {
-        "x": 1.69891950235207,
-        "y": 5.099123547415742
+        "x": 1.9283901630866325,
+        "y": 5.019873823531431
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AtSpeaker"
+      "linkedName": "ShootTwo"
     }
   ],
   "rotationTargets": [],

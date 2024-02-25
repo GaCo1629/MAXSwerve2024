@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonState;
 import frc.robot.subsystems.BatonSubsystem;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.Globals;
 public class AutoCollect extends Command {
   BatonSubsystem baton;
   DriveSubsystem robotDrive;
+  Timer          collectTimer = new Timer();
 
   /** Creates a new Shoot. */
   public AutoCollect(BatonSubsystem baton, DriveSubsystem robotDrive) {
@@ -27,6 +29,7 @@ public class AutoCollect extends Command {
   public void initialize() {
     Globals.setNoteTracking(true);
     baton.collect();
+    collectTimer.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,13 +42,14 @@ public class AutoCollect extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Globals.setNoteTracking(false);
+    baton.stopIntake();  //  also stops note tracking
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (baton.getState() == BatonState.HOLDING);
+    // wailt till note is picked up, but don't wait too long
+    return ((baton.getState() == BatonState.HOLDING) || (collectTimer.hasElapsed(2)));
   }
 
 }

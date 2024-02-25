@@ -125,6 +125,7 @@ public final class Constants {
     public static int tiltLeftID = 22;
     public static int tiltRightID = 23;
     public static int intakeID = 24;
+    public static double maxTiltAngle  = 30;
     public static double maxShooterRPM = 6500;
     public static double collect = -0.5;
     public static double fire = -1;

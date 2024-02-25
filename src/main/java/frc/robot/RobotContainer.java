@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCollect;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -20,7 +21,9 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -55,11 +58,14 @@ public class RobotContainer {
   public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("Shoot", new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("Collect", new AutoCollect(baton, robotDrive));
-    NamedCommands.registerCommand("CollectorOn",   baton.collectCmd());
-    NamedCommands.registerCommand("CollectorOff",  baton.stopIntakeCmd());
-    NamedCommands.registerCommand("RaiseShooter",  robotDrive.setSpeakerTrackingCmd(true));
+    NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
+    NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
+    NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
+
+    NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
+    NamedCommands.registerCommand("CollectorOff",   baton.stopIntakeCmd());
+    NamedCommands.registerCommand("RaiseShooter",   robotDrive.setSpeakerTrackingCmd(true));
+    NamedCommands.registerCommand("LowerShooter",   robotDrive.setSpeakerTrackingCmd(false));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -103,11 +109,29 @@ public class RobotContainer {
         .onTrue(baton.ejectCmd())
         .onFalse(baton.stopIntakeCmd());
 
-    new JoystickButton(copilot_1, Button.kTriangle.value)
-        .whileTrue(baton.fireCmd());
-
     new JoystickButton(copilot_1, Button.kCross.value)
         .onTrue(baton.stopIntakeCmd());
+
+    // Manual shooting controls
+    new JoystickButton(copilot_1, Button.kR2.value)
+        .onTrue(baton.enableManualShootingCmd(true))
+        .onFalse(baton.enableManualShootingCmd(false));
+
+    new JoystickButton(copilot_1, Button.kL2.value)
+        .whileTrue(baton.fireCmd());
+
+    new POVButton(driverController, 0)
+        .onTrue(baton.bumpTiltCmd(2));
+
+    new POVButton(driverController, 180)
+        .onTrue(baton.bumpTiltCmd(-2));
+
+    new POVButton(driverController, 90)
+        .onTrue(baton.bumpShooterCmd(200));
+
+    new POVButton(driverController, 270)
+        .onTrue(baton.bumpShooterCmd(-200));
+
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
     SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));

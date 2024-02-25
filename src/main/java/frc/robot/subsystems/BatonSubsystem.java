@@ -7,7 +7,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +36,10 @@ public class BatonSubsystem extends SubsystemBase {
     private double shooterSpeedBot;
     private double noteSensor;
     private BatonState currentState;
+
+    private boolean manualShooting;
+    private double manualTiltAngle;
+    private double manualShooterSpeed;
 
     private final SparkAnalogSensor   rangeFinder; 
 
@@ -83,12 +86,17 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void init(){
+        manualTiltAngle    = 10;
+        manualShooterSpeed = 1000;
+        manualShooting = false;
+
         setState(BatonState.IDLE);
         setShooterRPM(0);
         setTiltAngle(0);
         intake.set(BatonConstants.stopCollector);
         Globals.setNoteTracking(false);
         Globals.setSpeakerTracking(false);
+        stateTimer.restart();
     }
 
     @Override
@@ -100,14 +108,20 @@ public class BatonSubsystem extends SubsystemBase {
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
 
+        // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking()) {
             if  (Globals.speakerTarget.valid) {
                 setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
                 setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
             }
         } else {
-            setTiltAngle(0);
-            setShooterRPM(0);
+            if (manualShooting) {
+                setTiltAngle(manualTiltAngle);
+                setShooterRPM(manualShooterSpeed);
+            } else {
+                setTiltAngle(0);
+                setShooterRPM(0);
+            }
         }
 
         runTiltPID();
@@ -122,7 +136,11 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
-        SmartDashboard.putString("BatonState", currentState.toString());
+        SmartDashboard.putString("BatonState",      currentState.toString());
+
+        SmartDashboard.putBoolean("Manual Shooting",manualShooting);
+        SmartDashboard.putNumber("Manual Tilt",     manualTiltAngle);
+        SmartDashboard.putNumber("Manual Speed",    manualShooterSpeed);
     }
 
     /**
@@ -143,16 +161,18 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
         
             case HOLDING:
-                // Exits by button press.
+                // Exits by "fire" button press.
                 break;
                 
             case AUTO_SHOOT:
-                // Exits by being on target
+                // Exits by being on target and firing
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
                 } else if (!noteInIntake() && stateTimer.hasElapsed(2)){
-                    intake.set(BatonConstants.seeingNote);
+                    // we missed the note pickup, so cancel the shoot.
+                    stopIntake();  // just in case
+                    stopShooter();
                     Globals.setSpeakerTracking(false);
                     setState(BatonState.IDLE);                     
                 }
@@ -168,8 +188,8 @@ public class BatonSubsystem extends SubsystemBase {
                 if (stateTimer.hasElapsed(0.5)){
                     stopIntake();
                     stopShooter();
-                    setState(BatonState.IDLE);
                     Globals.setSpeakerTracking(false);
+                    setState(BatonState.IDLE);
                 }
                  break;
 
@@ -290,14 +310,10 @@ public class BatonSubsystem extends SubsystemBase {
         if (shooterUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-            driver.setRumble(RumbleType.kLeftRumble, 0);
-        }  else {
-            driver.setRumble(RumbleType.kLeftRumble, 1);
         }
     }
 
     public void stopIntake (){
-        driver.setRumble(RumbleType.kLeftRumble, 0);
         intake.set(BatonConstants.stopCollector);
         Globals.setNoteTracking(false);
         Globals.ledMode = LEDmode.DEFAULT;
@@ -307,12 +323,31 @@ public class BatonSubsystem extends SubsystemBase {
         intake.set(BatonConstants.eject);
     }
 
+    //  =========  Manual Shooting Commands
+    public void bumpTilt(double bump) {
+        manualTiltAngle += bump;
+        manualTiltAngle = MathUtil.clamp(manualTiltAngle, 0, BatonConstants.maxTiltAngle);
+    }
+
+    public void bumpShooter(double bump) {
+        manualShooterSpeed += bump;
+        manualShooterSpeed = MathUtil.clamp(manualShooterSpeed, 0, BatonConstants.maxShooterRPM);
+    }
+
+    public void enableManualShooting(boolean on){
+        manualShooting = on;
+    }
+
+
     // ============ Public Command Interface  ========================================
-    public Command collectCmd()                     {return this.runOnce(() -> collect());}
+    public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
     public Command fireCmd()                        {return runOnce(() -> fire());}
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
     public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
     public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
     
+    public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
+    public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
+    public Command enableManualShootingCmd(boolean on) {return runOnce(() -> enableManualShooting(on));}
 }
