@@ -10,11 +10,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+
 
 
 public class LEDSubsystem extends SubsystemBase {
+
+  private final int               stripLength = 24;
+  private final int               speedoGrn   = 14;
+  private final int               speedoOrg   = 6;
+
   private LEDmode                 lastMode = LEDmode.ALLIANCE;
-  private int                     stripLength;
   private AddressableLED          ledStrip;
   private Addressable2815LEDBuffer ledBuffer;  // Use the new class that flips the R&G LEDs
   private Timer                   ledTimer = new Timer();
@@ -25,15 +31,14 @@ public class LEDSubsystem extends SubsystemBase {
   private int direction = 1;
   private int collectingLEDSpeed = 2;
   private boolean stripOn = false;
-  
+   
   public static final int RED      = 0;
   public static final int ORANGE   = 5;
   public static final int GREEN   = 60;
   public static final int BLUE   = 120;
 
   /** Creates a new LED Strip. */
-  public LEDSubsystem(int LEDs, int port) {
-    stripLength = LEDs;
+  public LEDSubsystem(int port) {
     ledStrip = new AddressableLED(port);
     
     ledBuffer = new Addressable2815LEDBuffer(stripLength);
@@ -90,6 +95,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SPEEDOMETER:        // Displaying robot speed on power meter.
+        showSpeedo();
         break;
 
       case SYSTEM_ERROR:       // Displaying system error code
@@ -162,6 +168,28 @@ public class LEDSubsystem extends SubsystemBase {
     }
   }
     
+  // -----------------------------------------------------------------------------------
+  private void showSpeedo(){
+    clearStrip();
+
+    // light up based on robot speed.
+    // First band green,
+    // next band orange,
+    // next band red.
+
+    int speedLEDs = (int)(Globals.speed * stripLength);
+
+    //Paint light cluster
+    for (int i = 0; i < stripLength; i++){
+      if (speedLEDs > (speedoGrn + speedoOrg)) {
+        ledBuffer.setHSV( i, RED, 255, 128);
+      } else if (speedLEDs > speedoGrn){
+        ledBuffer.setHSV( i, ORANGE, 255, 128);
+      } else {
+        ledBuffer.setHSV( i, GREEN, 255, 128);
+      }
+    }
+  }
   // ==========================================================================
   //  Utility methods
   // ==========================================================================

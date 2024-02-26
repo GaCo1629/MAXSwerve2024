@@ -47,7 +47,7 @@ public class RobotContainer {
     public final BatonSubsystem  baton          = new BatonSubsystem(driverController, copilot_1, copilot_2);
     public final LiftSubsystem   lift           = new LiftSubsystem(driverController, copilot_1, copilot_2);
     public final VisionSubsystem vision         = new VisionSubsystem();
-    public final LEDSubsystem    LEDstrip       = new LEDSubsystem(25, 0);
+    public final LEDSubsystem    LEDstrip       = new LEDSubsystem(0);
 
     private final SendableChooser<Command> autoChooser;
 

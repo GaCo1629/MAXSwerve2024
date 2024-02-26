@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Globals;
+import frc.robot.subsystems.LEDmode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -47,6 +49,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    Globals.ledMode = LEDmode.ALLIANCE;
   }
 
   @Override
@@ -85,6 +88,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.robotDrive.init();
     m_robotContainer.baton.init();
+    Globals.ledMode = LEDmode.SPEEDOMETER;
   }
 
   /** This function is called periodically during operator control. */
