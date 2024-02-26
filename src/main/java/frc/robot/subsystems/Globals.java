@@ -12,6 +12,7 @@ public final class Globals{
     public static NoteTarget noteTarget         = new NoteTarget();
     public static RobotPoseFromApriltag robotPoseFromApriltag = new RobotPoseFromApriltag();
     public static LEDmode ledMode               = LEDmode.DEFAULT;
+    public static double  speed                 = 0;
 
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;

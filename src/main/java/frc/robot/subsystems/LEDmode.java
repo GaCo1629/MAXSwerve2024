@@ -3,10 +3,10 @@ package frc.robot.subsystems;
 public enum LEDmode {
     ALLIANCE,           // Display Alliance color
     RAINBOW,            // Show a pretty Rainbow
-    COLLECTING,         // Seeking a Note to collect
+    NOTE_COLLECTING,         // Seeking a Note to collect
     NOTE_DETECTED,      // Note is visible
-    NOTE_COLLECTED,     // Note is in robot
-    AIMING,             // Seeling a speaker to score
+    NOTE_HOLDING,       // Note is in robot
+    SEEKING,            // Seeking a speaker to score
     SPEAKER_DETECTED,   // Speaker Apriltag has been detected
     SHOOTING,           // In the process of preparing to shoot and waiting to shoot 
     SPEEDOMETER,        // Displaying robot speed on power meter.

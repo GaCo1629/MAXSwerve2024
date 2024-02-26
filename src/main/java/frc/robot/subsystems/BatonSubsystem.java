@@ -149,6 +149,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void runStateMachine(){
         switch (currentState) {
             case IDLE:
+                Globals.ledMode = LEDmode.SPEEDOMETER;
                 // Exits by button press.
                 break;
 
@@ -161,6 +162,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
         
             case HOLDING:
+                Globals.ledMode = LEDmode.NOTE_HOLDING;
                 // Exits by "fire" button press.
                 break;
                 
@@ -179,6 +181,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
                 
             case SHOOTING:
+                Globals.ledMode = LEDmode.SHOOTING;
                 if (!noteInIntake()){
                     setState(BatonState.WAITING);
                 }
@@ -303,7 +306,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void collect (){
         intake.set(BatonConstants.collect);
         setState(BatonState.COLLECTING);
-        Globals.ledMode = LEDmode.COLLECTING;
+        Globals.ledMode = LEDmode.NOTE_COLLECTING;
     }
 
     public void fire (){

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -16,12 +17,19 @@ public class LEDSubsystem extends SubsystemBase {
   private int                     stripLength;
   private AddressableLED          ledStrip;
   private Addressable2815LEDBuffer ledBuffer;  // Use the new class that flips the R&G LEDs
+  private Timer                   ledTimer = new Timer();
 
   
   // members for different modes
   private int patternMarker = 0;
   private int direction = 1;
-  private int collectingLEDSpeed = 3;
+  private int collectingLEDSpeed = 2;
+  private boolean stripOn = false;
+  
+  public static final int RED      = 0;
+  public static final int ORANGE   = 5;
+  public static final int GREEN   = 60;
+  public static final int BLUE   = 120;
 
   /** Creates a new LED Strip. */
   public LEDSubsystem(int LEDs, int port) {
@@ -41,7 +49,9 @@ public class LEDSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (Globals.ledMode != lastMode) {
-      clear();
+      clearStrip();
+      ledTimer.restart();
+      stripOn = false;
       lastMode = Globals.ledMode;
     }
 
@@ -55,29 +65,35 @@ public class LEDSubsystem extends SubsystemBase {
         showRainbow();
         break;
 
-      case COLLECTING:  // Seeking a Note to collect
+      case NOTE_COLLECTING:  // Seeking a Note to collect
         showCollecting();
         break;
 
       case NOTE_DETECTED:      // Note is visible
+        flashStrip(ORANGE, 0.1, 0.1);
         break;
 
-      case NOTE_COLLECTED:     // Note is in robot
+      case NOTE_HOLDING:       // Note is in robot
+        flashStrip(ORANGE, 0.25, 0.0);
         break;
 
-      case AIMING:             // Seeling a speaker to score
+      case SEEKING:             // Seeling a speaker to score
+        flashStrip(GREEN, 0.3, 0.3);
         break;
 
       case SPEAKER_DETECTED:   // Speaker Apriltag has been detected
+        flashStrip(GREEN, 0.25, 0.0);
         break;
 
       case SHOOTING:           // In the process of preparing to shoot and waiting to shoot 
+        flashStrip(GREEN, 0.1, 0.1);
         break;
 
       case SPEEDOMETER:        // Displaying robot speed on power meter.
         break;
 
       case SYSTEM_ERROR:       // Displaying system error code
+        flashStrip(RED, 0.1, 0.1);
         break;
 
     }
@@ -106,35 +122,30 @@ public class LEDSubsystem extends SubsystemBase {
       ledBuffer.setRGB(patternMarker, 0,128,0);
     } else {
       if (DriverStation.getAlliance().get() == Alliance.Red) {
-        ledBuffer.setRGB(patternMarker, 128,0,0);
+        ledBuffer.setRGB(patternMarker, 255,0,0);
       } else {
-        ledBuffer.setRGB(patternMarker, 0,0,128);
+        ledBuffer.setRGB(patternMarker, 0,0,255);
       }
     }
   }
 
   // -----------------------------------------------------------------------------------
   private void showRainbow() {
-    // For every pixel
-    for (var i = 0; i < stripLength; i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (patternMarker + (i * 180 / stripLength)) % 180;
-      // Set the value
+    // Fill the strip with a full color wheel of hues
+    for (int i = 0; i < stripLength; i++) {
+      int hue = (patternMarker + (i * 180 / stripLength)) % 180;
       ledBuffer.setHSV(i, hue, 255, 128);
     }
+    
     // Increase by to make the rainbow "move"
-    patternMarker += 3;
+    // patternMarker += 3;
     // Check bounds
     patternMarker %= 180;
   }
 
   // -----------------------------------------------------------------------------------
   private void showCollecting(){
-    //Clear the beginning of the light cluster
-    for (int i = 0; i < collectingLEDSpeed; i++){
-      ledBuffer.setRGB((patternMarker + i) % stripLength, 0, 0, 0);
-    }
+    clearStrip();
 
     //Wrap around at the end of the strand
     if (patternMarker >= (stripLength - 1)) {
@@ -143,19 +154,37 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     //Increment pattern marker and checking bounds
-    patternMarker += collectingLEDSpeed;
-    patternMarker %= stripLength;
+    patternMarker = (patternMarker + collectingLEDSpeed) % stripLength;
+
     //Paint light cluster
-    for (int i = 0; i < 15; i++){
-      ledBuffer.setRGB((patternMarker + i)%stripLength, 200, 20, 0);
+    for (int i = 0; i < 6; i++){
+      ledBuffer.setRGB((patternMarker + i) % stripLength, 200, 20, 0);
     }
   }
     
   // ==========================================================================
   //  Utility methods
   // ==========================================================================
- 
-  private void clear(){
+
+  private void flashStrip(int hue, double onTime, double offTime){
+    if (stripOn && ledTimer.hasElapsed(onTime)) {
+      clearStrip();
+      ledTimer.restart();
+      stripOn = false;
+    } else if (!stripOn && ledTimer.hasElapsed(offTime)){
+      setStrip(hue);
+      ledTimer.restart();
+      stripOn = true;
+    }
+  }
+
+  private void setStrip(int hue){
+    for (var i = 0; i < stripLength; i++) {
+      ledBuffer.setHSV(i, hue, 255, 128);
+    }    
+  }
+
+  private void clearStrip(){
     for (var i = 0; i < stripLength; i++) {
       ledBuffer.setRGB(i, 0, 0, 0);
     }    

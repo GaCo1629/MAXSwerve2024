@@ -232,22 +232,30 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     // TARGET TRACKING =======================================================
-    if (Globals.getSpeakerTracking() && Globals.speakerTarget.valid) {
-      //  TRACKING SPEAKER 
+    if (Globals.getSpeakerTracking()) {
       SmartDashboard.putString("Mode", "Speaker")  ;
 
-      // Calculate turn power to point to speaker.
-      rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+      if (Globals.speakerTarget.valid) {
+        //  TRACKING SPEAKER 
+        Globals.ledMode = LEDmode.SPEAKER_DETECTED;
 
-      // Add additional rotation based on robot's sideways motion 
-      rotate += (ySpeed * 0.2);
-      lockCurrentHeading();  // prepare for return to heading hold
+        // Calculate turn power to point to speaker.
+        rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+
+        // Add additional rotation based on robot's sideways motion 
+        rotate += (ySpeed * 0.2);
+        lockCurrentHeading();  // prepare for return to heading hold
+      } else {
+        Globals.ledMode = LEDmode.SEEKING;
+      }
 
     } else if (Globals.getNoteTracking()) {
       //  TRACKING NOTE 
       SmartDashboard.putString("Mode", "Node")  ;
 
       if (Globals.noteTarget.valid){
+        Globals.ledMode = LEDmode.NOTE_DETECTED;
+
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
         if (Math.abs(trackingController.getPositionError()) < 10){
@@ -255,13 +263,13 @@ public class DriveSubsystem extends SubsystemBase {
           xSpeed = Globals.noteTarget.range / 3.0;
         }
       } else {
+        Globals.ledMode = LEDmode.NOTE_COLLECTING;
         fieldRelative = false;
         xSpeed = 0.12;
       }
       lockCurrentHeading();  // prepare for return to heading hold
 
     } else {
-
       //  NO TRACKING
       if (rotate != 0) {
         headingLocked = false;
