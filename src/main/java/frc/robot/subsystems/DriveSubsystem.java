@@ -151,6 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setSpeakerTracking(false);
     trackTimer.start();
     lastHeadingOverride = new Rotation2d();
+    Globals.setLEDMode(LEDmode.SPEEDOMETER);
   }
 
 
@@ -174,6 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
       odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
     }
 
+   
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
   }
@@ -237,7 +239,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       if (Globals.speakerTarget.valid) {
         //  TRACKING SPEAKER 
-        Globals.ledMode = LEDmode.SPEAKER_DETECTED;
+        Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
         // Calculate turn power to point to speaker.
         rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
@@ -246,7 +248,7 @@ public class DriveSubsystem extends SubsystemBase {
         rotate += (ySpeed * 0.2);
         lockCurrentHeading();  // prepare for return to heading hold
       } else {
-        Globals.ledMode = LEDmode.SEEKING;
+        Globals.setLEDMode(LEDmode.SEEKING);
       }
 
     } else if (Globals.getNoteTracking()) {
@@ -321,6 +323,10 @@ public class DriveSubsystem extends SubsystemBase {
    * @param chassisSpeeds
    */
   public void  driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+
+    // Save overall speed for LEDs
+    Globals.speed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds( swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

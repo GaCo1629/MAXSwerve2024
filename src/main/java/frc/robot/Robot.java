@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Globals.ledMode = LEDmode.ALLIANCE;
   }
 
   @Override
@@ -88,7 +87,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.robotDrive.init();
     m_robotContainer.baton.init();
-    Globals.ledMode = LEDmode.SPEEDOMETER;
+    Globals.setLEDMode(LEDmode.SPEEDOMETER);
   }
 
   /** This function is called periodically during operator control. */

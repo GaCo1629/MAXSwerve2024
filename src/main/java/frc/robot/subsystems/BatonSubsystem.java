@@ -4,6 +4,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
@@ -118,7 +119,7 @@ public class BatonSubsystem extends SubsystemBase {
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
             setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
             setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
-        } else if(Globals.amplifingEnabled){
+        } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
         } else {
             if (manualShooting) {
@@ -158,7 +159,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void runStateMachine(){
         switch (currentState) {
             case IDLE:
-                Globals.ledMode = LEDmode.SPEEDOMETER;
+                Globals.setLEDMode(LEDmode.SPEEDOMETER);
                 // Exits by button press.
                 break;
 
@@ -167,11 +168,21 @@ public class BatonSubsystem extends SubsystemBase {
                     stopIntake();
                     setState(BatonState.HOLDING);
                     Globals.setNoteTracking(false);
+                } else {
+                    if (Globals.noteTarget.valid) {
+                        Globals.setLEDMode(LEDmode.NOTE_DETECTED);
+                    } else {
+                        Globals.setLEDMode(LEDmode.NOTE_COLLECTING);                        
+                    }
                 }
                 break;
         
             case HOLDING:
-                Globals.ledMode = LEDmode.NOTE_HOLDING;
+                if (Globals.speakerTarget.valid){
+                    Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
+                } else {
+                     Globals.setLEDMode(LEDmode.NOTE_HOLDING);
+                }
                 // Exits by "fire" button press.
                 break;
                 
@@ -190,14 +201,14 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
                 
             case SHOOTING:
-                Globals.ledMode = LEDmode.SHOOTING;
+                Globals.setLEDMode(LEDmode.SHOOTING);
                 if (!noteInIntake()){
                     setState(BatonState.SHOOTING_WAIT);
                 }
                 break;
 
             case SHOOTING_WAIT:    
-                if (stateTimer.hasElapsed(0.5)){
+                if (stateTimer.hasElapsed(0.25)){
                     stopIntake();
                     stopShooter();
                     Globals.setSpeakerTracking(false);
@@ -229,7 +240,7 @@ public class BatonSubsystem extends SubsystemBase {
             case AMP_WAIT:
                 if (stateTimer.hasElapsed(0.5)){
                     setTiltAngle(TiltConstants.homeAngle);
-                    Globals.amplifingEnabled = false;
+                    Globals.setAmplifying(false);
                     setState(BatonState.IDLE);
                 }
                 break;
@@ -291,6 +302,10 @@ public class BatonSubsystem extends SubsystemBase {
         // clip output to acceptable range
         output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
+        // if we are in auto, then make sure we get to the ground quickly
+        if (DriverStation.isAutonomousEnabled() && (tiltAngleSetPoint == 0) && (currentTiltAngle > 3)) {
+            output = -0.2;
+        } else 
         // if we are lowering, and are close to our target, just set power to zero to brake
         if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 2)) {
             output = 0;
@@ -351,7 +366,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void collect (){
         intake.set(BatonConstants.collect);
         setState(BatonState.COLLECTING);
-        Globals.ledMode = LEDmode.NOTE_COLLECTING;
+        Globals.setLEDMode(LEDmode.NOTE_COLLECTING);
     }
 
     public void fire (){
@@ -365,7 +380,7 @@ public class BatonSubsystem extends SubsystemBase {
 
     public void amplify (){
         if (currentState == BatonState.HOLDING){
-            Globals.amplifingEnabled = true;
+            Globals.setAmplifying(true);
             setTiltAngle(TiltConstants.ampLowAngle);
             setState(BatonState.TILTING);
         }

@@ -11,10 +11,10 @@ public final class Globals{
     public static SpeakerTarget speakerTarget   = new SpeakerTarget();
     public static NoteTarget noteTarget         = new NoteTarget();
     public static RobotPoseFromApriltag robotPoseFromApriltag = new RobotPoseFromApriltag();
-    public static LEDmode ledMode               = LEDmode.ALLIANCE;
     public static double  speed                 = 0;
     
-    public static boolean amplifingEnabled       = false;
+    private static boolean amplifyingEnabled     = false;
+    private static LEDmode ledMode               = LEDmode.ALLIANCE;
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;
 
@@ -34,5 +34,20 @@ public final class Globals{
         return speakerTrackingEnabled;
     }
 
+    public static void setAmplifying(boolean on) {
+        amplifyingEnabled = on;
+    }
+
+    public static boolean getAmplifying() {
+        return amplifyingEnabled;
+    }
+
+    public static void setLEDMode(LEDmode mode) {
+        ledMode = mode;
+    }
+
+    public static LEDmode getLEDMode() {
+        return ledMode;
+    }
 
 }

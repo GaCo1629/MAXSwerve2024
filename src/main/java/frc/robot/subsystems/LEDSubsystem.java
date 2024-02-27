@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 
 
 public class LEDSubsystem extends SubsystemBase {
@@ -19,7 +21,7 @@ public class LEDSubsystem extends SubsystemBase {
   private final int               speedoGrn   = 14;
   private final int               speedoOrg   = 6;
 
-  private LEDmode                 lastMode = LEDmode.ALLIANCE;
+  private LEDmode                 lastMode = LEDmode.NONE;
   private AddressableLED          ledStrip;
   private Addressable2815LEDBuffer ledBuffer;  // Use the new class that flips the R&G LEDs
   private Timer                   ledTimer = new Timer();
@@ -52,16 +54,24 @@ public class LEDSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putString("LED Mode", Globals.ledMode.toString());
+    if (DriverStation.isDisabled()) {
+      Globals.setLEDMode(LEDmode.ALLIANCE);
+    }
 
-    if (Globals.ledMode != lastMode) {
+    SmartDashboard.putString("LED Mode", Globals.getLEDMode().toString());
+
+    if (Globals.getLEDMode() != lastMode) {
       clearStrip();
       ledTimer.restart();
       stripOn = false;
-      lastMode = Globals.ledMode;
+      lastMode = Globals.getLEDMode();
     }
 
-    switch (Globals.ledMode) {
+    switch (Globals.getLEDMode()) {
+      case NONE:
+        clearStrip();
+        break;
+
       case ALLIANCE:    // Display Alliance color
         showAlliance();
         break;
@@ -75,7 +85,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case NOTE_DETECTED:      // Note is visible
-        flashStrip(ORANGE, 0.1, 0.1);
+        flashStrip(ORANGE, 0.05, 0.05);
         break;
 
       case NOTE_HOLDING:       // Note is in robot
@@ -178,7 +188,8 @@ public class LEDSubsystem extends SubsystemBase {
     // next band orange,
     // next band red.
 
-    int speedLEDs = (int)(Globals.speed * stripLength);
+    int speedLEDs = (int)((Globals.speed / DriveConstants.kMaxSpeedMetersPerSecond) * stripLength);
+    speedLEDs = MathUtil.clamp(speedLEDs, 0, stripLength - 1);
 
     //Paint light cluster
     clearStrip();
@@ -197,10 +208,12 @@ public class LEDSubsystem extends SubsystemBase {
   // ==========================================================================
 
   private void flashStrip(int hue, double onTime, double offTime){
-    if (stripOn && ledTimer.hasElapsed(onTime)) {
-      clearStrip();
+    if (stripOn && ledTimer.hasElapsed(onTime) ) {
       ledTimer.restart();
-      stripOn = false;
+      if (offTime > 0){
+        clearStrip();
+        stripOn = false;
+      }
     } else if (!stripOn && ledTimer.hasElapsed(offTime)){
       setStrip(hue);
       ledTimer.restart();

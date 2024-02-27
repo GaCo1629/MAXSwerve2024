@@ -169,7 +169,7 @@ public final class Constants {
     public static final double kIMin = 0.0;    
     public static final double kIMax = 0.5;
     public static final double kIDeadband = 0.5;
-    public static final double kMinOutput = -0.1;
+    public static final double kMinOutput = -0.025;
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
@@ -177,7 +177,7 @@ public final class Constants {
     public static final double homeAngle    = 0;
     public static final double ampLowAngle = 60;
     public static final double ampHighAngle = 68;
-    public static final double tiltThresholdDeg = 1.0;
+    public static final double tiltThresholdDeg = 1.5;
 
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
     public static final int kMotorCurrentLimit = 40; // amps

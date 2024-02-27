@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 public enum LEDmode {
+    NONE,
     ALLIANCE,           // Display Alliance color
     RAINBOW,            // Show a pretty Rainbow
     NOTE_COLLECTING,         // Seeking a Note to collect
