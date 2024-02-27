@@ -109,11 +109,9 @@ public class BatonSubsystem extends SubsystemBase {
         shooterSpeedTop     = shooterTop.getRPM();
 
         // control the baton angle and shooter speed.
-        if (Globals.getSpeakerTracking()) {
-            if  (Globals.speakerTarget.valid) {
-                setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
-                setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
-            }
+        if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
+            setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
+            setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
         } else {
             if (manualShooting) {
                 setTiltAngle(manualTiltAngle);
@@ -285,7 +283,8 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public boolean shooterUpToSpeed() {
-        return (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
+        double speedError = Math.abs(shooterSpeedSetPoint - shooterSpeedBot);
+        return (shooterSpeedSetPoint > 0) && (speedError < ShooterConstants.speedThresholdRPM);
     }
     
     public boolean readyToShoot() {
@@ -310,10 +309,10 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void fire (){
-        if (shooterUpToSpeed()){
+       if (shooterUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-        }
+       }
     }
 
     public void stopIntake (){
