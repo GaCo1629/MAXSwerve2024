@@ -149,6 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     Globals.setNoteTracking(false);
     Globals.setSpeakerTracking(false);
+    Globals.setAmplifying(false);
     trackTimer.start();
     lastHeadingOverride = new Rotation2d();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
@@ -253,7 +254,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     } else if (Globals.getNoteTracking()) {
       //  TRACKING NOTE 
-      SmartDashboard.putString("Mode", "Node")  ;
+
 
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
@@ -268,7 +269,14 @@ public class DriveSubsystem extends SubsystemBase {
       }
       lockCurrentHeading();  // prepare for return to heading hold
 
-    } else {
+    } else if (Globals.getAmplifying()) {
+       SmartDashboard.putString("Mode", "Amplify")  ;
+       fieldRelative = false;
+       xSpeed = 0.1;
+       lockCurrentHeading();  // prepare for return to heading hold
+
+
+    }  else {
       //  NO TRACKING
       if (rotate != 0) {
         headingLocked = false;

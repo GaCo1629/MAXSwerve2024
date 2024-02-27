@@ -176,7 +176,7 @@ public final class Constants {
     public static final double maxEncoderPosition = 90.0;
     public static final double homeAngle    = 0;
     public static final double ampLowAngle = 60;
-    public static final double ampHighAngle = 68;
+    public static final double ampHighAngle = 70;
     public static final double tiltThresholdDeg = 1.5;
 
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;

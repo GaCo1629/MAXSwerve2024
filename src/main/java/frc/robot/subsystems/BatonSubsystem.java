@@ -46,6 +46,10 @@ public class BatonSubsystem extends SubsystemBase {
     private double manualTiltAngle;
     private double manualShooterSpeed;
 
+    private boolean quickShooting = false;
+    private double  quickTiltAngle = 0;
+    private double  quickShooterRPM = 0;
+
     private final SparkAnalogSensor   rangeFinder; 
 
     //private PS4Controller driver;
@@ -91,8 +95,8 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void init(){
-        manualTiltAngle    = 10;
-        manualShooterSpeed = 1000;
+        manualTiltAngle    = 20;
+        manualShooterSpeed = 2000;
         manualShooting = false;
 
         setState(BatonState.IDLE);
@@ -116,11 +120,16 @@ public class BatonSubsystem extends SubsystemBase {
         shooterUpToSpeed    = (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
 
         // control the baton angle and shooter speed.
-        if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
+        if (quickShooting) {
+            setTiltAngle(quickTiltAngle);
+            setShooterRPM(quickShooterRPM);
+        } else if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
             setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
             setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
+
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
+
         } else {
             if (manualShooting) {
                 setTiltAngle(manualTiltAngle);
@@ -410,6 +419,18 @@ public class BatonSubsystem extends SubsystemBase {
         manualShooting = on;
     }
 
+    public void quickShootingOn(double tiltAngle, double shooterRPM){
+        quickShooting = true;
+        quickTiltAngle = tiltAngle;
+        quickShooterRPM = shooterRPM;
+    }
+
+    public void quickShootingOff(){
+        quickShooting = false;
+        quickTiltAngle = 0;
+        quickShooterRPM = 0;
+      }
+
 
     // ============ Public Command Interface  ========================================
     public Command collectCmd()                     {return runOnce(() -> collect());}
@@ -423,4 +444,8 @@ public class BatonSubsystem extends SubsystemBase {
     public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
     public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
     public Command enableManualShootingCmd(boolean on) {return runOnce(() -> enableManualShooting(on));}
+    public Command quickShootingOnCmd(double tiltAngle, double shooterRPM) 
+                                                    {return runOnce(() -> quickShootingOn(tiltAngle, shooterRPM));}
+    public Command quickShootingOffCmd()            {return runOnce(() -> quickShootingOff());}
+    
 }

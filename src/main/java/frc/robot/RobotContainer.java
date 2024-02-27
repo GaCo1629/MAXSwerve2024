@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
+import frc.robot.commands.AutoQuickShoot;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
@@ -58,8 +60,12 @@ public RobotContainer() {
 
         // Register named commands
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
+    NamedCommands.registerCommand("QuickShoot",     new AutoQuickShoot(baton));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
+    NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
+    NamedCommands.registerCommand("ShooterOff",     baton.quickShootingOffCmd());
+    NamedCommands.registerCommand("Shooter3500",    baton.quickShootingOnCmd(0, 3500));
 
     NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
     NamedCommands.registerCommand("CollectorOff",   baton.stopIntakeCmd());
@@ -70,7 +76,7 @@ public RobotContainer() {
     configureButtonBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
-    SmartDashboard.putData("Auto Mode", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
     robotDrive.setDefaultCommand(robotDrive.driveCmd());
@@ -137,10 +143,9 @@ public RobotContainer() {
 
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("ScoreSingle",  new PathPlannerAuto("ScoreSingle"));
-    SmartDashboard.putData("ScoreDouble",  new PathPlannerAuto("ScoreDouble"));
-    SmartDashboard.putData("ScoreTripple", new PathPlannerAuto("ScoreTripple"));
-    SmartDashboard.putData("TwoOnTheWall", new PathPlannerAuto("TwoOnTheWall"));
+    SmartDashboard.putData("1-3-5",  new PathPlannerAuto("1-3-5"));
+    SmartDashboard.putData("1-2",  new PathPlannerAuto("1-2"));
+  
   }
 
   /**

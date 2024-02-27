@@ -24,19 +24,6 @@
               "_showGlyph": false
             }
           },
-          "0,0": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Auto Mode",
-              "_title": "Auto Mode",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "13,0": {
             "size": [
               2,
@@ -233,7 +220,20 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/shooter setpoint",
-              "_title": "SmartDashboard/shooter setpoint",
+              "_title": "Shooter Setpoint",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "SmartDashboard/Auto Chooser",
               "_glyph": 148,
               "_showGlyph": false
             }
