@@ -27,10 +27,13 @@ public class BatonSubsystem extends SubsystemBase {
     private GPIDController tiltControl;
     private AbsoluteEncoder tiltEncoder;
     private Timer       stateTimer = new Timer();
+
+    private boolean tiltInPosition;
+    private boolean shooterUpToSpeed;
+    
     
     private double tiltAngleSetPoint;
     private double currentTiltAngle;
-    public boolean tiltInPosition;
     private double tiltPower;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
@@ -108,7 +111,8 @@ public class BatonSubsystem extends SubsystemBase {
         noteSensor          = getNoteSensorValue();
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
-        tiltInPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
+        tiltInPosition      = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
+        shooterUpToSpeed    = (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
@@ -134,10 +138,13 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt setpoint",   tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
         SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
+        SmartDashboard.putBoolean("tilt In Position",tiltIsInPosition());
+    
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+    
         SmartDashboard.putString("BatonState",      currentState.toString());
 
         SmartDashboard.putBoolean("Manual Shooting",manualShooting);
@@ -199,7 +206,7 @@ public class BatonSubsystem extends SubsystemBase {
                  break;
 
             case TILTING:
-                if (tiltInPosition){
+                if (tiltIsInPosition()){
                     eject();
                     setState(BatonState.EJECTING);
                 }
@@ -213,7 +220,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case AMP_SCORING:
-                if (tiltInPosition){
+                if (tiltIsInPosition()){
                     stopIntake();
                     setState(BatonState.AMP_WAIT);
                 }
@@ -251,10 +258,18 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
 
+    public boolean tiltIsInPosition() {
+        return tiltInPosition;
+    }
+
     public void setTiltAngle(double angle){
-        tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
-        tiltControl.setSetpoint(tiltAngleSetPoint);
-        tiltInPosition = false;
+        // load new setpoint and reset "inPosition" if it has changed
+        double newSetpoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
+        if (newSetpoint != tiltAngleSetPoint) {
+            tiltAngleSetPoint = newSetpoint;
+            tiltControl.setSetpoint(tiltAngleSetPoint);
+            tiltInPosition = false;
+        }
     }
 
 
@@ -290,13 +305,19 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     // ===== SHOOTER Methods  ===============================
+    public boolean shooterIsUpToSpeed() {
+        return shooterUpToSpeed;
+    }
 
     public void setShooterRPM(double speed){
-        shooterSpeedSetPoint = speed;
-        shooterBot.setRPM(shooterSpeedSetPoint);
-        shooterTop.setRPM(shooterSpeedSetPoint);
-        if (speed > 0) {
-            Globals.lastShooterSpeed = shooterSpeedSetPoint;            
+        if (speed != shooterSpeedSetPoint) {
+            shooterSpeedSetPoint = speed;
+            shooterBot.setRPM(shooterSpeedSetPoint);
+            shooterTop.setRPM(shooterSpeedSetPoint);
+            if (speed > 0) {
+                Globals.lastShooterSpeed = shooterSpeedSetPoint;      
+                //  shooterUpToSpeed = false;  //   maybe do this... 
+            }
         }
     }
 
@@ -311,13 +332,9 @@ public class BatonSubsystem extends SubsystemBase {
         setShooterRPM(0);
     }
 
-    public boolean shooterUpToSpeed() {
-        double speedError = Math.abs(shooterSpeedSetPoint - shooterSpeedBot);
-        return (shooterSpeedSetPoint > 0) && (speedError < ShooterConstants.speedThresholdRPM);
-    }
-    
+       
     public boolean readyToShoot() {
-        return noteInIntake() && tiltInPosition && shooterUpToSpeed();
+        return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
     }
 
 
@@ -338,7 +355,9 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void fire (){
-       if (shooterUpToSpeed()){
+       SmartDashboard.putBoolean("Shooter Up To Speed",shooterIsUpToSpeed());
+       SmartDashboard.putNumber("Shooter Up To Speed test",stateTimer.get());
+        if (shooterIsUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
        }
@@ -380,7 +399,7 @@ public class BatonSubsystem extends SubsystemBase {
     // ============ Public Command Interface  ========================================
     public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
-    public Command fireCmd()                        {return runOnce(() -> fire());}
+    public Command fireCmd()                        {return run(() -> fire());}
     public Command amplifyCmd()                     {return runOnce(() -> amplify());}
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
     public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}

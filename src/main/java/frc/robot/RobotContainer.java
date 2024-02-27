@@ -91,7 +91,7 @@ public RobotContainer() {
         .onFalse(robotDrive.setNoteTrackingCmd(false));
         
     new JoystickButton(driverController, Button.kR2.value)
-        .whileTrue(baton.fireCmd());
+        .whileTrue(baton.fireCmd());  // Repeats Automatically
 
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(robotDrive.setSpeakerTrackingCmd(true))
@@ -121,7 +121,7 @@ public RobotContainer() {
         .onFalse(baton.enableManualShootingCmd(false));
 
     new JoystickButton(copilot_1, Button.kR2.value)
-        .whileTrue(baton.fireCmd());
+        .whileTrue(baton.fireCmd());  // Repeats Automatically
 
     new POVButton(copilot_1, 0)
         .onTrue(baton.bumpTiltCmd(2));
