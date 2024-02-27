@@ -8,10 +8,9 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
-
 
 
 public class LEDSubsystem extends SubsystemBase {
@@ -53,6 +52,8 @@ public class LEDSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+    SmartDashboard.putString("LED Mode", Globals.ledMode.toString());
+
     if (Globals.ledMode != lastMode) {
       clearStrip();
       ledTimer.restart();
@@ -62,7 +63,6 @@ public class LEDSubsystem extends SubsystemBase {
 
     switch (Globals.ledMode) {
       case ALLIANCE:    // Display Alliance color
-      case DEFAULT:
         showAlliance();
         break;
 
@@ -95,6 +95,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SPEEDOMETER:        // Displaying robot speed on power meter.
+      case DEFAULT:
         showSpeedo();
         break;
 
@@ -170,7 +171,7 @@ public class LEDSubsystem extends SubsystemBase {
     
   // -----------------------------------------------------------------------------------
   private void showSpeedo(){
-    clearStrip();
+    
 
     // light up based on robot speed.
     // First band green,
@@ -180,10 +181,11 @@ public class LEDSubsystem extends SubsystemBase {
     int speedLEDs = (int)(Globals.speed * stripLength);
 
     //Paint light cluster
-    for (int i = 0; i < stripLength; i++){
-      if (speedLEDs > (speedoGrn + speedoOrg)) {
+    clearStrip();
+    for (int i = 0; i < speedLEDs; i++){
+      if (i >= (speedoGrn + speedoOrg)) {
         ledBuffer.setHSV( i, RED, 255, 128);
-      } else if (speedLEDs > speedoGrn){
+      } else if (i >= speedoGrn){
         ledBuffer.setHSV( i, ORANGE, 255, 128);
       } else {
         ledBuffer.setHSV( i, GREEN, 255, 128);

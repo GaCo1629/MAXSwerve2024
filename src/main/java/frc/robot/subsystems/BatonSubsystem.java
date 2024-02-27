@@ -352,12 +352,9 @@ public class BatonSubsystem extends SubsystemBase {
         }
     }
 
-
-
     public void stopIntake (){
         intake.set(BatonConstants.stopCollector);
         Globals.setNoteTracking(false);
-        Globals.ledMode = LEDmode.DEFAULT;
     }
 
     public void eject (){

@@ -11,7 +11,7 @@ public final class Globals{
     public static SpeakerTarget speakerTarget   = new SpeakerTarget();
     public static NoteTarget noteTarget         = new NoteTarget();
     public static RobotPoseFromApriltag robotPoseFromApriltag = new RobotPoseFromApriltag();
-    public static LEDmode ledMode               = LEDmode.DEFAULT;
+    public static LEDmode ledMode               = LEDmode.ALLIANCE;
     public static double  speed                 = 0;
     
     public static boolean amplifingEnabled       = false;

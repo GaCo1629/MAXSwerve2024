@@ -254,8 +254,6 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putString("Mode", "Node")  ;
 
       if (Globals.noteTarget.valid){
-        Globals.ledMode = LEDmode.NOTE_DETECTED;
-
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
         if (Math.abs(trackingController.getPositionError()) < 10){
@@ -263,7 +261,6 @@ public class DriveSubsystem extends SubsystemBase {
           xSpeed = Globals.noteTarget.range / 3.0;
         }
       } else {
-        Globals.ledMode = LEDmode.NOTE_COLLECTING;
         fieldRelative = false;
         xSpeed = 0.12;
       }
