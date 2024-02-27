@@ -112,6 +112,9 @@ public RobotContainer() {
         .onTrue(baton.ejectCmd())
         .onFalse(baton.stopIntakeCmd());
 
+    new JoystickButton(copilot_1, Button.kTouchpad.value)
+        .onTrue(baton.amplifyCmd());
+
     // Manual shooting controls
     new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(baton.enableManualShootingCmd(true))

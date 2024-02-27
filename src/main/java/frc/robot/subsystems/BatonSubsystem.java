@@ -181,11 +181,11 @@ public class BatonSubsystem extends SubsystemBase {
             case SHOOTING:
                 Globals.ledMode = LEDmode.SHOOTING;
                 if (!noteInIntake()){
-                    setState(BatonState.WAITING);
+                    setState(BatonState.SHOOTING_WAIT);
                 }
                 break;
 
-            case WAITING:    
+            case SHOOTING_WAIT:    
                 if (stateTimer.hasElapsed(0.5)){
                     stopIntake();
                     stopShooter();
@@ -193,6 +193,34 @@ public class BatonSubsystem extends SubsystemBase {
                     setState(BatonState.IDLE);
                 }
                  break;
+
+            case TILTING:
+                if (tiltInPosition()){
+                    eject();
+                    setState(BatonState.EJECTING);
+                }
+                break;
+            
+            case EJECTING:
+                if (!noteInIntake()){
+                    setTiltAngle(TiltConstants.ampHighAngle);
+                    setState(BatonState.AMP_SCORING);
+                }
+                break;
+
+            case AMP_SCORING:
+                if (tiltInPosition()){
+                    stopIntake();
+                    setState(BatonState.AMP_WAIT);
+                }
+                break;
+
+            case AMP_WAIT:
+                if (stateTimer.hasElapsed(1.0)){
+                    setTiltAngle(TiltConstants.homeAngle);
+                    setState(BatonState.IDLE);
+                }
+                break;
 
             default:
                 break;
@@ -315,6 +343,15 @@ public class BatonSubsystem extends SubsystemBase {
        }
     }
 
+    public void amplify (){
+        if (currentState == BatonState.HOLDING){
+            setTiltAngle(TiltConstants.ampLowAngle);
+            setState(BatonState.TILTING);
+        }
+    }
+
+
+
     public void stopIntake (){
         intake.set(BatonConstants.stopCollector);
         Globals.setNoteTracking(false);
@@ -345,6 +382,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
     public Command fireCmd()                        {return runOnce(() -> fire());}
+    public Command amplifyCmd()                     {return runOnce(() -> amplify());}
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
     public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
     public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
