@@ -30,6 +30,7 @@ public class BatonSubsystem extends SubsystemBase {
     
     private double tiltAngleSetPoint;
     private double currentTiltAngle;
+    public boolean tiltInPosition;
     private double tiltPower;
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
@@ -107,16 +108,19 @@ public class BatonSubsystem extends SubsystemBase {
         noteSensor          = getNoteSensorValue();
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
+        tiltInPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
             setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
             setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
+        } else if(Globals.amplifingEnabled){
+            //being done in state machine (so nothing)
         } else {
             if (manualShooting) {
                 setTiltAngle(manualTiltAngle);
                 setShooterRPM(manualShooterSpeed);
-            } else {
+            } else{
                 setTiltAngle(0);
                 setShooterRPM(0);
             }
@@ -195,7 +199,7 @@ public class BatonSubsystem extends SubsystemBase {
                  break;
 
             case TILTING:
-                if (tiltInPosition()){
+                if (tiltInPosition){
                     eject();
                     setState(BatonState.EJECTING);
                 }
@@ -209,15 +213,16 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case AMP_SCORING:
-                if (tiltInPosition()){
+                if (tiltInPosition){
                     stopIntake();
                     setState(BatonState.AMP_WAIT);
                 }
                 break;
 
             case AMP_WAIT:
-                if (stateTimer.hasElapsed(1.0)){
+                if (stateTimer.hasElapsed(0.5)){
                     setTiltAngle(TiltConstants.homeAngle);
+                    Globals.amplifingEnabled = false;
                     setState(BatonState.IDLE);
                 }
                 break;
@@ -249,13 +254,9 @@ public class BatonSubsystem extends SubsystemBase {
     public void setTiltAngle(double angle){
         tiltAngleSetPoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         tiltControl.setSetpoint(tiltAngleSetPoint);
+        tiltInPosition = false;
     }
 
-    public boolean tiltInPosition() {
-        boolean inPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
-        SmartDashboard.putBoolean("Tilt In position", inPosition);
-        return inPosition;
-    }
 
     public double getSafeTiltAngle() {
         double safe = tiltEncoder.getPosition();
@@ -316,7 +317,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
     
     public boolean readyToShoot() {
-        return noteInIntake() && tiltInPosition() && shooterUpToSpeed();
+        return noteInIntake() && tiltInPosition && shooterUpToSpeed();
     }
 
 
@@ -345,6 +346,7 @@ public class BatonSubsystem extends SubsystemBase {
 
     public void amplify (){
         if (currentState == BatonState.HOLDING){
+            Globals.amplifingEnabled = true;
             setTiltAngle(TiltConstants.ampLowAngle);
             setState(BatonState.TILTING);
         }

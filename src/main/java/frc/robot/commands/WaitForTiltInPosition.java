@@ -20,6 +20,6 @@ public class WaitForTiltInPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return baton.tiltInPosition();
+    return baton.tiltInPosition;
   }
 }
