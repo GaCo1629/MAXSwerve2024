@@ -241,13 +241,13 @@ public class BatonSubsystem extends SubsystemBase {
 
             case AMP_SCORING:
                 if (tiltIsInPosition()){
-                    stopIntake();
                     setState(BatonState.AMP_WAIT);
                 }
                 break;
 
             case AMP_WAIT:
                 if (stateTimer.hasElapsed(0.5)){
+                    stopIntake();
                     setTiltAngle(TiltConstants.homeAngle);
                     Globals.setAmplifying(false);
                     setState(BatonState.IDLE);

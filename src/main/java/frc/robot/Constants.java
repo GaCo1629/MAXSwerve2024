@@ -210,6 +210,8 @@ public final class Constants {
     public static final double kIHeadingLockController = 0;
     public static final double kDHeadingLockController = 0; // try to slow down approach
 
+    public static final double kDHeadingLockTollerance = Math.toRadians(2.0); // tollerance for atSetpoint();
+
     public static final TrapezoidProfile.Constraints kHeadingLockConstraints = new TrapezoidProfile.Constraints(
       kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
   

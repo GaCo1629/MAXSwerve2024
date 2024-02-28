@@ -43,6 +43,7 @@ public class AutoCollect extends Command {
   @Override
   public void end(boolean interrupted) {
     baton.stopIntake();  //  also stops note tracking
+    collectTimer.stop();
   }
 
   // Returns true when the command should end.

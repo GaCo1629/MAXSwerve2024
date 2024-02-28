@@ -65,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
   
   private boolean headingLocked = false;
   private double  headingSetpoint = 0;
-  private double speedFactor = DriveConstants.kAtleeSpeedFactor;
+  private double  speedFactor = DriveConstants.kAtleeSpeedFactor;
 
   private SlewRateLimiter XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -125,6 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kDHeadingLockController, 
                                                       AutoConstants.kHeadingLockConstraints );
     headingLockController.enableContinuousInput(-Math.PI, Math.PI);
+    headingLockController.setTolerance(AutoConstants.kDHeadingLockTollerance);
     
     trackingController = new PIDController(AutoConstants.kPTrackingController, 
                                                       AutoConstants.kITrackingController, 
@@ -454,8 +455,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isNotRotating() {
-
     return (Math.abs(imu.yawRate) < AutoConstants.kNotRotating);
+  }
+
+  public boolean atSetpoint() {
+    return headingLockController.atGoal();
   }
 
   //------------------------------
