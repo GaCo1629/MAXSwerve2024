@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8875870458293627,
-        "y": 7.180210827658122
+        "x": 1.934363663599122,
+        "y": 7.070285775899187
       },
       "isLocked": false,
       "linkedName": "AtAmpCorner"
@@ -20,8 +20,8 @@
         "y": 7.844438799988711
       },
       "prevControl": {
-        "x": 1.8314551045056504,
-        "y": 7.3392513280753064
+        "x": 1.7893561485128668,
+        "y": 7.262069908755203
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,7 +51,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 89.60211903816534,
     "velocity": 0
   },
   "useDefaultConstraints": false

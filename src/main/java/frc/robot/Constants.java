@@ -173,13 +173,16 @@ public final class Constants {
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
-    public static final double maxEncoderPosition = 90.0;
+    public static final double maxEncoderPosition = 80.0;
     public static final double homeAngle    = 0;
     public static final double ampLowAngle = 60;
     public static final double ampHighAngle = 70;
-    public static final double tiltThresholdDeg = 1.5;
-
+    public static final double tiltThresholdDeg = 1.0;
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
+
+    public static final double kTiltConversion = 4.6f; // 360 / gear ratio / 1.2
+    public static final float  softLimitRev = (float)(maxEncoderPosition / kTiltConversion);  // Set this to limit Baton tilt angle
+
     public static final int kMotorCurrentLimit = 40; // amps
 
     public static final double kEncoderPositionFactor = 360; // degrees

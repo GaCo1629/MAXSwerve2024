@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +19,7 @@ import frc.robot.Constants.TiltConstants;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkAnalogSensor;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake;
@@ -27,6 +29,7 @@ public class BatonSubsystem extends SubsystemBase {
     private FLEXShooter shooterBot;
     private GPIDController tiltControl;
     private AbsoluteEncoder tiltEncoder;
+    private RelativeEncoder tiltEncoderRel;
     private Timer       stateTimer = new Timer();
 
     private boolean tiltInPosition;
@@ -70,13 +73,24 @@ public class BatonSubsystem extends SubsystemBase {
         tiltLeft.restoreFactoryDefaults();
         tiltLeft.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltLeft.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
+        tiltLeft.setSoftLimit(SoftLimitDirection.kForward, 0);
+        tiltLeft.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
+        tiltLeft.enableSoftLimit(SoftLimitDirection.kForward, true);
+        tiltLeft.enableSoftLimit(SoftLimitDirection.kReverse, true);
         tiltLeft.burnFlash();
+
+        tiltEncoderRel = tiltLeft.getEncoder();
     
 
         tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
         tiltRight.restoreFactoryDefaults();
         tiltRight.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltRight.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
+        tiltRight.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
+        tiltRight.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        tiltRight.enableSoftLimit(SoftLimitDirection.kForward, true);
+        tiltRight.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        
 
         tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
         tiltEncoder.setPositionConversionFactor(TiltConstants.kEncoderPositionFactor);
@@ -113,6 +127,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
+        
         noteSensor          = getNoteSensorValue();
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
@@ -150,6 +165,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
         SmartDashboard.putBoolean("tilt In Position",tiltIsInPosition());
     
+SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);

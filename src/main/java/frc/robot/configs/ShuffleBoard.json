@@ -186,7 +186,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "15,4": {
+          "14,8": {
             "size": [
               3,
               2
@@ -234,6 +234,19 @@
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Auto Chooser",
               "_title": "SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tilt relative encoder",
+              "_title": "tilt relative encoder",
               "_glyph": 148,
               "_showGlyph": false
             }
