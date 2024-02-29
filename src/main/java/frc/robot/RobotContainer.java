@@ -152,8 +152,6 @@ public RobotContainer() {
 
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
-    SmartDashboard.putData("1-3-5",  new PathPlannerAuto("1-3-5"));
-    SmartDashboard.putData("1-2",  new PathPlannerAuto("1-2"));
   
   }
 
