@@ -328,8 +328,12 @@ SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
         output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
         // if we are in auto, then make sure we get to the ground quickly
-        if (DriverStation.isAutonomousEnabled() && (tiltAngleSetPoint == 0) && (currentTiltAngle > 3)) {
-            output = -0.2;
+        if (tiltAngleSetPoint == 0){
+            if (currentTiltAngle > 10) {
+                output = -0.2;
+            } else  {
+                output = 0;
+            }
         } else 
         // if we are lowering, and are close to our target, just set power to zero to brake
         if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 2)) {

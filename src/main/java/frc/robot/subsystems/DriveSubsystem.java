@@ -273,9 +273,8 @@ public class DriveSubsystem extends SubsystemBase {
     } else if (Globals.getAmplifying()) {
        SmartDashboard.putString("Mode", "Amplify")  ;
        fieldRelative = false;
-       xSpeed = 0.1;
+       xSpeed = 0.05;
        lockCurrentHeading();  // prepare for return to heading hold
-
 
     }  else {
       //  NO TRACKING
