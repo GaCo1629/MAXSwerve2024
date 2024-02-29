@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.525068258113724,
+      "y": 4.106987040184907
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo45"
+            "name": "TurnTo-45"
           }
         },
         {
@@ -38,7 +44,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo305"
+            "name": "TurnTo-20"
           }
         },
         {
@@ -50,7 +56,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo90"
+            "name": "TurnTo80"
           }
         },
         {

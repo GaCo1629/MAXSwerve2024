@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo45"
+            "name": "TurnTo-45"
           }
         },
         {
@@ -42,6 +42,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "TurnTo-20"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4-9C"
@@ -56,7 +68,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "9-P"
+            "pathName": "9-1"
           }
         },
         {

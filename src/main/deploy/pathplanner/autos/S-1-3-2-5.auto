@@ -44,19 +44,13 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo45"
+            "name": "TurnTo20"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo0"
           }
         },
         {

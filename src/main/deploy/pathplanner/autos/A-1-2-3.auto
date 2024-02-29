@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 1.522729427225236,
+      "y": 7.028186819906404
     },
     "rotation": 0
   },
@@ -50,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo270"
+            "name": "TurnTo-90"
           }
         },
         {
