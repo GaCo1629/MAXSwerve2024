@@ -1,16 +1,16 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.2083958713371972,
-      "y": 5.531946336619947
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo45"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -20,7 +20,25 @@
         {
           "type": "named",
           "data": {
+            "name": "TurnTo0"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4-B"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo305"
           }
         },
         {
@@ -44,7 +62,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo45"
+            "name": "TurnTo0"
           }
         },
         {

@@ -35,7 +35,7 @@ public class AutoTurnToHeading extends Command {
 
     // send the new setpoint and start timeout timer.
     robotDrive.newHeadingSetpoint(setpointRad);
-    turnTimer.start();
+    turnTimer.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
