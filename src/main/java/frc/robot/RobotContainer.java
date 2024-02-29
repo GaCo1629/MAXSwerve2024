@@ -68,12 +68,12 @@ public RobotContainer() {
     NamedCommands.registerCommand("ShooterOff",     baton.quickShootingOffCmd());
     NamedCommands.registerCommand("Shooter3500",    baton.quickShootingOnCmd(0, 3500));    
     
-    NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive,   0, 1.5));
+    NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive,  0, 1.5));
     NamedCommands.registerCommand("TurnTo45",       new AutoTurnToHeading(robotDrive,  45, 1.5));
     NamedCommands.registerCommand("TurnTo90",       new AutoTurnToHeading(robotDrive,  90, 1.5));
     NamedCommands.registerCommand("TurnTo180",      new AutoTurnToHeading(robotDrive, 180, 1.5));
     NamedCommands.registerCommand("TurnTo270",      new AutoTurnToHeading(robotDrive, -90, 1.5));
-    NamedCommands.registerCommand("TurnTo305",       new AutoTurnToHeading(robotDrive, -270, 1.5));
+    NamedCommands.registerCommand("TurnTo305",      new AutoTurnToHeading(robotDrive, -270, 1.5));
     
 
     NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
