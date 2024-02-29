@@ -32,8 +32,10 @@ public class BatonSubsystem extends SubsystemBase {
     private Timer       stateTimer = new Timer();
 
     private boolean tiltInPosition;
+
     private boolean shooterUpToSpeed;
-    
+    private boolean topUpToSpeed;
+    private boolean botUpToSpeed;    
     
     private double tiltAngleSetPoint;
     private double currentTiltAngle;
@@ -122,14 +124,8 @@ public class BatonSubsystem extends SubsystemBase {
         currentTiltAngle    = getSafeTiltAngle(); 
         
         noteSensor          = getNoteSensorValue();
-        shooterSpeedBot     = shooterBot.getRPM();
-        shooterSpeedTop     = shooterTop.getRPM();
-        tiltInPosition      = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
-
-        boolean topUpToSpeed = (Math.abs(shooterSpeedSetPoint - shooterSpeedTop) < ShooterConstants.speedThresholdRPM);
-        boolean botUpToSpeed = (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
-
-        shooterUpToSpeed    = (shooterSpeedSetPoint > 0) && (topUpToSpeed || botUpToSpeed);
+        tiltInPosition      = calculateTiltInPosition();
+        shooterUpToSpeed    = calculateShootersUpToSpeed();
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
@@ -157,14 +153,16 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
         SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
         SmartDashboard.putBoolean("tilt In Position",tiltIsInPosition());
-    
+        SmartDashboard.putBoolean("Note In Intake", noteInIntake());
         SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
+        SmartDashboard.putNumber("tilt Error", tiltAngleSetPoint - currentTiltAngle);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
-        SmartDashboard.putBoolean("shooter UTS", topUpToSpeed);
-        SmartDashboard.putBoolean("shooter UTS", botUpToSpeed);
+        SmartDashboard.putBoolean("top UTS", topUpToSpeed);
+        SmartDashboard.putBoolean("bot UTS", botUpToSpeed);
+        SmartDashboard.putBoolean("Ready To Shoot", readyToShoot());
     
         SmartDashboard.putString("BatonState",      currentState.toString());
 
@@ -179,6 +177,9 @@ public class BatonSubsystem extends SubsystemBase {
     public void runStateMachine(){
         switch (currentState) {
             case IDLE:
+                if (noteInIntake()) {
+                    setState(BatonState.HOLDING);
+                }
                 Globals.setLEDMode(LEDmode.SPEEDOMETER);
                 // Exits by button press.
                 break;
@@ -307,7 +308,7 @@ public class BatonSubsystem extends SubsystemBase {
         if (newSetpoint != tiltAngleSetPoint) {
             tiltAngleSetPoint = newSetpoint;
             tiltControl.setSetpoint(tiltAngleSetPoint);
-            tiltInPosition = false;
+            tiltInPosition = calculateTiltInPosition();
         }
     }
 
@@ -317,6 +318,10 @@ public class BatonSubsystem extends SubsystemBase {
         if (safe > 180) safe = 0;
 
         return safe;
+    }
+
+    public boolean calculateTiltInPosition(){
+        return (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
     }
 
     /**
@@ -384,6 +389,20 @@ public class BatonSubsystem extends SubsystemBase {
         return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
     }
 
+     
+    public boolean calculateShootersUpToSpeed() {
+        shooterSpeedTop = shooterTop.getRPM();
+        shooterSpeedBot = shooterBot.getRPM();
+
+        topUpToSpeed = calculateShooterUpToSpeed(shooterBot.getRPM());
+        botUpToSpeed = calculateShooterUpToSpeed(shooterTop.getRPM());
+        
+        return ((shooterSpeedSetPoint > 0) && (topUpToSpeed || botUpToSpeed));
+    }
+
+    public boolean calculateShooterUpToSpeed(double liveSpeed) {
+        return (Math.abs(shooterSpeedSetPoint - liveSpeed) < ShooterConstants.speedThresholdRPM);
+    }
 
     // ===== INTAKE Methods ==================
 
