@@ -73,7 +73,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("TurnTo90",       new AutoTurnToHeading(robotDrive,  90, 2.0));
     NamedCommands.registerCommand("TurnTo180",      new AutoTurnToHeading(robotDrive, 180, 2.0));
     NamedCommands.registerCommand("TurnTo270",      new AutoTurnToHeading(robotDrive, -90, 2.0));
-    NamedCommands.registerCommand("TurnTo305",      new AutoTurnToHeading(robotDrive, -270, 2.0));
+    NamedCommands.registerCommand("TurnTo305",      new AutoTurnToHeading(robotDrive, -45, 2.0));
     
 
     NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
