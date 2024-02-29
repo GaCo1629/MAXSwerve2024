@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.972205397402246,
-        "y": 0.8302849654132366
+        "x": 6.024978887564613,
+        "y": 1.1577212898015548
       },
       "isLocked": false,
       "linkedName": "8"
@@ -20,8 +20,8 @@
         "y": 3.6368820315988213
       },
       "prevControl": {
-        "x": 2.9700936604670414,
-        "y": 1.124738458749128
+        "x": 3.4288766013429455,
+        "y": 1.5787108497293916
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RaiseShooter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 4.0,

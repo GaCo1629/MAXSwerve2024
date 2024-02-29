@@ -4,10 +4,7 @@
 
 package frc.robot.subsystems;
 
-import java.util.Optional;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -76,7 +73,6 @@ public class DriveSubsystem extends SubsystemBase {
   private PIDController         trackingController;
   
   private Timer       trackTimer = new Timer();
-  private Rotation2d  lastHeadingOverride;
   
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(
@@ -133,9 +129,6 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kDTrackingController);
     trackingController.enableContinuousInput(-180, 180);
 
-    // Set the method that will be used to get rotation overrides
-    // PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
-
   }
 
 
@@ -153,7 +146,6 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setSpeakerTracking(false);
     Globals.setAmplifying(false);
     trackTimer.start();
-    lastHeadingOverride = new Rotation2d();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
     disableTracking = false;
   }
@@ -395,30 +387,6 @@ public class DriveSubsystem extends SubsystemBase {
     return Math.signum(joystickIn) * joystickIn * joystickIn;
   }
 
-  //  ======================  Tracking Commands
-
-  /* override heading while tracking and just a bit longer
-  public Optional<Rotation2d> getRotationTargetOverride(){
-    // Some condition that should decide if we want to override rotation
-    if(Globals.getNoteTracking() && Globals.noteTarget.valid) {
-        // Return an optional containing the rotation override (this should be a field relative rotation)
-        Rotation2d correctedHeading = Rotation2d.fromDegrees(normalizeHeadingDeg(imu.headingDeg - Globals.noteTarget.bearingDeg)) ;
-        lastHeadingOverride = correctedHeading;
-        trackTimer.reset();
-        return Optional.of(correctedHeading);
-    } else {
-        // return an empty optional when we don't want to override the path's rotation
-        //  keep last override for short time
-        if (trackTimer.hasElapsed(1.0)) {
-          lastHeadingOverride = new Rotation2d();
-          return Optional.empty();
-        } else {
-          return Optional.of(lastHeadingOverride);
-        }
-
-    }
-  } */
-
   public  void setTurboMode(boolean on){
     if (on){
       speedFactor = DriveConstants.kAlexSpeedFactor;
@@ -440,12 +408,6 @@ public class DriveSubsystem extends SubsystemBase {
     headingSetpoint = newSetpointRad;
     headingLockController.reset(imu.headingRad);
     headingLocked = true;
-  }
-
-  private double normalizeHeadingDeg(double headingDeg) {
-    while (headingDeg > 180) {headingDeg -= 360;}
-    while (headingDeg < 180) {headingDeg += 360;}
-    return headingDeg;
   }
 
   public void lockCurrentHeading() {

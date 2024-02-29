@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
-import frc.robot.commands.AutoQuickShoot;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoTurnToHeading;
 import frc.robot.commands.WaitForTiltInPosition;
