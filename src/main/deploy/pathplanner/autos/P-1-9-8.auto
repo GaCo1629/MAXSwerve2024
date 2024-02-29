@@ -18,9 +18,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo0"
+            "pathName": "4-B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4-9C"
           }
         },
         {
@@ -32,13 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4-B"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo305"
+            "pathName": "9-P"
           }
         },
         {
@@ -48,9 +48,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo90"
+            "pathName": "P-8C"
           }
         },
         {
@@ -60,9 +60,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo0"
+            "pathName": "8-P"
           }
         },
         {

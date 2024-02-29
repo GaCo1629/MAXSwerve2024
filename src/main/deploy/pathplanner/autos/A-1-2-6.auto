@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 2.8968988847048283,
+      "y": 6.987230701735759
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -30,15 +36,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4-B"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "TurnTo305"
+            "name": "TurnTo45"
           }
         },
         {
@@ -48,9 +48,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo90"
+            "pathName": "2-6C"
           }
         },
         {
@@ -60,9 +60,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo0"
+            "pathName": "6-2"
           }
         },
         {

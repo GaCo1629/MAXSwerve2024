@@ -36,21 +36,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo305"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo90"
+            "pathName": "4-9C"
           }
         },
         {
@@ -60,9 +48,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "TurnTo0"
+            "pathName": "9-P"
           }
         },
         {
