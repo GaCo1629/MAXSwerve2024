@@ -41,8 +41,8 @@ public class AutoTurnToHeading extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.drive();
+    // Let drive turn to new heading.  Disable target tracking if we are rasing baton
+    robotDrive.driveNoTrack();
   }
 
   // Called once the command ends or is interrupted.

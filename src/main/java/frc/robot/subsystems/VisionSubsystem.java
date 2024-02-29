@@ -14,6 +14,8 @@ public class VisionSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
+        getSpeakerTarget();
+        getNoteTarget();
         if (DriverStation.isDisabled()){
             getRobotPoseFromApriltag();
             SmartDashboard.putString("BotPose", Globals.robotPoseFromApriltag.toString());
@@ -23,6 +25,8 @@ public class VisionSubsystem extends SubsystemBase{
             SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
             SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
         }
+        SmartDashboard.putBoolean("ValidSpeaker", Globals.speakerTarget.valid);
+        SmartDashboard.putBoolean("ValidNote", Globals.noteTarget.valid);
     }
 
     //  ======================  AprilTag 3D Vision processing

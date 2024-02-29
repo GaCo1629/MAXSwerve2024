@@ -66,6 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean headingLocked = false;
   private double  headingSetpoint = 0;
   private double  speedFactor = DriveConstants.kAtleeSpeedFactor;
+  private boolean disableTracking = false;
 
   private SlewRateLimiter XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -73,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private ProfiledPIDController headingLockController;
   private PIDController         trackingController;
-
+  
   private Timer       trackTimer = new Timer();
   private Rotation2d  lastHeadingOverride;
   
@@ -133,7 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
     trackingController.enableContinuousInput(-180, 180);
 
     // Set the method that will be used to get rotation overrides
-    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+    // PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
 
   }
 
@@ -154,6 +155,7 @@ public class DriveSubsystem extends SubsystemBase {
     trackTimer.start();
     lastHeadingOverride = new Rotation2d();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
+    disableTracking = false;
   }
 
 
@@ -208,6 +210,12 @@ public class DriveSubsystem extends SubsystemBase {
       pose);
   }
 
+  public void driveNoTrack() {
+    disableTracking = true;
+    drive();
+    disableTracking = false;
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -236,7 +244,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     // TARGET TRACKING =======================================================
-    if (Globals.getSpeakerTracking()) {
+    if (Globals.getSpeakerTracking() && !disableTracking) {
       SmartDashboard.putString("Mode", "Speaker")  ;
 
       if (Globals.speakerTarget.valid) {
@@ -306,7 +314,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Send required power to swerve drives
     driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
-
   }
 
   /**
@@ -390,7 +397,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   //  ======================  Tracking Commands
 
-  // override heading wjile tracking and just a bit longer
+  /* override heading while tracking and just a bit longer
   public Optional<Rotation2d> getRotationTargetOverride(){
     // Some condition that should decide if we want to override rotation
     if(Globals.getNoteTracking() && Globals.noteTarget.valid) {
@@ -410,15 +417,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
     }
-  }
-
-  public  void setSpeakerTracking(boolean on){
-    Globals.setSpeakerTracking(on);
-  }
-
-  public  void setNoteTracking(boolean on){
-    Globals.setNoteTracking(on);
-  }
+  } */
 
   public  void setTurboMode(boolean on){
     if (on){
@@ -474,8 +473,6 @@ public class DriveSubsystem extends SubsystemBase {
   public Command driveCmd()                       {return runOnce(() -> drive());}
 
   public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
-  public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
-  public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
   public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
   public Command setXCmd()                        {return runOnce(() -> setX());}
 

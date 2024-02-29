@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -61,13 +61,10 @@ public RobotContainer() {
 
         // Register named commands
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("QuickShoot",     new AutoQuickShoot(baton));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
-    NamedCommands.registerCommand("ShooterOff",     baton.quickShootingOffCmd());
-    NamedCommands.registerCommand("Shooter3500",    baton.quickShootingOnCmd(0, 3500));    
-    
+
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));
     NamedCommands.registerCommand("TurnTo45",       new AutoTurnToHeading(robotDrive, 45, 2.0));
@@ -80,8 +77,8 @@ public RobotContainer() {
 
     NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
     NamedCommands.registerCommand("CollectorOff",   baton.stopIntakeCmd());
-    NamedCommands.registerCommand("RaiseShooter",   robotDrive.setSpeakerTrackingCmd(true));
-    NamedCommands.registerCommand("LowerShooter",   robotDrive.setSpeakerTrackingCmd(false));
+    NamedCommands.registerCommand("RaiseShooter",   baton.setSpeakerTrackingCmd(true));
+    NamedCommands.registerCommand("LowerShooter",   baton.setSpeakerTrackingCmd(false));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -103,16 +100,16 @@ public RobotContainer() {
     
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(baton.collectCmd())
-        .onTrue(robotDrive.setNoteTrackingCmd(true))
+        .onTrue(baton.setNoteTrackingCmd(true))
         .onFalse(baton.stopIntakeCmd())
-        .onFalse(robotDrive.setNoteTrackingCmd(false));
+        .onFalse(baton.setNoteTrackingCmd(false));
         
     new JoystickButton(driverController, Button.kR2.value)
         .whileTrue(baton.fireCmd());  // Repeats Automatically
 
     new JoystickButton(driverController, Button.kL2.value)    
-        .onTrue(robotDrive.setSpeakerTrackingCmd(true))
-        .onFalse(robotDrive.setSpeakerTrackingCmd(false));
+        .onTrue(baton.setSpeakerTrackingCmd(true))
+        .onFalse(baton.setSpeakerTrackingCmd(false));
 
     new JoystickButton(driverController, Button.kTouchpad.value)
         .onTrue(robotDrive.resetHeadingCmd());

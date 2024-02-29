@@ -49,5 +49,4 @@ public final class Globals{
     public static LEDmode getLEDMode() {
         return ledMode;
     }
-
 }

@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
@@ -49,10 +48,6 @@ public class BatonSubsystem extends SubsystemBase {
     private double manualTiltAngle;
     private double manualShooterSpeed;
 
-    private boolean quickShooting = false;
-    private double  quickTiltAngle = 0;
-    private double  quickShooterRPM = 0;
-
     private final SparkAnalogSensor   rangeFinder; 
 
     //private PS4Controller driver;
@@ -81,7 +76,6 @@ public class BatonSubsystem extends SubsystemBase {
 
         tiltEncoderRel = tiltLeft.getEncoder();
     
-
         tiltRight = new CANSparkMax(BatonConstants.tiltRightID, MotorType.kBrushless);
         tiltRight.restoreFactoryDefaults();
         tiltRight.setIdleMode(TiltConstants.kMotorIdleMode);
@@ -91,7 +85,6 @@ public class BatonSubsystem extends SubsystemBase {
         tiltRight.enableSoftLimit(SoftLimitDirection.kForward, true);
         tiltRight.enableSoftLimit(SoftLimitDirection.kReverse, true);
         
-
         tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
         tiltEncoder.setPositionConversionFactor(TiltConstants.kEncoderPositionFactor);
         tiltRight.burnFlash();
@@ -132,16 +125,16 @@ public class BatonSubsystem extends SubsystemBase {
         shooterSpeedBot     = shooterBot.getRPM();
         shooterSpeedTop     = shooterTop.getRPM();
         tiltInPosition      = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
-        shooterUpToSpeed    = (shooterSpeedSetPoint > 0) && (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
+
+        boolean topUpToSpeed = (Math.abs(shooterSpeedSetPoint - shooterSpeedTop) < ShooterConstants.speedThresholdRPM);
+        boolean botUpToSpeed = (Math.abs(shooterSpeedSetPoint - shooterSpeedBot) < ShooterConstants.speedThresholdRPM);
+
+        shooterUpToSpeed    = (shooterSpeedSetPoint > 0) && (topUpToSpeed || botUpToSpeed);
 
         // control the baton angle and shooter speed.
-        if (quickShooting) {
-            setTiltAngle(quickTiltAngle);
-            setShooterRPM(quickShooterRPM);
-        } else if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
+        if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
             setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
             setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
-
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
 
@@ -165,11 +158,13 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
         SmartDashboard.putBoolean("tilt In Position",tiltIsInPosition());
     
-SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
+        SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+        SmartDashboard.putBoolean("shooter UTS", topUpToSpeed);
+        SmartDashboard.putBoolean("shooter UTS", botUpToSpeed);
     
         SmartDashboard.putString("BatonState",      currentState.toString());
 
@@ -290,6 +285,14 @@ SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
         double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
         //double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
         return angle;
+    }
+    
+    public  void setSpeakerTracking(boolean on){
+        Globals.setSpeakerTracking(on);
+    }
+
+    public  void setNoteTracking(boolean on){
+        Globals.setNoteTracking(on);
     }
 
     // ===== TILT Methods  ===================================
@@ -439,19 +442,6 @@ SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
         manualShooting = on;
     }
 
-    public void quickShootingOn(double tiltAngle, double shooterRPM){
-        quickShooting = true;
-        quickTiltAngle = tiltAngle;
-        quickShooterRPM = shooterRPM;
-    }
-
-    public void quickShootingOff(){
-        quickShooting = false;
-        quickTiltAngle = 0;
-        quickShooterRPM = 0;
-      }
-
-
     // ============ Public Command Interface  ========================================
     public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
@@ -464,8 +454,8 @@ SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
     public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
     public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
     public Command enableManualShootingCmd(boolean on) {return runOnce(() -> enableManualShooting(on));}
-    public Command quickShootingOnCmd(double tiltAngle, double shooterRPM) 
-                                                    {return runOnce(() -> quickShootingOn(tiltAngle, shooterRPM));}
-    public Command quickShootingOffCmd()            {return runOnce(() -> quickShootingOff());}
+     public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
+    public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
+
     
 }
