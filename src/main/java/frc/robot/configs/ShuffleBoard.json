@@ -313,24 +313,17 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "12,3": {
+          "12,6": {
             "size": [
               3,
               2
             ],
             "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt Error",
-              "_title": "Tilt Error",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot Heading",
+              "_title": "Robot Heading",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt Error": true
+              "_showGlyph": false
             }
           }
         }
@@ -351,9 +344,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 2.4000000953674316,
-    "width": 1551.199951171875,
-    "height": 716.0
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 838.4000244140625
   }
 }
