@@ -1,0 +1,97 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4938891139043537,
+      "y": 4.104648209296419
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RaiseShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo-45"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo0"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4-B"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RaiseShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo-20"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1-8C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8-1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
