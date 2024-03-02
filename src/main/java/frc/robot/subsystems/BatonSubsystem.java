@@ -104,8 +104,8 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void init(){
-        manualTiltAngle    = 20;
-        manualShooterSpeed = 2000;
+        manualTiltAngle    = BatonConstants.defaultTilt;
+        manualShooterSpeed = BatonConstants.defaultRPM;
         manualShooting = false;
 
         setState(BatonState.IDLE);
