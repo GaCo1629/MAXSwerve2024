@@ -28,6 +28,11 @@ public final class Globals{
 
     public static void setSpeakerTracking(boolean on) {
         speakerTrackingEnabled = on;
+        if(speakerTrackingEnabled){
+            LimelightHelpers.setLEDMode_ForceOn("");
+        } else {
+            LimelightHelpers.setLEDMode_ForceOff("");
+        }
     }
 
     public static boolean getSpeakerTracking() {
