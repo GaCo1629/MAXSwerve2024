@@ -266,7 +266,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
       } else {
         fieldRelative = false;
-        xSpeed = 0.16;
+        xSpeed = 0.12;
       }
       lockCurrentHeading();  // prepare for return to heading hold
 
