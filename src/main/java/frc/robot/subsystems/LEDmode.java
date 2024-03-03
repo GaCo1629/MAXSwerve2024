@@ -9,8 +9,10 @@ public enum LEDmode {
     NOTE_HOLDING,       // Note is in robot
     SEEKING,            // Seeking a speaker to score
     SPEAKER_DETECTED,   // Speaker Apriltag has been detected
-    SHOOTING,           // In the process of preparing to shoot and waiting to shoot 
+    SHOOTING,           // Actually firing when ready
+    SHOOTING_TIMEOUT,   // Shooting even if not ready
     SPEEDOMETER,        // Displaying robot speed on power meter.
+    LOWERING,           // Baton is still returning from raised position
     SYSTEM_ERROR,       // Displaying system error code
     DEFAULT
 }

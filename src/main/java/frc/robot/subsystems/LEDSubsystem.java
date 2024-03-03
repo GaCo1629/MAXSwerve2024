@@ -100,13 +100,20 @@ public class LEDSubsystem extends SubsystemBase {
         flashStrip(GREEN, 0.25, 0.0);
         break;
 
-      case SHOOTING:           // In the process of preparing to shoot and waiting to shoot 
+      case SHOOTING:            // Green
         flashStrip(GREEN, 0.1, 0.1);
+
+      case SHOOTING_TIMEOUT:    // Waiting to shoot Shooting took too long
+        flashStrip(BLUE, 0.25, 0.0);
         break;
 
       case SPEEDOMETER:        // Displaying robot speed on power meter.
       case DEFAULT:
         showSpeedo();
+        break;
+
+      case LOWERING:
+        flashStrip(RED, 0.2, 0.05);
         break;
 
       case SYSTEM_ERROR:       // Displaying system error code

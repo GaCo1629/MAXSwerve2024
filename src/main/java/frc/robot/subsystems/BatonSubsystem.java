@@ -180,7 +180,13 @@ public class BatonSubsystem extends SubsystemBase {
                 if (noteInIntake()) {
                     setState(BatonState.HOLDING);
                 }
-                Globals.setLEDMode(LEDmode.SPEEDOMETER);
+
+                // Warn if batton in not fully lowered
+                if ((tiltAngleSetPoint == TiltConstants.homeAngle) && !tiltIsInPosition()) {
+                    Globals.setLEDMode(LEDmode.LOWERING);
+                } else {
+                    Globals.setLEDMode(LEDmode.SPEEDOMETER);
+                }
                 // Exits by button press.
                 break;
 
@@ -212,12 +218,10 @@ public class BatonSubsystem extends SubsystemBase {
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
-                } else if (!noteInIntake() && stateTimer.hasElapsed(2)){
-                    // we missed the note pickup, so cancel the shoot.
-                    stopIntake();  // just in case
-                    stopShooter();
-                    Globals.setSpeakerTracking(false);
-                    setState(BatonState.IDLE);                     
+                } else if(stateTimer.hasElapsed(2)){
+                   intake.set(BatonConstants.fire);
+                   Globals.setLEDMode(LEDmode.SHOOTING_TIMEOUT);
+                   setState(BatonState.SHOOTING); 
                 }
                 break;
                 
@@ -386,7 +390,8 @@ public class BatonSubsystem extends SubsystemBase {
 
        
     public boolean readyToShoot() {
-        return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
+        // return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
+        return tiltIsInPosition() && shooterIsUpToSpeed();
     }
 
      
