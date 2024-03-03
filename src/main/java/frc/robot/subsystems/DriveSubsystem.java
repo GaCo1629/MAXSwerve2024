@@ -262,11 +262,11 @@ public class DriveSubsystem extends SubsystemBase {
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
         if (Math.abs(trackingController.getPositionError()) < 10){
           fieldRelative = false;
-          xSpeed = Globals.noteTarget.range / 3.0;
+          xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
         }
       } else {
         fieldRelative = false;
-        xSpeed = 0.12;
+        xSpeed = 0.14;  //  Was 0.12
       }
       lockCurrentHeading();  // prepare for return to heading hold
 

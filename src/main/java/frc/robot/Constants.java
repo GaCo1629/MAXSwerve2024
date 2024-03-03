@@ -127,7 +127,7 @@ public final class Constants {
     public static int intakeID = 24;
     public static double maxTiltAngle  = 95;
     public static double maxShooterRPM = 6500;
-    public static double collect = -0.5;
+    public static double collect = -0.45;  // was 0.5
     public static double fire = -1;
     public static double eject = 0.3;
 
@@ -225,7 +225,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.015; //  0.015
+    public static final double kPTrackingController = 0.014; //  0.015 before slower detection
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
 
