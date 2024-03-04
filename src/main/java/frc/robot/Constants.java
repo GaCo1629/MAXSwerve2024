@@ -195,7 +195,7 @@ public final class Constants {
     public static final int kCoPilotController1Port= 1;
     public static final int kCoPilotController2Port= 2;
  
-    public static final double kDriveDeadband = 0.02;
+    public static final double kDriveDeadband = 0.05;
   }
 
   public static final class AutoConstants {
