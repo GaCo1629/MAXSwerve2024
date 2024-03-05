@@ -137,6 +137,9 @@ public final class Constants {
     public static double maxTargetRange = 5.0;  // meters
     public static double defaultTilt = 2;
     public static double defaultRPM = 3000;
+
+    public static double noteApproachSpeed = 0.12;
+    public static double amplifierApproachSpeed = 0.05;
   }
 
   public class LiftConstants{

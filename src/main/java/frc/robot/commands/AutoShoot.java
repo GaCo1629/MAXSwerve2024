@@ -33,7 +33,7 @@ public class AutoShoot extends Command {
   @Override
   public void execute() {
     // Read baton sensors
-    robotDrive.driveTelep();
+    robotDrive.driveAutoShoot();
   }
 
   // Called once the command ends or is interrupted.

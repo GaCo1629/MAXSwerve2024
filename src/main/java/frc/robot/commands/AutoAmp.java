@@ -33,7 +33,7 @@ public class AutoAmp extends Command {
   @Override
   public void execute() {
     // Read baton sensors
-    robotDrive.driveTelep();
+    robotDrive.driveAutoAmplify();
   }
 
   // Called once the command ends or is interrupted.

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -208,8 +209,10 @@ public class DriveSubsystem extends SubsystemBase {
     disableTracking = false;
   }
 
+  // ===============  Different Driving methods for different actions
+
   /**
-   * Method to drive the robot using joystick info.
+   * Drive Method for Teleop ------------------------------------------
    */
   public void driveTelep() {
     
@@ -226,7 +229,6 @@ public class DriveSubsystem extends SubsystemBase {
     // smooth out the translation requests
     xSpeed = XLimiter.calculate(xSpeed);
     ySpeed = YLimiter.calculate(ySpeed);
-
 
     // TARGET TRACKING =======================================================
     if (Globals.getSpeakerTracking()) {
@@ -248,8 +250,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     } else if (Globals.getNoteTracking()) {
       //  TRACKING NOTE 
-
-
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
@@ -259,14 +259,14 @@ public class DriveSubsystem extends SubsystemBase {
         }
       } else {
         fieldRelative = false;
-        xSpeed = 0.12;  //  Was 0.12
+        xSpeed = BatonConstants.noteApproachSpeed;
       }
       lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.getAmplifying()) {
        SmartDashboard.putString("Mode", "Amplify")  ;
        fieldRelative = false;
-       xSpeed = 0.05;
+       xSpeed = BatonConstants.amplifierApproachSpeed;
        lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {
@@ -301,71 +301,107 @@ public class DriveSubsystem extends SubsystemBase {
     driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
   }
 
-    /**
-   * Method to drive the robot using joystick info.
+  /**
+   * Drive Method to Turn To Heading -------------------------------------
    */
-  public void driveAuto() {
+  public void driveAutoTurnToHeading() {
     
-    double xSpeed = 0;
-    double ySpeed = 0;
-    double rotate = 0;
-    boolean fieldRelative = true;
+    SmartDashboard.putString("Mode", "Turn To Heading")  ;
 
-    // TARGET TRACKING =======================================================
-    if (Globals.getSpeakerTracking() && !disableTracking) {
-      SmartDashboard.putString("Mode", "Speaker")  ;
-
-      if (Globals.speakerTarget.valid) {
-        //  TRACKING SPEAKER 
-        Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
-
-        // Calculate turn power to point to speaker.
-        rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
-
-        // Add additional rotation based on robot's sideways motion 
-        rotate += (ySpeed * 0.2);
-        lockCurrentHeading();  // prepare for return to heading hold
-      } else {
-        Globals.setLEDMode(LEDmode.SEEKING);
-      }
-
-    } else if (Globals.getNoteTracking()) {
-      //  TRACKING NOTE 
-
-      if (Globals.noteTarget.valid){
-        // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
-        if (Math.abs(trackingController.getPositionError()) < 10){
-          fieldRelative = false;
-          xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
-        }
-      } else {
-        fieldRelative = false;
-        xSpeed = 0.12;
-      }
-      lockCurrentHeading();  // prepare for return to heading hold
-
-    } else if (Globals.getAmplifying()) {
-       SmartDashboard.putString("Mode", "Amplify")  ;
-       fieldRelative = false;
-       xSpeed = 0.05;
-       lockCurrentHeading();  // prepare for return to heading hold
-    }
-    
     // PID Yaw control.
-    rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+    double rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
     if (Math.abs(rotate) < 0.025) {
       rotate = 0;
     } 
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
 
     // Send required power to swerve drives
-    driveRobot(xSpeedMPS, ySpeedMPS, rotRPS, fieldRelative);
+    driveRobot(0, 0, rotRPS, false);
   }
+
+  /**
+   * Drive Method to Amplify ----------------------------------------------
+   */
+  public void driveAutoAmplify() {
+    
+    SmartDashboard.putString("Mode", "Amplify")  ;
+
+    // PID Yaw control.
+    double rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+    if (Math.abs(rotate) < 0.025) {
+      rotate = 0;
+    } 
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+    double xSpeed    = BatonConstants.amplifierApproachSpeed  * DriveConstants.kMaxSpeedMetersPerSecond;
+
+    // prepare for return to heading hold & Send power to swerve modules
+    lockCurrentHeading();  
+    driveRobot(xSpeed, 0, rotRPS, false);
+  }
+
+  /**
+   * Drive Methods to do Note Collection  ----------------------------------------------
+   */
+  public void driveAutoCollect() {
+    
+    double xSpeed = 0;
+    double rotate = 0;
+
+    //  TRACKING NOTES 
+    if (Globals.noteTarget.valid){
+      // Calculate turn power to point to note.
+      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
+      if (Math.abs(trackingController.getPositionError()) < 10){
+        xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
+      }
+    } else {
+        xSpeed = BatonConstants.noteApproachSpeed;
+    }
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // prepare for return to heading hold & Send power to swerve modules
+    lockCurrentHeading();  
+    driveRobot(xSpeedMPS, 0, rotRPS, false);
+  }
+
+
+  /**
+   * Method to drive while shooting in auto  ---------------------------------------
+   */
+  public void driveAutoShoot() {
+    
+    double xSpeed = 0;
+    double rotate = 0;
+
+    // TARGET TRACKING =======================================================
+    SmartDashboard.putString("Mode", "Speaker")  ;
+
+    if (Globals.speakerTarget.valid) {
+      //  TRACKING SPEAKER 
+      Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
+
+      // Calculate turn power to point to speaker.
+      rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+      lockCurrentHeading();  // prepare for return to heading hold
+    } else {
+      Globals.setLEDMode(LEDmode.SEEKING);
+    }
+    
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // Send required power to swerve drives
+    driveRobot(xSpeedMPS, 0, rotRPS, false);
+  }
+
 
   /**
    * Drives robot based on requested axis movements

@@ -42,7 +42,7 @@ public class AutoTurnToHeading extends Command {
   @Override
   public void execute() {
     // Let drive turn to new heading.  Disable target tracking if we are rasing baton
-    robotDrive.driveNoTrack();
+    robotDrive.driveAutoTurnToHeading();
   }
 
   // Called once the command ends or is interrupted.

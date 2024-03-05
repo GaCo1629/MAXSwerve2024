@@ -125,7 +125,7 @@ public class BatonSubsystem extends SubsystemBase {
         
         noteSensor          = getNoteSensorValue();
         tiltInPosition      = calculateTiltInPosition();
-        shooterUpToSpeed    = calculateShootersUpToSpeed();
+        shooterUpToSpeed    = areShootersUpToSpeed();
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
@@ -387,25 +387,23 @@ public class BatonSubsystem extends SubsystemBase {
     public void stopShooter(){
         setShooterRPM(0);
     }
-
        
     public boolean readyToShoot() {
         // return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
         return tiltIsInPosition() && shooterIsUpToSpeed();
     }
-
      
-    public boolean calculateShootersUpToSpeed() {
+    public boolean areShootersUpToSpeed() {
         shooterSpeedTop = shooterTop.getRPM();
         shooterSpeedBot = shooterBot.getRPM();
 
-        topUpToSpeed = calculateShooterUpToSpeed(shooterBot.getRPM());
-        botUpToSpeed = calculateShooterUpToSpeed(shooterTop.getRPM());
+        topUpToSpeed = isShooterUpToSpeed(shooterBot.getRPM());
+        botUpToSpeed = isShooterUpToSpeed(shooterTop.getRPM());
         
         return ((shooterSpeedSetPoint > 0) && (topUpToSpeed || botUpToSpeed));
     }
 
-    public boolean calculateShooterUpToSpeed(double liveSpeed) {
+    public boolean isShooterUpToSpeed(double liveSpeed) {
         return (Math.abs(shooterSpeedSetPoint - liveSpeed) < ShooterConstants.speedThresholdRPM);
     }
 
