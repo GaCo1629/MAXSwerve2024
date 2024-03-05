@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -16,76 +14,52 @@ public class VisionSubsystem extends SubsystemBase{
     public void periodic(){
         getSpeakerTarget();
         getNoteTarget();
-        if (DriverStation.isDisabled()){
-            getRobotPoseFromApriltag();
-            SmartDashboard.putString("BotPose", Globals.robotPoseFromApriltag.toString());
-        } else {
-            getSpeakerTarget();
-            getNoteTarget();
-            SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
-            SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
-        }
+
+        SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
+        SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
+
         SmartDashboard.putBoolean("ValidSpeaker", Globals.speakerTarget.valid);
         SmartDashboard.putBoolean("ValidNote", Globals.noteTarget.valid);
     }
 
-    //  ======================  AprilTag 3D Vision processing
-    public RobotPoseFromApriltag getRobotPoseFromApriltag() {
-
-        if (LimelightHelpers.getTV("")) {
-            Globals.robotPoseFromApriltag = new RobotPoseFromApriltag(true, LimelightHelpers.getBotPose2d_wpiBlue(""));
-        } else {
-            Globals.robotPoseFromApriltag = new RobotPoseFromApriltag();
-        }
-
-        return  Globals.robotPoseFromApriltag;
-    }
-
     //  ======================  Speaker Tracking Vision processing
-    public SpeakerTarget getSpeakerTarget() {
-        double x,y,z = 0;
-        double range = 0;
-        double bearing = 0;
-        double elevation = 0;
-        SpeakerTarget aTarget;
-
-        Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
-
-        x = targetLocation.getX();
-        y = targetLocation.getZ();
-        z = -targetLocation.getY();
-
-        // SmartDashboard.putString("Target Coord", String.format("X:Y:Z %5.2f  %5.2f  %5.2f ", x,y,z));
-
-        range = Math.hypot(x, y);
-        bearing = -Math.atan2(x, y);
-        elevation = Math.atan2(z, range);
-
-        if (range > 0.5) {
-            aTarget = new SpeakerTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
-        }else{
-            aTarget = new SpeakerTarget();
-        }
-        Globals.speakerTarget = aTarget;
-        return aTarget;
-    }
-
-    //  ======================  Note Tracking Vision processing
-    public NoteTarget getNoteTarget() {
+    public Target getSpeakerTarget() {
         double y = 0;
         double range = 0;
         double bearing = 0;
-        NoteTarget aTarget;
+        Target aTarget;
+
+        if (LimelightHelpers.getTV("limelight")) {
+
+            bearing = LimelightHelpers.getTX("limelight");
+            y = LimelightHelpers.getTY("limelight");
+
+            range = Math.tan((Math.toRadians(VisionConstants.noteCameraAngle + y) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset);
+            aTarget = new Target(true, range, bearing);
+        }else{
+            aTarget = new Target();
+        }
+        Globals.noteTarget = aTarget;
+        return aTarget;
+
+    }
+
+    //  ======================  Note Tracking Vision processing
+    public Target getNoteTarget() {
+        double y = 0;
+        double range = 0;
+        double bearing = 0;
+        Target aTarget;
 
         if (LimelightHelpers.getTV("limelight-note")) {
 
             bearing = LimelightHelpers.getTX("limelight-note");
-            y = LimelightHelpers.getTY("limelight-note");
+            y       = LimelightHelpers.getTY("limelight-note");
 
-            range = Math.tan((Math.toRadians(VisionConstants.noteCameraAngle + y) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset);
-            aTarget = new NoteTarget(true, range, bearing);
+            range   = VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y));
+            aTarget = new Target(true, range, bearing);
         }else{
-            aTarget = new NoteTarget();
+            aTarget = new Target();
         }
         Globals.noteTarget = aTarget;
         return aTarget;

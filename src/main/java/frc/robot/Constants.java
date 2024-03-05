@@ -253,6 +253,9 @@ public final class Constants {
     public static double noteCameraAngle  = 60;    // degrees
     public static double noteCameraHeight = 0.61;  // meters
     public static double noteRollerOffset = 0.13;  // meters
+
+    public static double speakerTagHeightAboveCamera = 1.00;  // meters
+    public static double speakerCameraAngle          = 25.0;  // degrees
   }
   
 

@@ -60,11 +60,10 @@ public class DriveSubsystem extends SubsystemBase {
   private PS4Controller driver;
   //private Joystick copilot_1;
   //private Joystick copilot_2;
-  
+    
   private boolean headingLocked = false;
   private double  headingSetpoint = 0;
   private double  speedFactor = DriveConstants.kAtleeSpeedFactor;
-  private boolean disableTracking = false;
 
   private SlewRateLimiter XLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter YLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -148,7 +147,6 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setAmplifying(false);
     trackTimer.start();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
-    disableTracking = false;
   }
 
 
@@ -203,12 +201,6 @@ public class DriveSubsystem extends SubsystemBase {
       pose);
   }
 
-  public void driveNoTrack() {
-    disableTracking = true;
-    driveTelep();
-    disableTracking = false;
-  }
-
   // ===============  Different Driving methods for different actions
 
   /**
@@ -239,7 +231,7 @@ public class DriveSubsystem extends SubsystemBase {
         Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
         // Calculate turn power to point to speaker.
-        rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+        rotate = -trackingController.calculate(Globals.speakerTarget.bearingDeg, 180);
 
         // Add additional rotation based on robot's sideways motion 
         rotate += (ySpeed * 0.2);
@@ -388,7 +380,7 @@ public class DriveSubsystem extends SubsystemBase {
       Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
       // Calculate turn power to point to speaker.
-      rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+      rotate = -trackingController.calculate(Globals.speakerTarget.bearingDeg, 180);
       lockCurrentHeading();  // prepare for return to heading hold
     } else {
       Globals.setLEDMode(LEDmode.SEEKING);

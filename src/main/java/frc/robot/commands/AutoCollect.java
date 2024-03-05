@@ -18,7 +18,6 @@ public class AutoCollect extends Command {
 
   /** Creates a new Shoot. */
   public AutoCollect(BatonSubsystem baton, DriveSubsystem robotDrive) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
     this.robotDrive = robotDrive;
     addRequirements(baton, robotDrive);

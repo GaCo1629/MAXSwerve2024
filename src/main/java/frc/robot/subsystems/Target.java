@@ -1,18 +1,18 @@
 package frc.robot.subsystems;
 
-public class NoteTarget {
+public class Target {
     
     public boolean valid;
     public double range;
     public double bearingDeg;
 
-    public NoteTarget(boolean valid, double range, double bearing) {
+    public Target(boolean valid, double range, double bearing) {
         this.valid = valid;
         this.range = range;
         this.bearingDeg = bearing;
     }
 
-    public NoteTarget() {
+    public Target() {
         this.valid = false;
         this.range = 0;
         this.bearingDeg = 0;

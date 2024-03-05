@@ -8,13 +8,14 @@ public final class Globals{
     public static double  robotPitch            = 0;
     public static double  robotRoll             = 0;
     public static double  lastShooterSpeed      = ShooterConstants.baseShooterSpeed;
-    public static SpeakerTarget speakerTarget   = new SpeakerTarget();
-    public static NoteTarget noteTarget         = new NoteTarget();
+    public static Target  speakerTarget         = new Target();
+    public static Target  noteTarget            = new Target();
     public static RobotPoseFromApriltag robotPoseFromApriltag = new RobotPoseFromApriltag();
     public static double  speed                 = 0;
     
-    private static boolean amplifyingEnabled     = false;
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
+
+    private static boolean amplifyingEnabled     = false;
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;
 
