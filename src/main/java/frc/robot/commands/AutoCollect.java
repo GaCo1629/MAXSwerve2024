@@ -36,7 +36,7 @@ public class AutoCollect extends Command {
   @Override
   public void execute() {
     // Read baton sensors
-    robotDrive.drive();
+    robotDrive.driveTelep();
   }
 
   // Called once the command ends or is interrupted.

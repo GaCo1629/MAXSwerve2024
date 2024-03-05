@@ -204,21 +204,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveNoTrack() {
     disableTracking = true;
-    drive();
+    driveTelep();
     disableTracking = false;
   }
 
   /**
    * Method to drive the robot using joystick info.
-   *
-   * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
-   * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
-   * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void drive() {
+  public void driveTelep() {
     
     double xSpeed;
     double ySpeed;
@@ -236,7 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     // TARGET TRACKING =======================================================
-    if (Globals.getSpeakerTracking() && !disableTracking) {
+    if (Globals.getSpeakerTracking()) {
       SmartDashboard.putString("Mode", "Speaker")  ;
 
       if (Globals.speakerTarget.valid) {
@@ -306,6 +299,72 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Send required power to swerve drives
     driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
+  }
+
+    /**
+   * Method to drive the robot using joystick info.
+   */
+  public void driveAuto() {
+    
+    double xSpeed = 0;
+    double ySpeed = 0;
+    double rotate = 0;
+    boolean fieldRelative = true;
+
+    // TARGET TRACKING =======================================================
+    if (Globals.getSpeakerTracking() && !disableTracking) {
+      SmartDashboard.putString("Mode", "Speaker")  ;
+
+      if (Globals.speakerTarget.valid) {
+        //  TRACKING SPEAKER 
+        Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
+
+        // Calculate turn power to point to speaker.
+        rotate = -trackingController.calculate(Globals.speakerTarget.bearing, 180);
+
+        // Add additional rotation based on robot's sideways motion 
+        rotate += (ySpeed * 0.2);
+        lockCurrentHeading();  // prepare for return to heading hold
+      } else {
+        Globals.setLEDMode(LEDmode.SEEKING);
+      }
+
+    } else if (Globals.getNoteTracking()) {
+      //  TRACKING NOTE 
+
+      if (Globals.noteTarget.valid){
+        // Calculate turn power to point to note.
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
+        if (Math.abs(trackingController.getPositionError()) < 10){
+          fieldRelative = false;
+          xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
+        }
+      } else {
+        fieldRelative = false;
+        xSpeed = 0.12;
+      }
+      lockCurrentHeading();  // prepare for return to heading hold
+
+    } else if (Globals.getAmplifying()) {
+       SmartDashboard.putString("Mode", "Amplify")  ;
+       fieldRelative = false;
+       xSpeed = 0.05;
+       lockCurrentHeading();  // prepare for return to heading hold
+    }
+    
+    // PID Yaw control.
+    rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+    if (Math.abs(rotate) < 0.025) {
+      rotate = 0;
+    } 
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // Send required power to swerve drives
+    driveRobot(xSpeedMPS, ySpeedMPS, rotRPS, fieldRelative);
   }
 
   /**
@@ -432,7 +491,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // ============ Public Command Interface  ========================================
-  public Command driveCmd()                       {return runOnce(() -> drive());}
+  public Command driveCmd()                       {return runOnce(() -> driveTelep());}
 
   public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
   public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
