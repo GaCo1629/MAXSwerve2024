@@ -29,6 +29,10 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.utils.Globals;
+import frc.robot.utils.IMUInterface;
+import frc.robot.utils.LEDmode;
+import frc.robot.utils.MAXSwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -164,13 +168,6 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()}
     );
 
-    // Look for AprilTags on the Speakers to update static position when disabled.
-    if (DriverStation.isDisabled() && Globals.robotPoseFromApriltag.valid) {
-      Pose2d robotPose = Globals.robotPoseFromApriltag.robotPose;          
-      odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
-    }
-
-   
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
   }

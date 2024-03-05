@@ -5,10 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.BatonState;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Globals;
+import frc.robot.utils.BatonState;
+import frc.robot.utils.Globals;
 
 public class AutoShoot extends Command {
   BatonSubsystem baton;
