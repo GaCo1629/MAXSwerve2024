@@ -3,6 +3,7 @@
   "robotLength": 0.84,
   "holonomicMode": true,
   "pathFolders": [
+    "1",
     "2",
     "3",
     "4",
@@ -11,15 +12,14 @@
     "7",
     "8",
     "9",
-    "A",
-    "1",
-    "P",
-    "S"
+    "1A",
+    "1P",
+    "1S"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 2.5,
-  "defaultMaxAccel": 4.0,
+  "defaultMaxVel": 4.0,
+  "defaultMaxAccel": 6.0,
   "defaultMaxAngVel": 180.0,
-  "defaultMaxAngAccel": 360.0,
+  "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5
 }

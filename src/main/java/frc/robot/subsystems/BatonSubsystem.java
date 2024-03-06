@@ -481,7 +481,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
     public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
     public Command enableManualShootingCmd(boolean on) {return runOnce(() -> enableManualShooting(on));}
-     public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
+    public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
     public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
 
     

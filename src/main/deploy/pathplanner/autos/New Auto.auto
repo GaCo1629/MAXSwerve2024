@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2083958713371972,
-      "y": 5.531946336619947
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -12,15 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
+          "type": "race",
           "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "S-L"
+            "commands": []
           }
         }
       ]

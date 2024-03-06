@@ -95,7 +95,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SEEKING:             // Seeling a speaker to score
-        flashStrip(GREEN, 0.3, 0.3);
+        flashStrip(GREEN, 0.25, 0.25);
         break;
 
       case SPEAKER_DETECTED:   // Speaker Apriltag has been detected

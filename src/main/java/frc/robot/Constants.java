@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.opencv.core.Point;
+
+import com.pathplanner.lib.path.PathPoint;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -256,6 +259,12 @@ public final class Constants {
 
     public static double speakerTagHeightAboveCamera = 1.00;  // meters
     public static double speakerCameraAngle          = 25.0;  // degrees
+  }
+
+  public static final class FieldConstants{
+    public static double INCH_TO_M = 0.0254;
+    public static Point redSpeaker =  new Point(652.7 * INCH_TO_M, 218.4 * INCH_TO_M);
+    public static Point blueSpeaker = new Point( -1.5 * INCH_TO_M, 218.4 * INCH_TO_M);
   }
   
 

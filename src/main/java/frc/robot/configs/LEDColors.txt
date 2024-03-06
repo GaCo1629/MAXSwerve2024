@@ -1,0 +1,23 @@
+Robot State	                        Color   Pattern	    Flashes per Sec.
+==================================  ======= =========   ===============
+Disabled: Not connected (has note)	Green	Bouncing	
+Disabled: Red Alliance (has note)	Red	    Bouncing	
+Disabled: Blue Alliance (has note)	Blue	Bouncing	
+Disabled: No note in collector.	    Red	    Flashing	5
+			
+Seeking Speaker Target 	            Green	Flashing	2
+Locked on Speaker Target	        Green	Solid	
+Shooting at Speaker	                Green   Flashing	5
+Shooting at Speaker, timed out	    Blue	Solid	
+Baton lowering back home	        Red	    Flashing	5
+			
+Looking for Note	                Orange	Sweep Up	
+Note Detected	                    Orange	Flashing	10
+Note Collected	                    Orange	Solid	
+			
+Speedometer (driving without note)	Green   0-60%
+                                    Orange  60-80% 
+                                    Red	    80-100%	
+
+
+

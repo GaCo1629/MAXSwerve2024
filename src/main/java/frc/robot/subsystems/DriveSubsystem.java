@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.core.Point;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -24,15 +26,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utils.Globals;
 import frc.robot.utils.IMUInterface;
 import frc.robot.utils.LEDmode;
 import frc.robot.utils.MAXSwerveModule;
+import frc.robot.utils.Target;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -170,6 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
+
   }
 
   /**
@@ -477,6 +483,35 @@ public class DriveSubsystem extends SubsystemBase {
     } else {
       speedFactor = DriveConstants.kAtleeSpeedFactor;
     }
+  }
+
+  public Target getTargetFromOdometry() {
+    Pose2d position = odometry.getEstimatedPosition();
+    Point  speaker  = new Point();
+    Point  robot    = new Point(position.getX(), position.getY());
+    Target estimate = new Target();
+
+    if (DriverStation.getAlliance().isPresent()) {
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        speaker = FieldConstants.redSpeaker;
+      } else {
+        speaker = FieldConstants.blueSpeaker;
+      }
+
+      double dX = speaker.x - robot.x;
+      double dY = speaker.y - robot.y;
+
+      double range   = Math.hypot(dX, dY);
+      double bearing = Math.atan2(dY, dX);
+
+      if (DriverStation.getAlliance().get() == Alliance.Red){
+        bearing = Math.PI - bearing;
+      }
+  
+      estimate = new Target(true, range, Math.toDegrees(bearing));
+    }
+
+    return estimate;
   }
 
   //  ======================  Heading related utilities.

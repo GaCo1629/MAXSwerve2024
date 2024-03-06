@@ -10,7 +10,7 @@ public final class Globals{
     public static double  lastShooterSpeed      = ShooterConstants.baseShooterSpeed;
     public static Target  speakerTarget         = new Target();
     public static Target  noteTarget            = new Target();
-     public static double  speed                 = 0;
+    public static double  speed                 = 0;
     
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
 
