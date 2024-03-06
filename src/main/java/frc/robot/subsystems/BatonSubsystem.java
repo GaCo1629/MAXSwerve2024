@@ -185,7 +185,9 @@ public class BatonSubsystem extends SubsystemBase {
                 if ((tiltAngleSetPoint == TiltConstants.homeAngle) && !tiltIsInPosition()) {
                     Globals.setLEDMode(LEDmode.LOWERING);
                 } else {
-                    Globals.setLEDMode(LEDmode.SPEEDOMETER);
+                    if (!Globals.getSpeakerTracking()) {
+                        Globals.setLEDMode(LEDmode.SPEEDOMETER);
+                    }
                 }
                 // Exits by button press.
                 break;
