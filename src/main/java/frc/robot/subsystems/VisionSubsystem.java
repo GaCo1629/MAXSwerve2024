@@ -37,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase{
             bearing = LimelightHelpers.getTX("limelight");
             y = LimelightHelpers.getTY("limelight");
 
-            range = Math.tan((Math.toRadians(VisionConstants.noteCameraAngle + y) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset);
+            range   = VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y));
             aTarget = new Target(true, range, bearing);
         }else{
             aTarget = new Target();
@@ -58,8 +58,8 @@ public class VisionSubsystem extends SubsystemBase{
 
             bearing = LimelightHelpers.getTX("limelight-note");
             y       = LimelightHelpers.getTY("limelight-note");
+            range = Math.tan((Math.toRadians(VisionConstants.noteCameraAngle + y) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset);
 
-            range   = VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y));
             aTarget = new Target(true, range, bearing);
         }else{
             aTarget = new Target();

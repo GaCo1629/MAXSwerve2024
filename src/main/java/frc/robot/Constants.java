@@ -6,7 +6,6 @@ package frc.robot;
 
 import org.opencv.core.Point;
 
-import com.pathplanner.lib.path.PathPoint;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
