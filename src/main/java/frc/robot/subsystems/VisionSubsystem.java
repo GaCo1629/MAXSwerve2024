@@ -42,7 +42,7 @@ public class VisionSubsystem extends SubsystemBase{
         }else{
             aTarget = new Target();
         }
-        Globals.noteTarget = aTarget;
+        Globals.speakerTarget = aTarget;
         return aTarget;
 
     }

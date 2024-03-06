@@ -325,6 +325,19 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "13,4": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Odo Target",
+              "_title": "SmartDashboard/Odo Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }

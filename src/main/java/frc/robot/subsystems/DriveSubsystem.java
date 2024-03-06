@@ -176,6 +176,11 @@ public class DriveSubsystem extends SubsystemBase {
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
 
+    Target odoTarget = getTargetFromOdometry();
+    SmartDashboard.putString("Odo Target", odoTarget.toString());
+
+    
+
   }
 
   /**
@@ -234,7 +239,7 @@ public class DriveSubsystem extends SubsystemBase {
         Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
         // Calculate turn power to point to speaker.
-        rotate = -trackingController.calculate(Globals.speakerTarget.bearingDeg, 180);
+        rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
 
         // Add additional rotation based on robot's sideways motion 
         rotate += (ySpeed * 0.2);
