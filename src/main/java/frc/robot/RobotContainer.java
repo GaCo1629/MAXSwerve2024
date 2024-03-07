@@ -22,7 +22,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-
+import frc.robot.utils.Globals;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -87,6 +87,8 @@ public RobotContainer() {
 
     // Configure default commands
     robotDrive.setDefaultCommand(robotDrive.driveCmd());
+
+    Globals.startingLocationSet = false ;
 
   }
 

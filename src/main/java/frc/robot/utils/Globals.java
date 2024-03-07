@@ -8,10 +8,12 @@ public final class Globals{
     public static double  robotPitch            = 0;
     public static double  robotRoll             = 0;
     public static double  lastShooterSpeed      = ShooterConstants.baseShooterSpeed;
+    public static double  speed                 = 0;
+    public static boolean startingLocationSet   = false;
     public static Target  speakerTarget         = new Target();
     public static Target  noteTarget            = new Target();
-    public static double  speed                 = 0;
-    
+    public static Target  odoTarget             = new Target();
+ 
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
 
     private static boolean amplifyingEnabled     = false;

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utils.Globals;
 import frc.robot.utils.Target;
 
 public class AutoTurnToSpeaker extends Command {
@@ -29,22 +30,30 @@ public class AutoTurnToSpeaker extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    // start timeout timer.
+    // restart timeout timer.
     turnTimer.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Let drive turn to new heading.  Disable target tracking if we are rasing baton
-    Target speaker = robotDrive.getTargetFromOdometry();
-    if (speaker.valid) {
-      robotDrive.newHeadingSetpoint(Math.toRadians(speaker.bearingDeg));
-      baton.setTiltAngle(baton.rangeToAngle(speaker.range) - 6 ); 
-      baton.setShooterRPM(baton.rangeToRPM(speaker.range));
+    Target turnTarget = null;
+
+    // Deterine which target location method we should use.
+    if (Globals.speakerTarget.valid) {
+      turnTarget = Globals.speakerTarget;
+    } else if (Globals.odoTarget.valid) {
+      turnTarget = Globals.odoTarget;
     }
     
+    // ensure that we have a valid target before starting any turn
+    if (turnTarget != null) {
+      robotDrive.newHeadingSetpoint(Math.toRadians(turnTarget.bearingDeg));
+      baton.setTiltAngle(baton.rangeToAngle(turnTarget.range) ); 
+      baton.setShooterRPM(baton.rangeToRPM(turnTarget.range));
+    }
+
+    // Run the drive comand used when turning on the spot.
     robotDrive.driveAutoTurnToHeading();
   }
 
@@ -52,8 +61,6 @@ public class AutoTurnToSpeaker extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    baton.setTiltAngle(0); 
-    baton.setShooterRPM(0);
     turnTimer.stop();
   }
 
@@ -63,7 +70,7 @@ public class AutoTurnToSpeaker extends Command {
    */
   @Override
   public boolean isFinished() {
-    return (robotDrive.atSetpoint() || ((timeout) > 0 && turnTimer.hasElapsed(timeout)));
+    return (robotDrive.atSetpoint() || ((timeout > 0) && turnTimer.hasElapsed(timeout)));
   }
 
 }

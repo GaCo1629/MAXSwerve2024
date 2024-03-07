@@ -102,7 +102,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
-      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::ppResetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -176,11 +176,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
 
-    Target odoTarget = getTargetFromOdometry();
-    SmartDashboard.putString("Odo Target", odoTarget.toString());
-
-    
-
+    getTargetFromOdometry();
   }
 
   /**
@@ -209,6 +205,15 @@ public class DriveSubsystem extends SubsystemBase {
       pose);
   }
 
+  /**
+   * Version of ResetOdometry which records the fact that Path Planner has set the robot location
+   * @param pose new pose to be assigned to robot
+   */
+  public void ppResetOdometry(Pose2d pose) {
+    Globals.startingLocationSet = true;
+    resetOdometry(pose);
+  }
+
   // ===============  Different Driving methods for different actions
 
   /**
@@ -231,25 +236,29 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeed = YLimiter.calculate(ySpeed);
 
     // TARGET TRACKING =======================================================
-    if (Globals.getSpeakerTracking()) {
+
+    if (Globals.getSpeakerTracking()) {  // --- TRACKING SPEAKER  ---------------------
       SmartDashboard.putString("Mode", "Speaker")  ;
 
       if (Globals.speakerTarget.valid) {
-        //  TRACKING SPEAKER 
         Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
         // Calculate turn power to point to speaker.
         rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
-
-        // Add additional rotation based on robot's sideways motion 
-        rotate += (ySpeed * 0.2);
         lockCurrentHeading();  // prepare for return to heading hold
+
       } else {
+        // Use heading derived from Odometry
+        newHeadingSetpoint(Globals.odoTarget.bearingRad);
+        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
         Globals.setLEDMode(LEDmode.SEEKING);
       }
 
-    } else if (Globals.getNoteTracking()) {
-      //  TRACKING NOTE 
+      // Add additional rotation based on robot's sideways motion 
+      rotate += (ySpeed * 0.2);
+
+    } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
+      
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.65;
@@ -259,20 +268,20 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
           xSpeed = 0.14;
         }
+        lockCurrentHeading();  // prepare for return to heading hold
       } else {
         fieldRelative = false;
         xSpeed = BatonConstants.noteApproachSpeed;
+        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
       }
-      lockCurrentHeading();  // prepare for return to heading hold
 
-    } else if (Globals.getAmplifying()) {
+    } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
        SmartDashboard.putString("Mode", "Amplify")  ;
        fieldRelative = false;
        xSpeed = BatonConstants.amplifierApproachSpeed;
        lockCurrentHeading();  // prepare for return to heading hold
 
-    }  else {
-      //  NO TRACKING
+    }  else {  // ---  MANUAL DRIVING-------------------------------------------------
       if (rotate != 0) {
         headingLocked = false;
       } else if (!headingLocked && isNotRotating()) {
@@ -393,6 +402,8 @@ public class DriveSubsystem extends SubsystemBase {
       rotate = -trackingController.calculate(Globals.speakerTarget.bearingDeg, 180);
       lockCurrentHeading();  // prepare for return to heading hold
     } else {
+      newHeadingSetpoint(Globals.odoTarget.bearingRad);
+      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
       Globals.setLEDMode(LEDmode.SEEKING);
     }
     
@@ -492,13 +503,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public Target getTargetFromOdometry() {
+  public void getTargetFromOdometry() {
     Pose2d position = odometry.getEstimatedPosition();
     Point  speaker  = new Point();
     Point  robot    = new Point(position.getX(), position.getY());
     Target estimate = new Target();
 
-    if (DriverStation.getAlliance().isPresent()) {
+    // only do this if we really know where we are on the field and we have an alliance color
+    if (Globals.startingLocationSet && DriverStation.getAlliance().isPresent()) {
       if (DriverStation.getAlliance().get() == Alliance.Red) {
         speaker = FieldConstants.redSpeaker;
       } else {
@@ -518,7 +530,8 @@ public class DriveSubsystem extends SubsystemBase {
       estimate = new Target(true, range, Math.toDegrees(bearing));
     }
 
-    return estimate;
+    Globals.odoTarget = estimate;
+    SmartDashboard.putString("Odo Target", estimate.toString());
   }
 
   //  ======================  Heading related utilities.

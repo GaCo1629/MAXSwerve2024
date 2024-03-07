@@ -134,7 +134,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
-            setTiltAngle(rangeToAngle(Globals.speakerTarget.range) - 6 ); 
+            setTiltAngle(rangeToAngle(Globals.speakerTarget.range)); 
             setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
@@ -296,7 +296,7 @@ public class BatonSubsystem extends SubsystemBase {
     public double rangeToAngle(double range) {
         double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
         //double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
-        return angle;
+        return angle - 6;
     }
     
     public  void setSpeakerTracking(boolean on){
@@ -348,7 +348,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         // if we are in auto, then make sure we get to the ground quickly
         if (tiltAngleSetPoint == 0){
-            if (currentTiltAngle > 10) {
+            if (currentTiltAngle > 6) {
                 output = -0.2;
             } else  {
                 output = 0;
