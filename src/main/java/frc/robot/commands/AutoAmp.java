@@ -14,7 +14,7 @@ public class AutoAmp extends Command {
   BatonSubsystem baton;
   DriveSubsystem robotDrive;
 
-  /** Creates a new Shoot. */
+  /** Creates a new Auto Amp. */
   public AutoAmp(BatonSubsystem baton, DriveSubsystem robotDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
