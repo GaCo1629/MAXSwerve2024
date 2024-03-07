@@ -31,10 +31,10 @@ public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax tiltRight;
     private FLEXShooter shooterTop;
     private FLEXShooter shooterBot;
-    private GPIDController tiltControl;
+    private GPIDController  tiltControl;
     private AbsoluteEncoder tiltEncoder;
     private RelativeEncoder tiltEncoderRel;
-    private Timer       stateTimer = new Timer();
+    private Timer           stateTimer = new Timer();
 
     private boolean tiltInPosition;
 
@@ -133,9 +133,24 @@ public class BatonSubsystem extends SubsystemBase {
         shooterUpToSpeed    = areShootersUpToSpeed();
 
         // control the baton angle and shooter speed.
-        if (Globals.getSpeakerTracking() && (Globals.speakerTarget.valid)) {
-            setTiltAngle(rangeToAngle(Globals.speakerTarget.range)); 
-            setShooterRPM(rangeToRPM(Globals.speakerTarget.range));
+        if (Globals.getSpeakerTracking()) {
+             double range = 0;
+
+            // Deterine which target location method we should use.
+            if (Globals.speakerTarget.valid) {
+                range = Globals.speakerTarget.range;
+            } else if (Globals.odoTarget.valid) {
+                range = Globals.odoTarget.range;
+            }
+
+            if ((range > 1) && (range < 4)) {
+                setTiltAngle(rangeToAngle(range)); 
+                setShooterRPM(rangeToRPM(range));
+            } else {
+                setTiltAngle(0); 
+                setShooterRPM(0);
+            }
+
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
 
@@ -152,21 +167,21 @@ public class BatonSubsystem extends SubsystemBase {
         runTiltPID();
         runStateMachine();
 
-        SmartDashboard.putNumber("Intake Range",    rangeFinder.getVoltage());
+        SmartDashboard.putNumber("Intake Range",            rangeFinder.getVoltage());
 
-        SmartDashboard.putNumber("tilt setpoint",   tiltAngleSetPoint);
-        SmartDashboard.putNumber("tilt angle",      currentTiltAngle);
-        SmartDashboard.putNumber("tilt Power",      tiltRight.getAppliedOutput());
-        SmartDashboard.putBoolean("tilt In Position",tiltIsInPosition());
-        SmartDashboard.putBoolean("Note In Intake", noteInIntake());
-        SmartDashboard.putNumber("tilt relative encoder", tiltEncoderRel.getPosition());
-        SmartDashboard.putNumber("tilt Error", tiltAngleSetPoint - currentTiltAngle);
+        SmartDashboard.putNumber("tilt setpoint",           tiltAngleSetPoint);
+        SmartDashboard.putNumber("tilt angle",              currentTiltAngle);
+        SmartDashboard.putNumber("tilt Power",              tiltRight.getAppliedOutput());
+        SmartDashboard.putBoolean("tilt In Position",       tiltIsInPosition());
+        SmartDashboard.putBoolean("Note In Intake",         noteInIntake());
+        SmartDashboard.putNumber("tilt relative encoder",   tiltEncoderRel.getPosition());
+        SmartDashboard.putNumber("tilt Error",              tiltAngleSetPoint - currentTiltAngle);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
-        SmartDashboard.putBoolean("top UTS", topUpToSpeed);
-        SmartDashboard.putBoolean("bot UTS", botUpToSpeed);
+        SmartDashboard.putBoolean("top UTS",        topUpToSpeed);
+        SmartDashboard.putBoolean("bot UTS",        botUpToSpeed);
         SmartDashboard.putBoolean("Ready To Shoot", readyToShoot());
     
         SmartDashboard.putString("BatonState",      currentState.toString());

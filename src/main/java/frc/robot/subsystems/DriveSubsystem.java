@@ -137,7 +137,6 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
     trackingController.enableContinuousInput(-180, 180);
-
   }
 
 
@@ -247,11 +246,14 @@ public class DriveSubsystem extends SubsystemBase {
         rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
         lockCurrentHeading();  // prepare for return to heading hold
 
-      } else {
-        // Use heading derived from Odometry
-        newHeadingSetpoint(Globals.odoTarget.bearingRad);
-        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+      } else if (Globals.odoTarget.valid) {
         Globals.setLEDMode(LEDmode.SEEKING);
+
+        rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
+        rotate = MathUtil.clamp(rotate, -0.5, 0.5);
+        lockCurrentHeading();  // prepare for return to heading hold
+        SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
+
       }
 
       // Add additional rotation based on robot's sideways motion 
@@ -260,17 +262,17 @@ public class DriveSubsystem extends SubsystemBase {
     } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
       
       if (Globals.noteTarget.valid){
+        fieldRelative = false;
+
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.65;
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.5;
         if (Math.abs(trackingController.getPositionError()) < 10){
-          fieldRelative = false;
-          xSpeed = Globals.noteTarget.range * 0.4; 
+          xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
-          xSpeed = 0.14;
+          xSpeed = BatonConstants.noteApproachSpeed;
         }
         lockCurrentHeading();  // prepare for return to heading hold
       } else {
-        fieldRelative = false;
         xSpeed = BatonConstants.noteApproachSpeed;
         rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
       }
