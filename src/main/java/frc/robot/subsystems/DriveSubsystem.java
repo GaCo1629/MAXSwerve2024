@@ -252,10 +252,12 @@ public class DriveSubsystem extends SubsystemBase {
       //  TRACKING NOTE 
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.65;
         if (Math.abs(trackingController.getPositionError()) < 10){
           fieldRelative = false;
-          xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
+          xSpeed = Globals.noteTarget.range * 0.4; 
+        } else {
+          xSpeed = 0.14;
         }
       } else {
         fieldRelative = false;
@@ -503,8 +505,8 @@ public class DriveSubsystem extends SubsystemBase {
         speaker = FieldConstants.blueSpeaker;
       }
 
-      double dX = speaker.x - robot.x;
-      double dY = speaker.y - robot.y;
+      double dX = robot.x - speaker.x ;
+      double dY = robot.y - speaker.y ;
 
       double range   = Math.hypot(dX, dY);
       double bearing = Math.atan2(dY, dX);

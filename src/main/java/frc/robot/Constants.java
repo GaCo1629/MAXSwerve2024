@@ -252,9 +252,9 @@ public final class Constants {
   }
 
   public class VisionConstants {
-    public static double noteCameraAngle  = 60;    // degrees
+    public static double noteCameraAngle  = 53;    // degrees
     public static double noteCameraHeight = 0.61;  // meters
-    public static double noteRollerOffset = 0.13;  // meters
+    public static double noteRollerOffset = 0.0;   // meters
 
     public static double speakerTagHeightAboveCamera = 0.966;  // meters
     public static double speakerCameraAngle          = 25.0;  // degrees
