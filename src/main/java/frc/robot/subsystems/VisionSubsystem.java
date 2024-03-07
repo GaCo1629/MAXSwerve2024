@@ -15,7 +15,7 @@ public class VisionSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        getSpeakerTarget();
+        getSpeakerTargetFromAprilTag();
         getNoteTarget();
 
         SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
@@ -26,7 +26,7 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     //  ======================  Speaker Tracking Vision processing
-    public Target getSpeakerTarget() {
+    public Target getSpeakerTargetFromAprilTag() {
         double y = 0;
         double range = 0;
         double bearing = 0;
@@ -38,6 +38,7 @@ public class VisionSubsystem extends SubsystemBase{
             y = LimelightHelpers.getTY("limelight");
 
             range   = (VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y))) + VisionConstants.speakerCameraCenterOffset;
+            range *= VisionConstants.rangeAdjustV2O ; 
             aTarget = new Target(true, range, bearing);
         }else{
             aTarget = new Target();

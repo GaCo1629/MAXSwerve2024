@@ -259,6 +259,8 @@ public final class Constants {
     public static double speakerTagHeightAboveCamera = 0.966;  // meters
     public static double speakerCameraCenterOffset   = 0.28;  // meters
     public static double speakerCameraAngle          = 25.0;  // degrees
+
+    public static double rangeAdjustV2O              = 1.097; // baed on measurments on the field
   }
 
   public static final class FieldConstants{

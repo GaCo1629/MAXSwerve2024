@@ -175,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
 
-    getTargetFromOdometry();
+    getSpeakerTargetFromOdometry();
   }
 
   /**
@@ -505,7 +505,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public void getTargetFromOdometry() {
+  public void getSpeakerTargetFromOdometry() {
     Pose2d position = odometry.getEstimatedPosition();
     Point  speaker  = new Point();
     Point  robot    = new Point(position.getX(), position.getY());
