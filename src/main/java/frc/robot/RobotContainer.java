@@ -15,6 +15,7 @@ import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoTurnToHeading;
+import frc.robot.commands.AutoTurnToSpeaker;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -59,10 +60,11 @@ public class RobotContainer {
 public RobotContainer() {
 
         // Register named commands
-    NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
-    NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
+    NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
+    NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
+    NamedCommands.registerCommand("TurnToSpeaker",  new AutoTurnToSpeaker(baton, robotDrive, 2.0));
+    NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));
@@ -76,8 +78,6 @@ public RobotContainer() {
 
     NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
     NamedCommands.registerCommand("CollectorOff",   baton.stopIntakeCmd());
-    NamedCommands.registerCommand("RaiseShooter",   baton.setSpeakerTrackingCmd(true));
-    NamedCommands.registerCommand("LowerShooter",   baton.setSpeakerTrackingCmd(false));
     
     // Configure the button bindings
     configureButtonBindings();
