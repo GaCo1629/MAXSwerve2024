@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnToSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
@@ -46,12 +40,6 @@
           "type": "named",
           "data": {
             "name": "Collect"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnToSpeaker"
           }
         },
         {
@@ -89,12 +77,6 @@
           "type": "path",
           "data": {
             "pathName": "5to2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnToSpeaker"
           }
         },
         {

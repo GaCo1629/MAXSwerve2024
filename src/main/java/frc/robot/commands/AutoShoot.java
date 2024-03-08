@@ -34,6 +34,9 @@ public class AutoShoot extends Command {
   public void execute() {
     // Read baton sensors
     robotDrive.driveAutoShoot();
+    if (robotDrive.atSetpoint()) {
+      baton.setState(BatonState.AUTO_SHOOT);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,7 +48,7 @@ public class AutoShoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (baton.getState() == BatonState.IDLE);
+    return (baton.getState() == BatonState.SHOOTING_WAIT);
   }
 
 }

@@ -249,8 +249,7 @@ public class DriveSubsystem extends SubsystemBase {
       } else if (Globals.odoTarget.valid) {
         Globals.setLEDMode(LEDmode.SEEKING);
 
-        rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
-        rotate = MathUtil.clamp(rotate, -0.5, 0.5);
+        rotate = moderateTurnRate(trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0));
         lockCurrentHeading();  // prepare for return to heading hold
         SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
       }
@@ -323,6 +322,10 @@ public class DriveSubsystem extends SubsystemBase {
     return rotate;
   }
 
+  private double moderateTurnRate(double rotate) {
+    return MathUtil.clamp(rotate, -0.4, 0.4);
+  }
+
   /**
    * Drive Method to Turn To Heading -------------------------------------
    */
@@ -370,18 +373,17 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveAutoCollect() {
     
-    double xSpeed = 0;
+    double xSpeed = BatonConstants.noteApproachSpeed;
     double rotate = 0;
 
     //  TRACKING NOTES 
     if (Globals.noteTarget.valid){
+      
       // Calculate turn power to point to note.
-      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) / 2;
+      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.5;
       if (Math.abs(trackingController.getPositionError()) < 10){
-        xSpeed = Globals.noteTarget.range / 2.5;  // was 3.0
+        xSpeed = Globals.noteTarget.range * 0.35; 
       }
-    } else {
-        xSpeed = BatonConstants.noteApproachSpeed;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
@@ -398,32 +400,34 @@ public class DriveSubsystem extends SubsystemBase {
    * Method to drive while shooting in auto  ---------------------------------------
    */
   public void driveAutoShoot() {
-    
-    double xSpeed = 0;
+  
     double rotate = 0;
 
     // TARGET TRACKING =======================================================
     SmartDashboard.putString("Mode", "Speaker")  ;
 
     if (Globals.speakerTarget.valid) {
-      //  TRACKING SPEAKER 
       Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
       // Calculate turn power to point to speaker.
-      rotate = -trackingController.calculate(Globals.speakerTarget.bearingDeg, 180);
+      rotate = moderateTurnRate(trackingController.calculate(Globals.speakerTarget.bearingDeg, 0));
       lockCurrentHeading();  // prepare for return to heading hold
-    } else {
-      newHeadingSetpoint(Globals.odoTarget.bearingRad);
-      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+
+    } else if (Globals.odoTarget.valid) {
       Globals.setLEDMode(LEDmode.SEEKING);
+
+      rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
+      rotate = MathUtil.clamp(rotate, -0.4, 0.4);
+      lockCurrentHeading();  // prepare for return to heading hold
+      SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
     }
+
     
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
 
     // Send required power to swerve drives
-    driveRobot(xSpeedMPS, 0, rotRPS, false);
+    driveRobot(0, 0, rotRPS, false);
   }
 
 

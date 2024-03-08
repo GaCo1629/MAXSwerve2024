@@ -127,6 +127,7 @@ public class BatonSubsystem extends SubsystemBase {
 
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
+        Globals.batonIsDown = (currentTiltAngle < 1.0);
         
         noteSensor          = getNoteSensorValue();
         tiltInPosition      = calculateTiltInPosition();
@@ -446,12 +447,10 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void fire (){
-       SmartDashboard.putBoolean("Shooter Up To Speed",shooterIsUpToSpeed());
-       SmartDashboard.putNumber("Shooter Up To Speed test",stateTimer.get());
         if (shooterIsUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
-       }
+        }
     }
 
     public void amplify (){

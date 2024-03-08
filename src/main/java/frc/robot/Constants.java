@@ -233,7 +233,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.014; //  0.015 before slower detection
+    public static final double kPTrackingController = 0.005; //  0.015 before slower detection
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
 
