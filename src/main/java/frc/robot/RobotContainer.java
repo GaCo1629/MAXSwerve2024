@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
+import frc.robot.commands.AutoFindNote;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoTurnToHeading;
 import frc.robot.commands.AutoTurnToSpeaker;
@@ -65,6 +66,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
     NamedCommands.registerCommand("TurnToSpeaker",  new AutoTurnToSpeaker(baton, robotDrive, 2.0));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
+    NamedCommands.registerCommand("FindNote",       new AutoFindNote());
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));
