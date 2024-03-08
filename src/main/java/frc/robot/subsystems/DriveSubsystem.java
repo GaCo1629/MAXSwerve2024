@@ -253,17 +253,13 @@ public class DriveSubsystem extends SubsystemBase {
         rotate = MathUtil.clamp(rotate, -0.5, 0.5);
         lockCurrentHeading();  // prepare for return to heading hold
         SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
-
       }
-
-      // Add additional rotation based on robot's sideways motion 
-      rotate += (ySpeed * 0.2);
+      rotate += (ySpeed * 0.2);  // Add additional rotation based on robot's sideways motion 
 
     } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
-      
+      fieldRelative = false;
       if (Globals.noteTarget.valid){
-        fieldRelative = false;
-
+        
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.5;
         if (Math.abs(trackingController.getPositionError()) < 10){
@@ -273,8 +269,10 @@ public class DriveSubsystem extends SubsystemBase {
         }
         lockCurrentHeading();  // prepare for return to heading hold
       } else {
-        xSpeed = BatonConstants.noteApproachSpeed;
-        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+        if (Math.abs(xSpeed) < BatonConstants.noteApproachSpeed ){
+          xSpeed = BatonConstants.noteApproachSpeed;
+        }
+        rotate = controlTurning(rotate);
       }
 
     } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
@@ -284,25 +282,7 @@ public class DriveSubsystem extends SubsystemBase {
        lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {  // ---  MANUAL DRIVING-------------------------------------------------
-      if (rotate != 0) {
-        headingLocked = false;
-      } else if (!headingLocked && isNotRotating()) {
-        lockCurrentHeading();
-      }
-
-      // if Heading lock is engaged, override the user input with data from PID
-      if (headingLocked) {
-        SmartDashboard.putString("Mode", "Auto")  ;
-        // PID control.
-        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-        if (Math.abs(rotate) < 0.025) {
-          rotate = 0;
-        } 
-      } else {
-        // plain driver control
-        SmartDashboard.putString("Mode", "Manual")  ;
-        rotate = rotLimiter.calculate(rotate);
-      }
+      rotate = controlTurning(rotate);
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
@@ -312,6 +292,35 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Send required power to swerve drives
     driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
+  }
+
+  /**
+   * Looks the requested joystick rotate and applies heading lock if required.
+   * @param rotate
+   * @return
+   */
+  private double controlTurning(double rotate) {
+    if (rotate != 0) {
+      headingLocked = false;
+    } else if (!headingLocked && isNotRotating()) {
+      lockCurrentHeading();
+    }
+
+    // if Heading lock is engaged, override the user input with data from PID
+    if (headingLocked) {
+      SmartDashboard.putString("Mode", "Auto")  ;
+      // PID control.
+      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+      if (Math.abs(rotate) < 0.025) {
+        rotate = 0;
+      } 
+    } else {
+      // plain driver control
+      SmartDashboard.putString("Mode", "Manual")  ;
+      rotate = rotLimiter.calculate(rotate);
+    }
+
+    return rotate;
   }
 
   /**
@@ -505,6 +514,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+  /**
+   * Calculates the range and bearing to the active speaker based on odometry.
+   */
   public void getSpeakerTargetFromOdometry() {
     Pose2d position = odometry.getEstimatedPosition();
     Point  speaker  = new Point();
@@ -525,10 +537,6 @@ public class DriveSubsystem extends SubsystemBase {
       double range   = Math.hypot(dX, dY);
       double bearing = Math.atan2(dY, dX);
 
-      if (DriverStation.getAlliance().get() == Alliance.Red){
-        bearing = Math.PI - bearing;
-      }
-  
       estimate = new Target(true, range, Math.toDegrees(bearing));
     }
 

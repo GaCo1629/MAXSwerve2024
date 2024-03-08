@@ -143,13 +143,12 @@ public class BatonSubsystem extends SubsystemBase {
                 range = Globals.odoTarget.range;
             }
 
-            if ((range > 1) && (range < 4)) {
+            // Prep Baton if we can see the target, or if ODO has us within valid range.
+            if (Globals.speakerTarget.valid || 
+                ((range > ShooterConstants.MinTargetRange) && (range < ShooterConstants.MaxTargetRange))) {
                 setTiltAngle(rangeToAngle(range)); 
                 setShooterRPM(rangeToRPM(range));
-            } else {
-                setTiltAngle(0); 
-                setShooterRPM(0);
-            }
+            } 
 
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
@@ -230,7 +229,7 @@ public class BatonSubsystem extends SubsystemBase {
                 if (Globals.speakerTarget.valid){
                     Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
                 } else {
-                     Globals.setLEDMode(LEDmode.NOTE_HOLDING);
+                    Globals.setLEDMode(LEDmode.NOTE_HOLDING);
                 }
                 // Exits by "fire" button press.
                 break;
@@ -308,12 +307,6 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== Conversions
 
-    public double rangeToAngle(double range) {
-        double angle = (-3.558 * range * range) + (31.335 * range) - 30.389;
-        //double angle = (-3.025 * range * range) + (28.00 * range) - 26.311;
-        return angle - 6;
-    }
-    
     public  void setSpeakerTracking(boolean on){
         Globals.setSpeakerTracking(on);
     }
@@ -324,6 +317,13 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
 
+    public double rangeToAngle(double range) {
+        //double angle = (-3.558 * range * range) + (31.335 * range) - 36.4;
+        double angle = (-3.558 * range * range) + (31.335 * range) - 35.4;
+
+        return angle;
+    }
+        
     public boolean tiltIsInPosition() {
         return tiltInPosition;
     }

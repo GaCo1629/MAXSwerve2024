@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
@@ -46,6 +52,12 @@
           "type": "named",
           "data": {
             "name": "TurnToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
@@ -83,6 +95,12 @@
           "type": "named",
           "data": {
             "name": "TurnToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

@@ -37,7 +37,7 @@ public class AutoTurnToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Target turnTarget = null;
+    Target turnTarget = new Target();
 
     // Deterine which target location method we should use.
     if (Globals.speakerTarget.valid) {
@@ -47,7 +47,7 @@ public class AutoTurnToSpeaker extends Command {
     }
     
     // ensure that we have a valid target before starting any turn
-    if (turnTarget != null) {
+    if (turnTarget.valid) {
       robotDrive.newHeadingSetpoint(Math.toRadians(turnTarget.bearingDeg));
       baton.setTiltAngle(baton.rangeToAngle(turnTarget.range) ); 
       baton.setShooterRPM(baton.rangeToRPM(turnTarget.range));

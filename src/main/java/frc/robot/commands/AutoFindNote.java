@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.Globals;
 
 public class AutoFindNote extends Command {

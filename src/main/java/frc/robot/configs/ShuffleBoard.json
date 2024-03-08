@@ -3,7 +3,7 @@
     {
       "title": "SmartDashboard",
       "autoPopulate": false,
-      "autoPopulatePrefix": "SmartDashboard/",
+      "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 32.0,
         "showGrid": true,
@@ -11,7 +11,7 @@
         "vgap": 24.0,
         "titleType": 0,
         "tiles": {
-          "15,6": {
+          "3,6": {
             "size": [
               9,
               2
@@ -19,7 +19,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Estimated Pos",
-              "_title": "Odpmetry Pose",
+              "_title": "Odometry Pose",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -50,22 +50,9 @@
               "_showGlyph": false
             }
           },
-          "15,8": {
+          "14,5": {
             "size": [
-              9,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/BotPose",
-              "_title": "Apriltag Pose",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,6": {
-            "size": [
-              5,
+              4,
               2
             ],
             "content": {
@@ -76,7 +63,7 @@
               "_showGlyph": false
             }
           },
-          "3,6": {
+          "18,5": {
             "size": [
               4,
               2
@@ -197,9 +184,9 @@
               "_showGlyph": false
             }
           },
-          "18,4": {
+          "12,3": {
             "size": [
-              3,
+              2,
               2
             ],
             "content": {
@@ -313,7 +300,7 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "12,6": {
+          "15,0": {
             "size": [
               3,
               2
@@ -326,9 +313,9 @@
               "_showGlyph": false
             }
           },
-          "13,4": {
+          "14,3": {
             "size": [
-              5,
+              4,
               2
             ],
             "content": {

@@ -164,6 +164,9 @@ public final class Constants {
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
     public static final double speedThresholdRPM = 20;
+
+    public static final double MinTargetRange = 1.0; // meters
+    public static final double MaxTargetRange = 5.0; // meters
   }
 
   public static final class TiltConstants { 
@@ -265,8 +268,8 @@ public final class Constants {
 
   public static final class FieldConstants{
     public static double INCH_TO_M = 0.0254;
-    public static Point redSpeaker =  new Point(652.7 * INCH_TO_M, 218.4 * INCH_TO_M);
-    public static Point blueSpeaker = new Point( -1.5 * INCH_TO_M, 218.4 * INCH_TO_M);
+    public static Point redSpeaker =  new Point(16.58, 5.54);
+    public static Point blueSpeaker = new Point(  -0.04, 5.54);
   }
   
 
