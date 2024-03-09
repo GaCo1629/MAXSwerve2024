@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4072529462910246,
-      "y": 7.0087226194216985
+      "x": 1.3005404928188775,
+      "y": 5.5430292057165325
     },
     "rotation": 0
   },
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Ato2C"
+                  "pathName": "S-3C"
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2to5C"
+                  "pathName": "3to7C"
                 }
               },
               {
@@ -76,7 +76,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5to2"
+            "pathName": "7to3"
           }
         },
         {

@@ -240,7 +240,7 @@ public class BatonSubsystem extends SubsystemBase {
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
-                } else if(stateTimer.hasElapsed(2)){
+                } else if(stateTimer.hasElapsed(3)){
                    intake.set(BatonConstants.fire);
                    Globals.setLEDMode(LEDmode.SHOOTING_TIMEOUT);
                    setState(BatonState.SHOOTING); 
@@ -413,7 +413,7 @@ public class BatonSubsystem extends SubsystemBase {
        
     public boolean readyToShoot() {
         // return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
-        return tiltIsInPosition() && shooterIsUpToSpeed();
+        return  tiltIsInPosition() && shooterIsUpToSpeed() && Globals.robotAtHeading;
     }
      
     public boolean areShootersUpToSpeed() {

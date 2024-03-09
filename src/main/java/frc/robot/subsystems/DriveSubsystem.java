@@ -137,6 +137,8 @@ public class DriveSubsystem extends SubsystemBase {
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
     trackingController.enableContinuousInput(-180, 180);
+    trackingController.setTolerance(AutoConstants.kToleranceTrackingController);
+
   }
 
 
@@ -171,6 +173,8 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()}
     );
+    Globals.robotAtHeading = trackingController.atSetpoint();
+    SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());

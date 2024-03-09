@@ -104,6 +104,7 @@ public class LEDSubsystem extends SubsystemBase {
 
       case SHOOTING:            // Green
         flashStrip(GREEN, 0.1, 0.1);
+        break;
 
       case SHOOTING_TIMEOUT:    // Waiting to shoot Shooting took too long
         flashStrip(BLUE, 0.25, 0.0);

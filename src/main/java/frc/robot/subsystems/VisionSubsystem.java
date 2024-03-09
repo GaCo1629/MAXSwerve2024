@@ -102,10 +102,13 @@ public class VisionSubsystem extends SubsystemBase{
 
             // do we need a guarenteed fresh Note?
             if ((hash != lastNoteTargetHash) || !needFreshNote) {
-                range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
-                aTarget = new Target(true, range, x);
-                lastNoteTargetHash = hash ;
-                needFreshNote = false;
+                if (a > VisionConstants.noteAreaThreshold){
+                    range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
+                    aTarget = new Target(true, range, x);
+                    lastNoteTargetHash = hash ;
+                    needFreshNote = false;
+                }
+                
             }
         }
 

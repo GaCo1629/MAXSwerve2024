@@ -6,6 +6,7 @@ public final class Globals{
     public static boolean enableLIftSubsystem   = false;
     public static boolean gyroHasBeenReset      = false;
     public static boolean batonIsDown           = false;
+    public static boolean robotAtHeading        = false;
 
     public static double  robotPitch            = 0;
     public static double  robotRoll             = 0;

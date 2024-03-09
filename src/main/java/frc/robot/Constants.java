@@ -187,7 +187,7 @@ public final class Constants {
     public static final double homeAngle    = 0;
     public static final double ampLowAngle = 60;
     public static final double ampHighAngle = 70;
-    public static final double tiltThresholdDeg = 1.0;
+    public static final double tiltThresholdDeg = 0.75;  //  was 1.0
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     public static final double kTiltConversion = 4.6f; // 360 / gear ratio / 1.2
@@ -236,6 +236,7 @@ public final class Constants {
     public static final double kPTrackingController = 0.005; //  0.015 before slower detection
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
+    public static final double kToleranceTrackingController = 4.0; // was 2.0
 
     public static final TrapezoidProfile.Constraints kTrackingConstraints = new TrapezoidProfile.Constraints(
       kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
@@ -264,6 +265,8 @@ public final class Constants {
     public static double speakerCameraAngle          = 25.0;  // degrees
 
     public static double rangeAdjustV2O              = 1.097; // baed on measurments on the field
+
+    public static double noteAreaThreshold = 0.5;
   }
 
   public static final class FieldConstants{
