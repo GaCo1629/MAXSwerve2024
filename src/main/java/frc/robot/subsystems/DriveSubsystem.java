@@ -275,7 +275,7 @@ public class DriveSubsystem extends SubsystemBase {
     } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
        SmartDashboard.putString("Mode", "Amplify")  ;
        fieldRelative = false;
-       xSpeed = BatonConstants.amplifierApproachSpeed;
+       xSpeed = BatonConstants.amplifierApproachSpeed;  // could be replaced by smart approach code
        lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {  // ---  MANUAL DRIVING-------------------------------------------------
