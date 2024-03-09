@@ -36,10 +36,11 @@ public class GPIDController implements Sendable, AutoCloseable {
   private double m_integralDeadband = 0.01;
 
   private double m_maximumInput;
-
   private double m_minimumInput;
+  private double m_maximumOutput = Double.POSITIVE_INFINITY;
+  private double m_minimumOutput = Double.NEGATIVE_INFINITY;
 
-  // Do the endpoints wrap around? e.g. Absolute encoder
+ // Do the endpoints wrap around? e.g. Absolute encoder
   private boolean m_continuous;
 
   // The error at the time of the most recent call to calculate()
@@ -336,6 +337,19 @@ public class GPIDController implements Sendable, AutoCloseable {
     m_maximumIntegral = maximumIntegral;
   }
 
+/**
+   * Sets the minimum and maximum values for the output.
+   *
+   * <p>When the cap is reached, the output is clamped.
+   *
+   * @param minimumOutput 
+   * @param maximumOutput 
+   */
+  public void setOutputRange(double minimumOutput, double maximumOutput) {
+    m_minimumOutput = minimumOutput;
+    m_maximumOutput = maximumOutput;
+  }
+
   /**
    * Sets the error which is considered tolerable for use with atSetpoint().
    *
@@ -424,7 +438,8 @@ public class GPIDController implements Sendable, AutoCloseable {
               m_maximumIntegral / m_ki);
     }
 
-    return (m_kp * m_positionError) + (m_ki * m_totalError) + (m_kd * m_velocityError);
+    double output = (m_kp * m_positionError) + (m_ki * m_totalError) + (m_kd * m_velocityError);
+    return MathUtil.clamp(output, m_minimumOutput, m_maximumOutput);
   }
 
   /** Resets the previous error and the integral term. */

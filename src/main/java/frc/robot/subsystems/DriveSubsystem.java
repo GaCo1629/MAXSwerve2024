@@ -12,7 +12,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -33,6 +32,7 @@ import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
 import frc.robot.utils.IMUInterface;
 import frc.robot.utils.LEDmode;
@@ -79,7 +79,7 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 
   private ProfiledPIDController headingLockController;
-  private PIDController         trackingController;
+  private GPIDController         trackingController;
   
   private Timer       trackTimer = new Timer();
   
@@ -133,12 +133,12 @@ public class DriveSubsystem extends SubsystemBase {
     headingLockController.enableContinuousInput(-Math.PI, Math.PI);
     headingLockController.setTolerance(AutoConstants.kDHeadingLockTollerance);
     
-    trackingController = new PIDController(AutoConstants.kPTrackingController, 
+    trackingController = new GPIDController(AutoConstants.kPTrackingController, 
                                                       AutoConstants.kITrackingController, 
                                                       AutoConstants.kDTrackingController);
     trackingController.enableContinuousInput(-180, 180);
     trackingController.setTolerance(AutoConstants.kToleranceTrackingController);
-
+    trackingController.setOutputRange(-AutoConstants.kOutputLimitTrackingController, AutoConstants.kOutputLimitTrackingController);
   }
 
 
@@ -251,7 +251,7 @@ public class DriveSubsystem extends SubsystemBase {
       } else if (Globals.odoTarget.valid) {
         Globals.setLEDMode(LEDmode.SEEKING);
 
-        rotate = moderateTurnRate(trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0));
+        rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
         lockCurrentHeading();  // prepare for return to heading hold
         SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
       }
@@ -262,7 +262,7 @@ public class DriveSubsystem extends SubsystemBase {
       if (Globals.noteTarget.valid){
         
         // Calculate turn power to point to note.
-        rotate = moderateTurnRate(trackingController.calculate(Globals.noteTarget.bearingDeg, 0));
+        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0);
         if (Math.abs(trackingController.getPositionError()) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
@@ -322,10 +322,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     return rotate;
-  }
-
-  private double moderateTurnRate(double rotate) {
-    return MathUtil.clamp(rotate, -0.4, 0.4);
   }
 
   /**
@@ -560,7 +556,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     if (Globals.noteTarget.valid){
       // Calculate turn power to point to note.
-      rotate = moderateTurnRate(trackingController.calculate(Globals.noteTarget.bearingDeg, 0));
+      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0);
       if (Math.abs(trackingController.getPositionError()) < 10){
         xSpeed = Globals.noteTarget.range * 0.35; 
       }
@@ -587,7 +583,7 @@ public class DriveSubsystem extends SubsystemBase {
       Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
       // Calculate turn power to point to speaker.
-      rotate = moderateTurnRate(trackingController.calculate(Globals.speakerTarget.bearingDeg, 0));
+      rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
       lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.odoTarget.valid) {

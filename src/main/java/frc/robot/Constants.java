@@ -233,10 +233,11 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.005; //  0.015 before slower detection
+    public static final double kPTrackingController = 0.010; //  0.015 before slower detection
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
     public static final double kToleranceTrackingController = 4.0; // was 2.0
+    public static final double kOutputLimitTrackingController = 0.4;
 
     public static final TrapezoidProfile.Constraints kTrackingConstraints = new TrapezoidProfile.Constraints(
       kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
@@ -256,7 +257,7 @@ public final class Constants {
   }
 
   public class VisionConstants {
-    public static double noteCameraAngle  = 53;    // degrees
+    public static double noteCameraAngle  = 61;    // degrees
     public static double noteCameraHeight = 0.61;  // meters
     public static double noteRollerOffset = 0.0;   // meters
 
