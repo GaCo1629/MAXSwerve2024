@@ -9,8 +9,12 @@ import frc.robot.utils.Target;
 
 public class VisionSubsystem extends SubsystemBase{
 
-    public VisionSubsystem (){
+    double  lastNoteTargetHash ;
+    boolean needFreshNote;
 
+    public VisionSubsystem (){
+        lastNoteTargetHash = 0;
+        needFreshNote = false;
     }
 
     @Override
@@ -23,6 +27,11 @@ public class VisionSubsystem extends SubsystemBase{
 
         SmartDashboard.putBoolean("ValidSpeaker", Globals.speakerTarget.valid);
         SmartDashboard.putBoolean("ValidNote", Globals.noteTarget.valid);
+    }
+
+    public void flushNoteTargets() {
+        Globals.noteTarget  = new Target();
+        needFreshNote        = true;
     }
 
     //  ======================  Speaker Tracking Vision processing
@@ -50,21 +59,29 @@ public class VisionSubsystem extends SubsystemBase{
 
     //  ======================  Note Tracking Vision processing
     public Target getNoteTarget() {
+        double x = 0;
         double y = 0;
+        double a = 0;
         double range = 0;
-        double bearing = 0;
-        Target aTarget;
+        double hash  = 0;
+        Target aTarget = new Target();
 
         if (LimelightHelpers.getTV("limelight-note")) {
 
-            bearing = LimelightHelpers.getTX("limelight-note");
-            y       = LimelightHelpers.getTY("limelight-note");
-            range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
+            x = LimelightHelpers.getTX("limelight-note");
+            y = LimelightHelpers.getTY("limelight-note");
+            a = LimelightHelpers.getTA("limelight-note");
+            hash = x + y + a;  // come up with a value that will cprobably change for each note target.
 
-            aTarget = new Target(true, range, bearing);
-        }else{
-            aTarget = new Target();
+            // do we need a guarenteed fresh Note?
+            if ((hash != lastNoteTargetHash) || !needFreshNote) {
+                range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
+                aTarget = new Target(true, range, x);
+                lastNoteTargetHash = hash ;
+                needFreshNote = false;
+            }
         }
+
         Globals.noteTarget = aTarget;
         return aTarget;
     }

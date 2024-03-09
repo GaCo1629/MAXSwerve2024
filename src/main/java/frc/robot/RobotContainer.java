@@ -16,7 +16,6 @@ import frc.robot.commands.AutoCollect;
 import frc.robot.commands.AutoFindNote;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoTurnToHeading;
-import frc.robot.commands.AutoTurnToSpeaker;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -64,9 +63,8 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("TurnToSpeaker",  new AutoTurnToSpeaker(baton, robotDrive, 2.0));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
-    NamedCommands.registerCommand("FindNote",       new AutoFindNote());
+    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));
@@ -108,7 +106,8 @@ public RobotContainer() {
         .onFalse(baton.setNoteTrackingCmd(false));
         
     new JoystickButton(driverController, Button.kR2.value)
-        .whileTrue(baton.fireCmd());  // Repeats Automatically
+        .whileTrue(baton.fireCmd())  // Repeats Automatically
+        .onTrue(robotDrive.updateOdometryFromSpeakerCmd());  //  test this to see if it works.
 
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(baton.setSpeakerTrackingCmd(true))

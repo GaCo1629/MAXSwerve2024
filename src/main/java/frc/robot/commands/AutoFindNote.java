@@ -6,26 +6,33 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.Globals;
 
 public class AutoFindNote extends Command {
   Timer      downTimer = new Timer();
+  VisionSubsystem vision;
 
   /** Creates a new AutoFindNote. */
-  public AutoFindNote() {
+  public AutoFindNote(VisionSubsystem vision) {
+    this.vision = vision;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     downTimer.restart();
+    vision.flushNoteTargets();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    // Keep resetting the timer and flushing note-target-buffer while Baton is lowering.
     if (!Globals.batonIsDown) {
       downTimer.reset();
+      vision.flushNoteTargets();
     }
   }
 
@@ -36,6 +43,6 @@ public class AutoFindNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((downTimer.hasElapsed(0.25)) && Globals.noteTarget.valid && (Globals.noteTarget.range < 1.5) );
+    return (downTimer.hasElapsed(0.1) && Globals.noteTarget.valid);
   }
 }

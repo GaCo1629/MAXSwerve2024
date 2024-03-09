@@ -26,7 +26,7 @@ public class AutoAmp extends Command {
   @Override
   public void initialize() {
     baton.setState(BatonState.HOLDING);
-    baton.amplify();
+    baton.amplify();  // start the scoring process
    }
 
   // Called every time the scheduler runs while the command is scheduled.
