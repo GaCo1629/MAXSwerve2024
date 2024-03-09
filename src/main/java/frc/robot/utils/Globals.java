@@ -33,9 +33,9 @@ public final class Globals{
     public static void setSpeakerTracking(boolean on) {
         speakerTrackingEnabled = on;
         if(speakerTrackingEnabled){
-            LimelightHelpers.setLEDMode_ForceOn("");
+            Limelight.setLEDMode_ForceOn("");
         } else {
-            LimelightHelpers.setLEDMode_ForceOff("");
+            Limelight.setLEDMode_ForceOff("");
         }
     }
 

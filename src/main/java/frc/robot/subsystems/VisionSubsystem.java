@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.Globals;
-import frc.robot.utils.LimelightHelpers;
+import frc.robot.utils.Limelight;
 import frc.robot.utils.Target;
 
 public class VisionSubsystem extends SubsystemBase{
@@ -41,10 +41,10 @@ public class VisionSubsystem extends SubsystemBase{
         double bearing = 0;
         Target aTarget;
 
-        if (LimelightHelpers.getTV("limelight")) {
+        if (Limelight.getTV("limelight")) {
 
-            bearing = LimelightHelpers.getTX("limelight");
-            y = LimelightHelpers.getTY("limelight");
+            bearing = Limelight.getTX("limelight");
+            y = Limelight.getTY("limelight");
 
             range   = (VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y))) + VisionConstants.speakerCameraCenterOffset;
             range *= VisionConstants.rangeAdjustV2O ; 
@@ -66,11 +66,11 @@ public class VisionSubsystem extends SubsystemBase{
         double hash  = 0;
         Target aTarget = new Target();
 
-        if (LimelightHelpers.getTV("limelight-note")) {
+        if (Limelight.getTV("limelight-note")) {
 
-            x = LimelightHelpers.getTX("limelight-note");
-            y = LimelightHelpers.getTY("limelight-note");
-            a = LimelightHelpers.getTA("limelight-note");
+            x = Limelight.getTX("limelight-note");
+            y = Limelight.getTY("limelight-note");
+            a = Limelight.getTA("limelight-note");
             hash = x + y + a;  // come up with a value that will cprobably change for each note target.
 
             // do we need a guarenteed fresh Note?
