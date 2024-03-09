@@ -258,7 +258,7 @@ public class DriveSubsystem extends SubsystemBase {
       if (Globals.noteTarget.valid){
         
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.5;
+        rotate = moderateTurnRate(trackingController.calculate(Globals.noteTarget.bearingDeg, 0));
         if (Math.abs(trackingController.getPositionError()) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
@@ -466,8 +466,8 @@ public class DriveSubsystem extends SubsystemBase {
         speaker = FieldConstants.blueSpeaker;
       }
 
-      X = speaker.x + (Math.sin(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
-      Y = speaker.y + (Math.cos(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
+      X = speaker.x + (Math.cos(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
+      Y = speaker.y + (Math.sin(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
       ppResetOdometry(new Pose2d(X, Y, imu.rotation2d));
     }    
   }
@@ -556,7 +556,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     if (Globals.noteTarget.valid){
       // Calculate turn power to point to note.
-      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.5;
+      rotate = moderateTurnRate(trackingController.calculate(Globals.noteTarget.bearingDeg, 0));
       if (Math.abs(trackingController.getPositionError()) < 10){
         xSpeed = Globals.noteTarget.range * 0.35; 
       }

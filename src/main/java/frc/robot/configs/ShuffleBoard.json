@@ -11,7 +11,7 @@
         "vgap": 24.0,
         "titleType": 0,
         "tiles": {
-          "6,8": {
+          "7,10": {
             "size": [
               9,
               2
@@ -24,33 +24,7 @@
               "_showGlyph": false
             }
           },
-          "18,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/tilt angle",
-              "_title": "Tilt Angle",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "18,2": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/tilt setpoint",
-              "_title": "Tilt Setpoint",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,6": {
+          "3,6": {
             "size": [
               4,
               2
@@ -63,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "3,6": {
+          "3,10": {
             "size": [
               4,
               2
@@ -76,7 +50,7 @@
               "_showGlyph": false
             }
           },
-          "0,4": {
+          "0,8": {
             "size": [
               3,
               2
@@ -89,7 +63,7 @@
               "_showGlyph": false
             }
           },
-          "0,2": {
+          "0,6": {
             "size": [
               3,
               2
@@ -102,63 +76,7 @@
               "_showGlyph": false
             }
           },
-          "20,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Manual Shooting",
-              "_title": "Manual",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "22,2": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Manual Speed",
-              "_title": "Manual Speed",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "22,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Manual Tilt",
-              "_title": "Manual Tilt",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,0": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/tilt In Position",
-              "_title": "Tilt In Position",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#00FF00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "22,4": {
+          "9,6": {
             "size": [
               2,
               2
@@ -171,7 +89,7 @@
               "_showGlyph": false
             }
           },
-          "0,6": {
+          "0,10": {
             "size": [
               3,
               2
@@ -184,7 +102,7 @@
               "_showGlyph": false
             }
           },
-          "12,3": {
+          "7,6": {
             "size": [
               2,
               2
@@ -192,7 +110,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/shooter setpoint",
-              "_title": "Shooter Setpoint",
+              "_title": "RPM",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -223,21 +141,6 @@
               "_showGlyph": false,
               "Colors/Color when true": "#00FF00FF",
               "Colors/Color when false": "#CCCCCCFF"
-            }
-          },
-          "3,0": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Note In Intake",
-              "_title": "Note In Intake",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#00FF00FF",
-              "Colors/Color when false": "#FF0000FF"
             }
           },
           "12,0": {
@@ -300,7 +203,7 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "15,0": {
+          "12,3": {
             "size": [
               3,
               2
@@ -308,12 +211,12 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Robot Heading",
-              "_title": "Robot Heading",
+              "_title": "Heading",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "11,6": {
+          "3,8": {
             "size": [
               4,
               2
@@ -324,6 +227,121 @@
               "_title": "SmartDashboard/Odo Target",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              3,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "MANUAL",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "HIDDEN",
+              "_children": [
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Manual Shooting",
+                  "_title": "Manual",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Manual Tilt",
+                  "_title": "Manual Tilt",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Manual Speed",
+                  "_title": "Manual Speed",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
+            }
+          },
+          "12,5": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tilt angle",
+              "_title": "Tilt Angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,8": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tilt setpoint",
+              "_title": "Tilt Setpoint",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Note In Intake",
+              "_title": "Note In Intake",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#00FF00FF",
+              "Colors/Color when false": "#FF0000FF"
+            }
+          },
+          "6,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/tilt In Position",
+              "_title": "Tilt In Position",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#00FF00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "15,0": {
+            "size": [
+              8,
+              8
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://limelight-note",
+              "_title": "limelight-note",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           }
         }
