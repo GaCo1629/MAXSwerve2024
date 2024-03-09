@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -32,6 +34,31 @@ public class VisionSubsystem extends SubsystemBase{
     public void flushNoteTargets() {
         Globals.noteTarget  = new Target();
         needFreshNote        = true;
+    }
+
+    public void lookForSpeaker() {
+        if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+            Limelight.setTagPriority("limelight", 4);
+        } else {
+            Limelight.setTagPriority("limelight", 7);
+        }
+    }
+
+    public void lookForTrap() {
+        Limelight.setTagPriority("limelight", -1);
+    }
+
+    public void lookForNote() {
+        Limelight.setPipelineIndex("limelight-note", 0);
+    }
+
+    public void lookForAmp() {
+        Limelight.setPipelineIndex("limelight-note", 1);
+        if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+            Limelight.setTagPriority("limelight-note", 5);
+        } else {
+            Limelight.setTagPriority("limelight-note", 6);
+        }
     }
 
     //  ======================  Speaker Tracking Vision processing
@@ -71,7 +98,7 @@ public class VisionSubsystem extends SubsystemBase{
             x = Limelight.getTX("limelight-note");
             y = Limelight.getTY("limelight-note");
             a = Limelight.getTA("limelight-note");
-            hash = x + y + a;  // come up with a value that will cprobably change for each note target.
+            hash = x + y + a;  // come up with a value that will probably change for each note target.
 
             // do we need a guarenteed fresh Note?
             if ((hash != lastNoteTargetHash) || !needFreshNote) {
