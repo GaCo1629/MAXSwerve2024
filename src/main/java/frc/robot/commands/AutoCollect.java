@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.BatonState;
+import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 
 public class AutoCollect extends Command {
@@ -26,6 +28,7 @@ public class AutoCollect extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     Globals.setNoteTracking(true);
     baton.collect();
     collectTimer.restart();

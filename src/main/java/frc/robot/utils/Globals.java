@@ -8,14 +8,19 @@ public final class Globals{
     public static boolean batonIsDown           = false;
     public static boolean robotAtHeading        = false;
 
+    public static FrontImageSource frontSource;
+    public static BackImageSource  backSource;
+
     public static double  robotPitch            = 0;
     public static double  robotRoll             = 0;
     public static double  lastShooterSpeed      = ShooterConstants.baseShooterSpeed;
     public static double  speed                 = 0;
     public static boolean startingLocationSet   = false;
+
     public static Target  speakerTarget         = new Target();
     public static Target  noteTarget            = new Target();
     public static Target  odoTarget             = new Target();
+    public static Target  ampTarget             = new Target();
  
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
 
@@ -59,4 +64,7 @@ public final class Globals{
     public static LEDmode getLEDMode() {
         return ledMode;
     }
+
+    
+
 }

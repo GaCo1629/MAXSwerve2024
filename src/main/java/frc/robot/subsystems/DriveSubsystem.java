@@ -32,6 +32,8 @@ import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.utils.BackImageSource;
+import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
 import frc.robot.utils.IMUInterface;
@@ -240,6 +242,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     if (Globals.getSpeakerTracking()) {  // --- TRACKING SPEAKER  ---------------------
       SmartDashboard.putString("Mode", "Speaker")  ;
+      VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
 
       if (Globals.speakerTarget.valid) {
         Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
@@ -258,6 +261,7 @@ public class DriveSubsystem extends SubsystemBase {
       rotate += (ySpeed * 0.2);  // Add additional rotation based on robot's sideways motion 
 
     } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
+      VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
       fieldRelative = false;
       ySpeed = 0;
       if (Globals.noteTarget.valid){
@@ -278,12 +282,16 @@ public class DriveSubsystem extends SubsystemBase {
       }
 
     } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
+       VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
        SmartDashboard.putString("Mode", "Amplify")  ;
        fieldRelative = false;
        xSpeed = BatonConstants.amplifierApproachSpeed;  // could be replaced by smart approach code
        lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {  // ---  MANUAL DRIVING-------------------------------------------------
+
+      VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
+      VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
 
       // should we be in auto or not?
       if (rotate != 0) {

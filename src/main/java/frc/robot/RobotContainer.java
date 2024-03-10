@@ -94,42 +94,55 @@ public RobotContainer() {
 
   private void configureButtonBindings() {
 
-    // Pilot Functions
+    // -----------------   Pilot Functions
+    // Turbo
     new JoystickButton(driverController, Button.kR1.value)    
         .onTrue(robotDrive.setTurboModeCmd(true))
         .onFalse(robotDrive.setTurboModeCmd(false));
     
+    // Collect
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(baton.collectCmd())
         .onTrue(baton.setNoteTrackingCmd(true))
         .onFalse(baton.stopIntakeCmd())
         .onFalse(baton.setNoteTrackingCmd(false));
-        
+
+    // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
         .whileTrue(baton.fireCmd())  // Repeats Automatically
         .onTrue(robotDrive.updateOdometryFromSpeakerCmd());  //  test this to see if it works.
 
+    // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(baton.setSpeakerTrackingCmd(true))
         .onFalse(baton.setSpeakerTrackingCmd(false));
 
+    // Reset Heading    
     new JoystickButton(driverController, Button.kTouchpad.value)
         .onTrue(robotDrive.resetHeadingCmd());
 
+    //  Eject Note   
     new JoystickButton(driverController, Button.kCross.value)
-        .onTrue(baton.stopIntakeCmd());
+        .onTrue(baton.ejectCmd())
+        .onFalse(baton.stopIntakeCmd());
 
-    // Co-Pilot Functions
+    // --------------   Co-Pilot Functions
+
+    // Manual Collect
     new JoystickButton(copilot_1, Button.kL1.value)    
         .onTrue(baton.collectCmd())
         .onFalse(baton.stopIntakeCmd());
 
+    // Eject Note
     new JoystickButton(copilot_1, Button.kCross.value)
         .onTrue(baton.ejectCmd())
         .onFalse(baton.stopIntakeCmd());
 
+    // Amplify    
     new JoystickButton(copilot_1, Button.kTouchpad.value)
-        .onTrue(baton.amplifyCmd());
+        .onTrue(baton.amplifyCmd(true))
+        .onFalse(baton.amplifyCmd(false));
+
 
     // Manual shooting controls
     new JoystickButton(copilot_1, Button.kL2.value)

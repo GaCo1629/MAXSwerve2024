@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TiltConstants;
+import frc.robot.utils.BackImageSource;
 import frc.robot.utils.BatonState;
 import frc.robot.utils.FLEXShooter;
+import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
 import frc.robot.utils.LEDmode;
@@ -288,6 +290,7 @@ public class BatonSubsystem extends SubsystemBase {
                     stopIntake();
                     setTiltAngle(TiltConstants.homeAngle);
                     Globals.setAmplifying(false);
+                    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
                     setState(BatonState.IDLE);
                 }
                 break;
@@ -441,23 +444,34 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void collect (){
+        VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
         intake.set(BatonConstants.collect);
         setState(BatonState.COLLECTING);
         Globals.setLEDMode(LEDmode.NOTE_COLLECTING);
     }
 
     public void fire (){
+        VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
         if (shooterIsUpToSpeed()){
             intake.set(BatonConstants.fire);
             setState(BatonState.SHOOTING);
         }
     }
 
-    public void amplify (){
-        if (currentState == BatonState.HOLDING){
-            Globals.setAmplifying(true);
-            setTiltAngle(TiltConstants.ampLowAngle);
-            setState(BatonState.TILTING);
+    public void amplify (boolean enable){
+        if (enable) {
+            VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
+            if (currentState == BatonState.HOLDING){
+                Globals.setAmplifying(true);
+                setTiltAngle(TiltConstants.ampLowAngle);
+                setState(BatonState.TILTING);
+            }
+        } else {
+            VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+            Globals.setAmplifying(false);
+            setTiltAngle(TiltConstants.homeAngle);
+            intake.set(BatonConstants.stopCollector);
+            setState(BatonState.IDLE);
         }
     }
 
@@ -489,7 +503,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
     public Command fireCmd()                        {return run(() -> fire());}
-    public Command amplifyCmd()                     {return runOnce(() -> amplify());}
+    public Command amplifyCmd(boolean on)           {return runOnce(() -> amplify(on));}
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
     public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
     public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}

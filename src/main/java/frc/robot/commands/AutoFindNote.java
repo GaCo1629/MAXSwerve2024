@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 
 public class AutoFindNote extends Command {
@@ -21,6 +22,7 @@ public class AutoFindNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     downTimer.restart();
     vision.flushNoteTargets();
   }

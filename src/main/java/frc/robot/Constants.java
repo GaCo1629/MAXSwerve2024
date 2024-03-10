@@ -268,6 +268,7 @@ public final class Constants {
     public static double rangeAdjustV2O              = 1.097; // baed on measurments on the field
 
     public static double noteAreaThreshold = 0.5;
+    public static double ampAreaThreshold  = 0.5;
   }
 
   public static final class FieldConstants{
