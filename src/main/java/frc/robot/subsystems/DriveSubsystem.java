@@ -259,11 +259,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
       fieldRelative = false;
+      ySpeed = 0;
       if (Globals.noteTarget.valid){
-        
         // Calculate turn power to point to note.
         rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0);
-        if (Math.abs(trackingController.getPositionError()) < 10){
+        if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
           xSpeed = BatonConstants.noteApproachSpeed;
@@ -273,7 +273,8 @@ public class DriveSubsystem extends SubsystemBase {
         if (Math.abs(xSpeed) < BatonConstants.noteApproachSpeed ){
           xSpeed = BatonConstants.noteApproachSpeed;
         }
-        rotate = controlTurning(rotate);
+        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+        
       }
 
     } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
@@ -283,7 +284,28 @@ public class DriveSubsystem extends SubsystemBase {
        lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {  // ---  MANUAL DRIVING-------------------------------------------------
-      rotate = controlTurning(rotate);
+
+      // should we be in auto or not?
+      if (rotate != 0) {
+        headingLocked = false;
+      } else if (!headingLocked && isNotRotating()) {
+        lockCurrentHeading();
+      }
+
+      // if Heading lock is engaged, override the user input with data from PID
+      if (headingLocked) {
+        SmartDashboard.putString("Mode", "Auto")  ;
+        // PID control.
+        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+        if (Math.abs(rotate) < 0.025) {
+          rotate = 0;
+        } 
+      } else {
+        // plain driver control
+        SmartDashboard.putString("Mode", "Manual")  ;
+        rotate = rotLimiter.calculate(rotate);
+      }
+
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
@@ -295,35 +317,7 @@ public class DriveSubsystem extends SubsystemBase {
     driveRobot(xSpeedDelivered, ySpeedDelivered, rotDelivered, fieldRelative);
   }
 
-  /**
-   * Looks the requested joystick rotate and applies heading lock if required.
-   * @param rotate
-   * @return
-   */
-  private double controlTurning(double rotate) {
-    if (rotate != 0) {
-      headingLocked = false;
-    } else if (!headingLocked && isNotRotating()) {
-      lockCurrentHeading();
-    }
-
-    // if Heading lock is engaged, override the user input with data from PID
-    if (headingLocked) {
-      SmartDashboard.putString("Mode", "Auto")  ;
-      // PID control.
-      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-      if (Math.abs(rotate) < 0.025) {
-        rotate = 0;
-      } 
-    } else {
-      // plain driver control
-      SmartDashboard.putString("Mode", "Manual")  ;
-      rotate = rotLimiter.calculate(rotate);
-    }
-
-    return rotate;
-  }
-
+  
   /**
    * Drives robot based on requested axis movements
    * Can be field relative or robot relative
@@ -557,9 +551,12 @@ public class DriveSubsystem extends SubsystemBase {
     if (Globals.noteTarget.valid){
       // Calculate turn power to point to note.
       rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0);
-      if (Math.abs(trackingController.getPositionError()) < 10){
+      if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
         xSpeed = Globals.noteTarget.range * 0.35; 
       }
+      lockCurrentHeading(); 
+    } else {
+      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
@@ -567,7 +564,6 @@ public class DriveSubsystem extends SubsystemBase {
     double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
 
     // prepare for return to heading hold & Send power to swerve modules
-    lockCurrentHeading();  
     driveRobot(xSpeedMPS, 0, rotRPS, false);
   }
 

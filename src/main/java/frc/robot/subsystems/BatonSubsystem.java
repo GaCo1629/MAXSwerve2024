@@ -67,7 +67,7 @@ public class BatonSubsystem extends SubsystemBase {
         //this.copilot_2 = copilot_2;
 
         intake = new CANSparkMax(BatonConstants.intakeID, MotorType.kBrushless);
-        intake.restoreFactoryDefaults(true);
+        intake.restoreFactoryDefaults();
         rangeFinder = intake.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
         intake.burnFlash();
         
