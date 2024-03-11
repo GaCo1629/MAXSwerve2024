@@ -157,6 +157,9 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setNoteTracking(false);
     Globals.setSpeakerTracking(false);
     Globals.setAmplifying(false);
+    VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+
     trackTimer.start();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
     trackingController.calculate(0,0);

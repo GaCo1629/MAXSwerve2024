@@ -50,34 +50,34 @@ public class VisionSubsystem extends SubsystemBase{
 
     public static void setFrontImageSource(FrontImageSource source) {
         // Use the network tables to update the camera pipeline
-        if (source != Globals.frontSource) {
-            if (source == FrontImageSource.NOTE) {
-                Limelight.setPipelineIndex("limelight-note", 0);
+
+        if (source == FrontImageSource.NOTE) {
+            Limelight.setPipelineIndex("limelight-note", 0);
+        } else {
+        Limelight.setPipelineIndex("limelight-note", 1);
+            if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+                Limelight.setTagPriority("limelight-note", 5);
             } else {
-            Limelight.setPipelineIndex("limelight-note", 1);
-                if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
-                    Limelight.setTagPriority("limelight-note", 5);
-                } else {
-                    Limelight.setTagPriority("limelight-note", 6);
-                }
+                Limelight.setTagPriority("limelight-note", 6);
             }
         }
+
         Globals.frontSource = source;
     }
 
     public static void setBackImageSource(BackImageSource source) {
         // Use the network tables to update the camera pipeline
-        if (source != Globals.backSource) {
-            if (source == BackImageSource.SPEAKER) {
-                if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
-                    Limelight.setTagPriority("limelight", 4);
-                } else {
-                    Limelight.setTagPriority("limelight", 7);
-                }
+
+        if (source == BackImageSource.SPEAKER) {
+            if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+                Limelight.setTagPriority("limelight", 4);
             } else {
-                Limelight.setTagPriority("limelight", -1);
+                Limelight.setTagPriority("limelight", 7);
             }
+        } else {
+            Limelight.setTagPriority("limelight", -1);
         }
+
         Globals.backSource = source;
     }
     

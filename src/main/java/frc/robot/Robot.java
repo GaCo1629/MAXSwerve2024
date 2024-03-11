@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.BackImageSource;
+import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 import frc.robot.utils.LEDmode;
 
@@ -58,6 +61,9 @@ public class Robot extends TimedRobot {
   /** This runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+
     m_robotContainer.robotDrive.resetHeading();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -85,6 +91,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+    
     m_robotContainer.robotDrive.init();
     m_robotContainer.baton.init();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
