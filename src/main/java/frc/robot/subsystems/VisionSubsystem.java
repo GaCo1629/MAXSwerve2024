@@ -113,7 +113,8 @@ public class VisionSubsystem extends SubsystemBase{
         double hash  = 0;
         Target aTarget = new Target();
 
-        if (Limelight.getTV("limelight-note")) {
+        if (Limelight.getTV("limelight-note") && 
+            (Limelight.getTClass("limelight-note").equals("note"))) {
 
             x = Limelight.getTX("limelight-note");
             y = Limelight.getTY("limelight-note");
@@ -139,26 +140,25 @@ public class VisionSubsystem extends SubsystemBase{
     //  ======================  AMP Tracking Vision processing
     public Target getAmpTarget() {
         double x = 0;
-        double y = 0;
-        double a = 0;
+        double l = 0;
         double range = 0;
         Target aTarget = new Target();
 
         // Use the X value for Bearing, but use the area for range.
         // It would be nice to use the Y value for range, but the baton tilt will not be stable, so just use the area with a minimum 
 
-        if (Limelight.getTV("limelight-note")) {
+        if (Limelight.getTV("limelight-note")  && 
+            (Limelight.getTClass("limelight-note").equals(""))) {
 
             x = Limelight.getTX("limelight-note");
-            y = Limelight.getTY("limelight-note");
-            a = Limelight.getTA("limelight-note");
+            l = Limelight.getTLong("limelight-note");
 
-            if (a > VisionConstants.ampAreaThreshold){
-                range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
+            if (l > VisionConstants.ampLongThreshold){
+                range = (97.5 / l) - 0.965;
                 aTarget = new Target(true, range, x);
             }
         }
-        Globals.noteTarget = aTarget;
+        Globals.ampTarget = aTarget;
         return aTarget;
     }
 }

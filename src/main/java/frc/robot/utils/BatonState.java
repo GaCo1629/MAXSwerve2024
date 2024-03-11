@@ -7,6 +7,7 @@ public enum BatonState {
     AUTO_SHOOT,
     SHOOTING,
     SHOOTING_WAIT,
+    AMP_APPROACH,
     TILTING,
     EJECTING,
     AMP_SCORING,

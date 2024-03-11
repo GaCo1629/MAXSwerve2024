@@ -11,7 +11,7 @@
         "vgap": 24.0,
         "titleType": 0,
         "tiles": {
-          "7,10": {
+          "14,10": {
             "size": [
               9,
               2
@@ -224,7 +224,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Odo Target",
-              "_title": "SmartDashboard/Odo Target",
+              "_title": "Odo Target",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -280,7 +280,7 @@
               "_showGlyph": false
             }
           },
-          "7,8": {
+          "7,10": {
             "size": [
               2,
               2
@@ -323,10 +323,23 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
+          "7,8": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Amp",
+              "_title": "Amp Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
           "15,0": {
             "size": [
-              8,
-              8
+              9,
+              9
             ],
             "content": {
               "_type": "Camera Stream",
@@ -416,6 +429,19 @@
             }
           }
         }
+      }
+    },
+    {
+      "title": "Tab 3",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
       }
     }
   ],

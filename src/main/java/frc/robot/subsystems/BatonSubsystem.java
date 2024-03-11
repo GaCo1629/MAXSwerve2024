@@ -265,6 +265,13 @@ public class BatonSubsystem extends SubsystemBase {
                 }
                  break;
 
+            case AMP_APPROACH:
+                if (Globals.ampTarget.valid && (Globals.ampTarget.range > 0.01) && (Globals.ampTarget.range < 0.1)) {
+                    setTiltAngle(TiltConstants.ampLowAngle);
+                    setState(BatonState.TILTING);
+                }
+                break;
+
             case TILTING:
                 if (tiltIsInPosition()){
                     eject();
@@ -463,8 +470,8 @@ public class BatonSubsystem extends SubsystemBase {
             VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
             if (currentState == BatonState.HOLDING){
                 Globals.setAmplifying(true);
-                setTiltAngle(TiltConstants.ampLowAngle);
-                setState(BatonState.TILTING);
+                setTiltAngle(TiltConstants.ampTrackAngle);
+                setState(BatonState.AMP_APPROACH);
             }
         } else {
             VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);

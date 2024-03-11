@@ -80,6 +80,14 @@ public class Limelight {
         return getLimelightNTDouble(limelightName, "ta");
     }
 
+    public static double getTLong(String limelightName) {
+        return getLimelightNTDouble(limelightName, "tlong");
+    }
+
+    public static String getTClass(String limelightName) {
+        return getLimelightNTString(limelightName, "tclass");
+    }
+
     public static double getLatency_Pipeline(String limelightName) {
         return getLimelightNTDouble(limelightName, "tl");
     }

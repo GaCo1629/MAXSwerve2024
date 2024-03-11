@@ -278,15 +278,30 @@ public class DriveSubsystem extends SubsystemBase {
           xSpeed = BatonConstants.noteApproachSpeed;
         }
         rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-        
+       
       }
 
     } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
-       VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
-       SmartDashboard.putString("Mode", "Amplify")  ;
-       fieldRelative = false;
-       xSpeed = BatonConstants.amplifierApproachSpeed;  // could be replaced by smart approach code
-       lockCurrentHeading();  // prepare for return to heading hold
+      VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
+      SmartDashboard.putString("Mode", "Amplify")  ;
+      fieldRelative = false;
+
+      // If we can see the amp. try to get directly in front of it.
+      if (Globals.ampTarget.valid) {
+        // Point to amp amd strafe sideways to get in front
+        rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
+        double strafeError = (imu.headingDeg - 90);
+        if (Globals.ampTarget.range < 0.1) {
+          strafeError /= 120;
+        } else {
+          strafeError /= 180;
+        }
+
+        ySpeed = MathUtil.clamp(strafeError, -0.2, 0.2);
+        xSpeed = BatonConstants.amplifierApproachSpeed + (Globals.ampTarget.range * 0.12);
+      }
+
+      lockCurrentHeading();  // prepare for return to heading hold
 
     }  else {  // ---  MANUAL DRIVING-------------------------------------------------
 
