@@ -28,7 +28,6 @@ public class AutoAmp extends Command {
   @Override
   public void initialize() {
     VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
-    baton.setState(BatonState.HOLDING);
     baton.amplify(true);  // start the scoring process
    }
 

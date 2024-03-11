@@ -15,6 +15,7 @@ import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
 import frc.robot.commands.AutoFindNote;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootNow;
 import frc.robot.commands.AutoTurnToHeading;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
@@ -53,7 +54,7 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
 
-    /**
+  /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
 public RobotContainer() {
@@ -62,6 +63,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, robotDrive, 0, 3000));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
 
@@ -70,6 +72,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("TurnTo45",       new AutoTurnToHeading(robotDrive, 45, 2.0));
     NamedCommands.registerCommand("TurnTo80",       new AutoTurnToHeading(robotDrive, 80, 2.0));
     NamedCommands.registerCommand("TurnTo90",       new AutoTurnToHeading(robotDrive, 90, 2.0));
+    NamedCommands.registerCommand("TurnTo135",      new AutoTurnToHeading(robotDrive, 135, 2.0));
     NamedCommands.registerCommand("TurnTo180",      new AutoTurnToHeading(robotDrive, 180, 2.0));
     NamedCommands.registerCommand("TurnTo-20",      new AutoTurnToHeading(robotDrive, -20, 2.0));
     NamedCommands.registerCommand("TurnTo-45",      new AutoTurnToHeading(robotDrive, -45, 2.0));

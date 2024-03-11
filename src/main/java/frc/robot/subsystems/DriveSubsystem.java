@@ -159,6 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
     Globals.setAmplifying(false);
     trackTimer.start();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
+    trackingController.calculate(0,0);
   }
 
 

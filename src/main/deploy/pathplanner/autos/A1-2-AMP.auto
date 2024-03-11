@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3005404928188775,
-      "y": 5.5430292057165325
+      "x": 1.4072529462910246,
+      "y": 7.0087226194216985
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNow"
+            "name": "Shoot"
           }
         },
         {
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S-3C"
+                  "pathName": "Ato2C"
                 }
               },
               {
@@ -45,44 +45,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3to7C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNote"
-                }
-              }
-            ]
+            "name": "TurnTo135"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Collect"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7to3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "name": "Amp"
           }
         }
       ]
