@@ -281,6 +281,12 @@ public class BatonSubsystem extends SubsystemBase {
             
             case EJECTING:
                 if (!noteInIntake()){
+                    setState(BatonState.AMP_HOLDING);
+                }
+                break;
+
+            case AMP_HOLDING:
+                if(stateTimer.hasElapsed(0.25)){
                     setTiltAngle(TiltConstants.ampHighAngle);
                     setState(BatonState.AMP_SCORING);
                 }

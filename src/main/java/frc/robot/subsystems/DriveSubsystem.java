@@ -292,7 +292,7 @@ public class DriveSubsystem extends SubsystemBase {
       if (Globals.ampTarget.valid) {
         // If we are coming in, use the heading error (from 90) to strafe.
         // once we are close, use the angle error 
-        if (Globals.ampTarget.range > 0.2) {
+        if (Globals.ampTarget.range > 0.3) {
           // Point to amp and strafe sideways to get to point to 90 (centered on target)
           xSpeed = (Globals.ampTarget.range * 0.25);
           ySpeed = (imu.headingDeg - 90) * 0.00556;
@@ -300,7 +300,7 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
           // Point to 90 degrees and strafe sideways to get the tag centered
           xSpeed = BatonConstants.amplifierApproachSpeed;
-          ySpeed = Globals.ampTarget.bearingDeg * 0.02;
+          ySpeed = Globals.ampTarget.bearingDeg * -0.02;
           rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
         }
 
@@ -499,9 +499,10 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         speaker = FieldConstants.blueSpeaker;
       }
+      double bearingToTarget = Globals.speakerTarget.bearingRad + imu.headingRad;
 
-      X = speaker.x + (Math.cos(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
-      Y = speaker.y + (Math.sin(Globals.speakerTarget.bearingRad) * Globals.speakerTarget.range);
+      X = speaker.x + (Math.cos(bearingToTarget) * Globals.speakerTarget.range);
+      Y = speaker.y + (Math.sin(bearingToTarget) * Globals.speakerTarget.range);
       ppResetOdometry(new Pose2d(X, Y, imu.rotation2d));
     }    
   }
@@ -571,7 +572,7 @@ SmartDashboard.putString("Mode", "Amplify")  ;
     if (Globals.ampTarget.valid) {
       // If we are coming in, use the heading error (from 90) to strafe.
       // once we are close, use the angle error 
-      if (Globals.ampTarget.range > 0.2) {
+      if (Globals.ampTarget.range > 0.3) {
         // Point to amp and strafe sideways to get to point to 90 (centered on target)
         xSpeed = (Globals.ampTarget.range * 0.25);
         ySpeed = (imu.headingDeg - 90) * 0.00556;
@@ -579,14 +580,14 @@ SmartDashboard.putString("Mode", "Amplify")  ;
       } else {
         // Point to 90 degrees and strafe sideways to get the tag centered
         xSpeed = BatonConstants.amplifierApproachSpeed;
-        ySpeed = Globals.ampTarget.bearingDeg * 0.02;
+        ySpeed = Globals.ampTarget.bearingDeg * -0.02;
         rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
       }
 
       xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
       ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
     }
-
+    
     double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
