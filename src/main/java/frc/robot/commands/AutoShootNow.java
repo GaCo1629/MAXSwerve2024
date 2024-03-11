@@ -7,41 +7,46 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.utils.BackImageSource;
 import frc.robot.utils.BatonState;
 import frc.robot.utils.Globals;
 
-public class AutoShoot extends Command {
+public class AutoShootNow extends Command {
   BatonSubsystem baton;
   DriveSubsystem robotDrive;
+  double tiltAngle = 0;
+  double shooterSpeed = 0;
 
   /** Creates a new Shoot. */
-  public AutoShoot(BatonSubsystem baton, DriveSubsystem robotDrive) {
+  public AutoShootNow(BatonSubsystem baton, DriveSubsystem robotDrive, double tiltAngle, double shooterSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
     this.robotDrive = robotDrive;
+    this.tiltAngle = tiltAngle;
+    this.shooterSpeed = shooterSpeed;
     addRequirements(baton, robotDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
     Globals.setSpeakerTracking(true);
+    baton.setManualTiltAngle(tiltAngle);
+    baton.setManualShooterSpeed(shooterSpeed);
+    baton.setManualShooting(true);
     baton.setState(BatonState.AUTO_SHOOT);
+
+    //  robotDrive.setRoll();  line up wheels straight
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.driveAutoShoot();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    baton.setManualShooting(false);
     Globals.setSpeakerTracking(false);
   }
 
@@ -50,5 +55,4 @@ public class AutoShoot extends Command {
   public boolean isFinished() {
     return (baton.getState() == BatonState.IDLE);
   }
-
 }

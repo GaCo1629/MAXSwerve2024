@@ -493,17 +493,23 @@ public class BatonSubsystem extends SubsystemBase {
 
     //  =========  Manual Shooting Commands
     public void bumpTilt(double bump) {
-        manualTiltAngle += bump;
-        manualTiltAngle = MathUtil.clamp(manualTiltAngle, 0, BatonConstants.maxTiltAngle);
+        setManualTiltAngle(manualTiltAngle + bump);
     }
 
     public void bumpShooter(double bump) {
-        manualShooterSpeed += bump;
-        manualShooterSpeed = MathUtil.clamp(manualShooterSpeed, 0, BatonConstants.maxShooterRPM);
+        setManualShooterSpeed(manualShooterSpeed + bump);
     }
 
-    public void enableManualShooting(boolean on){
+    public void setManualShooting(boolean on){
         manualShooting = on;
+    }
+
+    public void setManualTiltAngle(double angle) {
+        manualTiltAngle = MathUtil.clamp(angle, 0, BatonConstants.maxTiltAngle);
+    }
+
+    public void setManualShooterSpeed(double speedRPM) {
+        manualShooterSpeed = MathUtil.clamp(speedRPM, 0, BatonConstants.maxShooterRPM);
     }
 
     // ============ Public Command Interface  ========================================
@@ -517,7 +523,7 @@ public class BatonSubsystem extends SubsystemBase {
     
     public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
     public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
-    public Command enableManualShootingCmd(boolean on) {return runOnce(() -> enableManualShooting(on));}
+    public Command enableManualShootingCmd(boolean on) {return runOnce(() -> setManualShooting(on));}
     public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
     public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
 

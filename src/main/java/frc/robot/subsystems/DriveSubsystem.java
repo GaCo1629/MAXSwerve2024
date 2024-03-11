@@ -175,6 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()}
     );
+    
     Globals.robotAtHeading = trackingController.atSetpoint();
     SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
 
@@ -285,20 +286,26 @@ public class DriveSubsystem extends SubsystemBase {
       VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
       SmartDashboard.putString("Mode", "Amplify")  ;
       fieldRelative = false;
+      rotate = 0;
 
       // If we can see the amp. try to get directly in front of it.
       if (Globals.ampTarget.valid) {
-        // Point to amp amd strafe sideways to get in front
-        rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
-        double strafeError = (imu.headingDeg - 90);
-        if (Globals.ampTarget.range < 0.1) {
-          strafeError /= 120;
+        // If we are coming in, use the heading error (from 90) to strafe.
+        // once we are close, use the angle error 
+        if (Globals.ampTarget.range > 0.2) {
+          // Point to amp and strafe sideways to get to point to 90 (centered on target)
+          xSpeed = (Globals.ampTarget.range * 0.25);
+          ySpeed = (imu.headingDeg - 90) * 0.00556;
+          rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
         } else {
-          strafeError /= 180;
+          // Point to 90 degrees and strafe sideways to get the tag centered
+          xSpeed = BatonConstants.amplifierApproachSpeed;
+          ySpeed = Globals.ampTarget.bearingDeg * 0.02;
+          rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
         }
 
-        ySpeed = MathUtil.clamp(strafeError, -0.2, 0.2);
-        xSpeed = BatonConstants.amplifierApproachSpeed + (Globals.ampTarget.range * 0.12);
+        xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
+        ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
       }
 
       lockCurrentHeading();  // prepare for return to heading hold
@@ -392,6 +399,16 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+  }
+
+  /**
+   * Sets the wheels into an || formation to make movement ready.
+   */
+  public void setRoll() {
+    m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d()));
+    m_frontRight.setDesiredState(new SwerveModuleState(0, new Rotation2d()));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d()));
+    m_rearRight.setDesiredState(new SwerveModuleState(0, new Rotation2d()));
   }
 
   /**
@@ -545,21 +562,38 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveAutoAmplify() {
     
-    SmartDashboard.putString("Mode", "Amplify")  ;
+SmartDashboard.putString("Mode", "Amplify")  ;
+    double xSpeed = 0;
+    double ySpeed = 0;
+    double rotate = 0;
 
-    // PID Yaw control.
-    double rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-    if (Math.abs(rotate) < 0.025) {
-      rotate = 0;
-    } 
+    // If we can see the amp. try to get directly in front of it.
+    if (Globals.ampTarget.valid) {
+      // If we are coming in, use the heading error (from 90) to strafe.
+      // once we are close, use the angle error 
+      if (Globals.ampTarget.range > 0.2) {
+        // Point to amp and strafe sideways to get to point to 90 (centered on target)
+        xSpeed = (Globals.ampTarget.range * 0.25);
+        ySpeed = (imu.headingDeg - 90) * 0.00556;
+        rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
+      } else {
+        // Point to 90 degrees and strafe sideways to get the tag centered
+        xSpeed = BatonConstants.amplifierApproachSpeed;
+        ySpeed = Globals.ampTarget.bearingDeg * 0.02;
+        rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
+      }
 
-    // Convert the commanded speeds into the correct units for the drivetrain
+      xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
+      ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
+    }
+
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
-    double xSpeed    = BatonConstants.amplifierApproachSpeed  * DriveConstants.kMaxSpeedMetersPerSecond;
 
     // prepare for return to heading hold & Send power to swerve modules
     lockCurrentHeading();  
-    driveRobot(xSpeed, 0, rotRPS, false);
+    driveRobot(xSpeedMPS, ySpeedMPS, rotRPS, false);
   }
 
   /**

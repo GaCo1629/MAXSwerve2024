@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -159,10 +158,10 @@ public RobotContainer() {
         .onTrue(baton.bumpTiltCmd(-2));
 
     new POVButton(copilot_1, 90)
-        .onTrue(baton.bumpShooterCmd(200));
+        .onTrue(baton.bumpShooterCmd(250));
 
     new POVButton(copilot_1, 270)
-        .onTrue(baton.bumpShooterCmd(-200));
+        .onTrue(baton.bumpShooterCmd(-250));
 
 
     // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
