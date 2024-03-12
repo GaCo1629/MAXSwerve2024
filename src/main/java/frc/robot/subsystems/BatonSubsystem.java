@@ -203,16 +203,28 @@ public class BatonSubsystem extends SubsystemBase {
             case IDLE:
                 if (noteInIntake()) {
                     setState(BatonState.HOLDING);
-                }
-
-                // Warn if batton in not fully lowered
+                } 
+                
                 if ((tiltAngleSetPoint == TiltConstants.homeAngle) && !tiltIsInPosition()) {
+                    // Warn if batton in not fully lowered
                     Globals.setLEDMode(LEDmode.LOWERING);
+
+                    // Assist Baton lowering by spinning wheels backwards as it passes the Bumper & Frame
+                    if ((currentTiltAngle > 2) && (currentTiltAngle < 20)) {
+                        intake.set(BatonConstants.eject);
+                    } else {
+                        intake.set(0);
+                    }
+            
                 } else {
                     if (!Globals.getSpeakerTracking()) {
                         Globals.setLEDMode(LEDmode.SPEEDOMETER);
                     }
+                    intake.set(0);
                 }
+
+                // Assist Baton lowering by spinning wheels backwards as it passes the Bumper & Frame
+            
                 // Exits by button press.
                 break;
 

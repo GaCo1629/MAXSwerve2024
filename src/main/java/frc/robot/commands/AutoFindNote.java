@@ -53,6 +53,8 @@ public class AutoFindNote extends Command {
     if (downTimer.hasElapsed(0.1) && Globals.noteTarget.valid) {
       if ((fieldOfView == 0)  ||  (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) {
         if ((!delayLooking) || (Globals.startNoteFinding)) {
+          Globals.startNoteFinding = false;
+
           finished = true;
         }
       }
