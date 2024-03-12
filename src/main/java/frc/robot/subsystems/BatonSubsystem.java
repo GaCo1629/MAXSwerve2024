@@ -497,6 +497,7 @@ public class BatonSubsystem extends SubsystemBase {
         intake.set(BatonConstants.eject);
     }
 
+
     //  =========  Manual Shooting Commands
     public void bumpTilt(double bump) {
         setManualTiltAngle(manualTiltAngle + bump);
@@ -518,6 +519,11 @@ public class BatonSubsystem extends SubsystemBase {
         manualShooterSpeed = MathUtil.clamp(speedRPM, 0, BatonConstants.maxShooterRPM);
     }
 
+    public void setManualSpeedAndTilt(double speed, double angle){
+        manualShooterSpeed = MathUtil.clamp(speed, 0, BatonConstants.maxShooterRPM);
+        manualTiltAngle = MathUtil.clamp(angle, 0, BatonConstants.maxTiltAngle);
+    }
+
     // ============ Public Command Interface  ========================================
     public Command collectCmd()                     {return runOnce(() -> collect());}
     public Command ejectCmd()                       {return runOnce(() -> eject());}
@@ -526,6 +532,7 @@ public class BatonSubsystem extends SubsystemBase {
     public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
     public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
     public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
+    public Command setManualSpeedAndTiltCmd(double speed, double angle)       {return runOnce(() -> setManualSpeedAndTilt(speed, angle));}
     
     public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
     public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}

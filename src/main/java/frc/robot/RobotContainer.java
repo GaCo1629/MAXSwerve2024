@@ -169,8 +169,9 @@ public RobotContainer() {
     new POVButton(copilot_1, 270)
         .onTrue(baton.bumpShooterCmd(-250));
 
-
-    // Add a button to run the auto to SmartDashboard, this will also be in the auto chooser built above
+    new JoystickButton(copilot_1, Button.kSquare.value)
+        .onTrue(baton.setManualSpeedAndTiltCmd(0, 0));
+    
   
   }
 
