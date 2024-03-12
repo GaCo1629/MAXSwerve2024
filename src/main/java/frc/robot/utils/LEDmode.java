@@ -14,5 +14,7 @@ public enum LEDmode {
     SPEEDOMETER,        // Displaying robot speed on power meter.
     LOWERING,           // Baton is still returning from raised position
     SYSTEM_ERROR,       // Displaying system error code
+    WAITING,            // Waiting for any number of things   
+    DONE_WAITING,
     DEFAULT
 }

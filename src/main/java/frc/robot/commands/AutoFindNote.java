@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
+import frc.robot.utils.LEDmode;
 
 public class AutoFindNote extends Command {
   Timer      downTimer = new Timer();
@@ -29,6 +30,7 @@ public class AutoFindNote extends Command {
     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     downTimer.restart();
     vision.flushNoteTargets();
+    Globals.startNoteFinding = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,14 +52,19 @@ public class AutoFindNote extends Command {
   @Override
   public boolean isFinished() {
     boolean finished = false;
-    if (downTimer.hasElapsed(0.1) && Globals.noteTarget.valid) {
-      if ((fieldOfView == 0)  ||  (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) {
-        if ((!delayLooking) || (Globals.startNoteFinding)) {
-          Globals.startNoteFinding = false;
+    if (downTimer.hasElapsed(0.1) && ((!delayLooking) || (Globals.startNoteFinding))){
 
-          finished = true;
-        }
+      if (Globals.noteTarget.valid && ((fieldOfView == 0) || (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) ){
+      
+        Globals.startNoteFinding = false;
+        finished = true;
+      
+      } else {
+        Globals.setLEDMode(LEDmode.DONE_WAITING);
       }
+
+    } else {
+      Globals.setLEDMode(LEDmode.WAITING);
     }
     return finished;
   }

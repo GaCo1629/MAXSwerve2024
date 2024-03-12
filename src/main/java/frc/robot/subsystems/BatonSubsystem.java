@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
@@ -43,6 +44,7 @@ public class BatonSubsystem extends SubsystemBase {
     private boolean shooterUpToSpeed;
     private boolean topUpToSpeed;
     private boolean botUpToSpeed;    
+    private boolean rememberToStopIntake;
     
     private double tiltAngleSetPoint;
     private double currentTiltAngle;
@@ -114,6 +116,7 @@ public class BatonSubsystem extends SubsystemBase {
         manualTiltAngle    = BatonConstants.defaultTilt;
         manualShooterSpeed = BatonConstants.defaultRPM;
         manualShooting = false;
+        rememberToStopIntake = true;
 
         setState(BatonState.IDLE);
         setShooterRPM(0);
@@ -130,8 +133,13 @@ public class BatonSubsystem extends SubsystemBase {
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
         Globals.batonIsDown = (currentTiltAngle < 1.0);
+
+        shooterBot.getVoltage();
         
-        noteSensor          = getNoteSensorValue();
+        
+        // noteSensor          = getNoteSensorValue();
+        noteSensor          = shooterTop.getVoltage();
+
         tiltInPosition      = calculateTiltInPosition();
         shooterUpToSpeed    = areShootersUpToSpeed();
 
@@ -171,7 +179,7 @@ public class BatonSubsystem extends SubsystemBase {
         runTiltPID();
         runStateMachine();
 
-        SmartDashboard.putNumber("Intake Range",            rangeFinder.getVoltage());
+        SmartDashboard.putNumber("Intake Range",            shooterTop.getVoltage());
 
         SmartDashboard.putNumber("tilt setpoint",           tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",              currentTiltAngle);
@@ -210,18 +218,25 @@ public class BatonSubsystem extends SubsystemBase {
                     Globals.setLEDMode(LEDmode.LOWERING);
 
                     // Assist Baton lowering by spinning wheels backwards as it passes the Bumper & Frame
-                    if ((currentTiltAngle > 2) && (currentTiltAngle < 20)) {
+                    if (currentTiltAngle < 20) {
                         intake.set(BatonConstants.eject);
-                    } else {
-                        intake.set(0);
+                        rememberToStopIntake = true;
                     }
             
                 } else {
                     if (!Globals.getSpeakerTracking()) {
-                        Globals.setLEDMode(LEDmode.SPEEDOMETER);
+                        if (DriverStation.isTeleopEnabled()) {
+                            Globals.setLEDMode(LEDmode.SPEEDOMETER);
+                        }
                     }
-                    intake.set(0);
+
+                    if (rememberToStopIntake) {
+                        intake.set(BatonConstants.stopCollector);   
+                        rememberToStopIntake = false; 
+                    }
                 }
+
+                
 
                 // Exits by button press.
                 break;

@@ -132,10 +132,11 @@ public final class Constants {
     public static double collect = -0.45;  // was 0.5
     public static double fire = -1;
     public static double eject = 0.3;
-
     public static double stopCollector = 0;
+
     public static double seeingNote = 0.6;
     public static double readingError = 2.2;
+
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
     public static double defaultTilt = 2;
