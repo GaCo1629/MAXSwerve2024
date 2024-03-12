@@ -1,7 +1,5 @@
 package frc.robot.utils;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ShooterConstants;
 
 public final class Globals{
@@ -10,6 +8,7 @@ public final class Globals{
     public static boolean batonIsDown           = false;
     public static boolean robotAtHeading        = false;
     public static boolean startNoteFinding      = false;
+    public static boolean noteInIntake       = false;
 
     public static FrontImageSource frontSource;
     public static BackImageSource  backSource;

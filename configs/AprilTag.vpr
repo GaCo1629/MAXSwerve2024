@@ -38,11 +38,11 @@ exposure:350
 fiducial_backend:umich
 fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
-fiducial_idfilters:4,7
+fiducial_idfilters:
 fiducial_locfilters:
 fiducial_method:sqpnp
 fiducial_qualitythreshold:2.0
-fiducial_refine:1
+fiducial_refine:0
 fiducial_resdiv:2
 fiducial_size:165.1
 fiducial_skip3d:1

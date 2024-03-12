@@ -135,6 +135,8 @@ public class BatonSubsystem extends SubsystemBase {
         tiltInPosition      = calculateTiltInPosition();
         shooterUpToSpeed    = areShootersUpToSpeed();
 
+        Globals.noteInIntake = noteInIntake();
+
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking()) {
              double range = 0;
@@ -335,9 +337,11 @@ public class BatonSubsystem extends SubsystemBase {
     // ===== TILT Methods  ===================================
 
     public double rangeToAngle(double range) {
-        //double angle = (-3.558 * range * range) + (31.335 * range) - 36.4;
-        double angle = (-3.558 * range * range) + (31.335 * range) - 35.4;
+        double X2 =   -3.2043;  // Was -3.558
+        double X  =   29.8560;  // Was 31.335
+        double C  =  -33.9600;  // Was 35.4
 
+        double angle = (X2 * range * range) + (X * range) + C;
         return angle;
     }
         
@@ -354,7 +358,6 @@ public class BatonSubsystem extends SubsystemBase {
             tiltInPosition = calculateTiltInPosition();
         }
     }
-
 
     public double getSafeTiltAngle() {
         double safe = tiltEncoder.getPosition();

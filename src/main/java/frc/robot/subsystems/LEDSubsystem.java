@@ -57,7 +57,11 @@ public class LEDSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (DriverStation.isDisabled()) {
-      Globals.setLEDMode(LEDmode.ALLIANCE);
+      if (Globals.noteInIntake) {
+        Globals.setLEDMode(LEDmode.ALLIANCE);
+      } else {
+        Globals.setLEDMode(LEDmode.SYSTEM_ERROR);
+      }
     }
 
     SmartDashboard.putString("LED Mode", Globals.getLEDMode().toString());
@@ -120,7 +124,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SYSTEM_ERROR:       // Displaying system error code
-        flashStrip(RED, 0.1, 0.1);
+        flashStrip(RED, 0.2, 0.2);
         break;
 
     }
