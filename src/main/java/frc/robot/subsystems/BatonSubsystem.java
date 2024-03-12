@@ -466,7 +466,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public boolean noteInIntake(){
-        return (noteSensor > BatonConstants.seeingNote);
+        return ((noteSensor > BatonConstants.seeingNote) && (noteSensor < BatonConstants.readingError) );
     }
 
     public void collect (){

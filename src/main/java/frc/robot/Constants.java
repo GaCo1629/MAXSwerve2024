@@ -135,6 +135,7 @@ public final class Constants {
 
     public static double stopCollector = 0;
     public static double seeingNote = 0.6;
+    public static double readingError = 2.2;
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
     public static double defaultTilt = 2;
@@ -213,7 +214,7 @@ public final class Constants {
     public static final int kCoPilotController1Port= 1;
     public static final int kCoPilotController2Port= 2;
  
-    public static final double kDriveDeadband = 0.07;
+    public static final double kDriveDeadband = 0.10;
   }
 
   public static final class AutoConstants {

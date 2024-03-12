@@ -378,7 +378,8 @@
             ],
             "content": {
               "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt Error",
+              "_source0": "network_table:///SmartDashboard/Intake Range",
+              "_source1": "network_table:///SmartDashboard/tilt Error",
               "_title": "SmartDashboard/tilt Error",
               "_glyph": 148,
               "_showGlyph": false,
@@ -386,9 +387,10 @@
               "Graph/X-axis auto scrolling": true,
               "Y-axis/Automatic bounds": false,
               "Y-axis/Upper bound": 5.0,
-              "Y-axis/Lower bound": -5.0,
+              "Y-axis/Lower bound": 0.0,
               "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt Error": true
+              "Visible data/SmartDashboard/Intake Range": true,
+              "Visible data/SmartDashboard/tilt Error": false
             }
           },
           "6,0": {
@@ -413,7 +415,7 @@
               "Visible data/SmartDashboard/tilt setpoint": true
             }
           },
-          "7,4": {
+          "2,3": {
             "size": [
               1,
               1
