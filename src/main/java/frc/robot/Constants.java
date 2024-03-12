@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.opencv.core.Point;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,9 +41,9 @@ public final class Constants {
     public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(26.5);
+    public static final double kTrackWidth = Units.inchesToMeters(21.5);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(26.5);
+    public static final double kWheelBase = Units.inchesToMeters(23.5);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -83,7 +85,7 @@ public final class Constants {
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+    public static final double kDriveWheelFreeSpeedMps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
 
     public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
@@ -100,7 +102,7 @@ public final class Constants {
     public static final double kDrivingP = 0.04;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
-    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
+    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedMps;
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
@@ -137,6 +139,15 @@ public final class Constants {
     public static double maxTargetRange = 5.0;  // meters
     public static double defaultTilt = 2;
     public static double defaultRPM = 3000;
+
+    public static double highNoteShareAngle = 16;
+    public static double lowNoteShareAngle  = 58;
+
+    public static double highNoteShareSpeed = 3000;
+    public static double lowNoteShareSpeed  = 4500;
+
+    public static double noteApproachSpeed = 0.12;
+    public static double amplifierApproachSpeed = 0.1;
   }
 
   public class LiftConstants{
@@ -159,27 +170,34 @@ public final class Constants {
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
     public static final double speedThresholdRPM = 20;
+
+    public static final double MinTargetRange = 1.0; // meters
+    public static final double MaxTargetRange = 5.0; // meters
   }
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.012;
-    public static final double kI = 0.027;
-    public static final double kD = 0.001;
+    public static final double kP = 0.02;  // 0.12
+    public static final double kI = 0.03;  // 0.027
+    public static final double kD = 0.0005; // 0.001
     public static final double kFF = 0;
-    public static final double kZone = 10;    
+    public static final double kZone = 4;    
     public static final double kIMin = 0.0;    
-    public static final double kIMax = 0.5;
-    public static final double kIDeadband = 0.5;
-    public static final double kMinOutput = -0.025;
+    public static final double kIMax = 0.25;
+    public static final double kIDeadband = 0.25;
+    public static final double kMinOutput = -0.03;
     public static final double kMaxOutput = 0.3;
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 80.0;
     public static final double homeAngle    = 0;
-    public static final double ampLowAngle = 60;
+
+    public static final double ampTrackAngle = 53;
+    public static final double ampLowAngle = 63;
     public static final double ampHighAngle = 70;
-    public static final double tiltThresholdDeg = 1.0;
+
+
+    public static final double tiltThresholdDeg = 0.75;  //  was 1.0
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     public static final double kTiltConversion = 4.6f; // 360 / gear ratio / 1.2
@@ -195,7 +213,7 @@ public final class Constants {
     public static final int kCoPilotController1Port= 1;
     public static final int kCoPilotController2Port= 2;
  
-    public static final double kDriveDeadband = 0.02;
+    public static final double kDriveDeadband = 0.07;
   }
 
   public static final class AutoConstants {
@@ -225,9 +243,11 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.014; //  0.015 before slower detection
+    public static final double kPTrackingController = 0.010; //  0.015 before slower detection
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
+    public static final double kToleranceTrackingController = 4.0; // was 2.0
+    public static final double kOutputLimitTrackingController = 0.4;
 
     public static final TrapezoidProfile.Constraints kTrackingConstraints = new TrapezoidProfile.Constraints(
       kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
@@ -247,9 +267,24 @@ public final class Constants {
   }
 
   public class VisionConstants {
-    public static double noteCameraAngle  = 60;    // degrees
+    public static double noteCameraAngle  = 61;    // degrees
     public static double noteCameraHeight = 0.61;  // meters
-    public static double noteRollerOffset = 0.13;  // meters
+    public static double noteRollerOffset = 0.0;   // meters
+
+    public static double speakerTagHeightAboveCamera = 0.966;  // meters
+    public static double speakerCameraCenterOffset   = 0.28;  // meters
+    public static double speakerCameraAngle          = 25.0;  // degrees
+
+    public static double rangeAdjustV2O              = 1.097; // baed on measurments on the field
+
+    public static double noteAreaThreshold = 0.5;
+    public static double ampLongThreshold  = 0.3;
+  }
+
+  public static final class FieldConstants{
+    public static double INCH_TO_M = 0.0254;
+    public static Point redSpeaker =  new Point(16.58, 5.54);
+    public static Point blueSpeaker = new Point(  -0.04, 5.54);
   }
   
 

@@ -6,10 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.BatonState;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Globals;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.BatonState;
+import frc.robot.utils.FrontImageSource;
+import frc.robot.utils.Globals;
 
 public class AutoCollect extends Command {
   BatonSubsystem baton;
@@ -18,7 +20,6 @@ public class AutoCollect extends Command {
 
   /** Creates a new Shoot. */
   public AutoCollect(BatonSubsystem baton, DriveSubsystem robotDrive) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
     this.robotDrive = robotDrive;
     addRequirements(baton, robotDrive);
@@ -27,6 +28,7 @@ public class AutoCollect extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     Globals.setNoteTracking(true);
     baton.collect();
     collectTimer.restart();
@@ -36,7 +38,7 @@ public class AutoCollect extends Command {
   @Override
   public void execute() {
     // Read baton sensors
-    robotDrive.drive();
+    robotDrive.driveAutoCollect();
   }
 
   // Called once the command ends or is interrupted.

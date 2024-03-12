@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3576779647621067,
-      "y": 4.114397967513275
+      "x": 1.4199314885116257,
+      "y": 4.113892912470511
     },
     "rotation": 0
   },
@@ -14,19 +14,26 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo-45"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "P-8C"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pto8C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
@@ -38,7 +45,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8-1"
+            "pathName": "8to10s"
           }
         },
         {
@@ -48,9 +55,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "P-9C"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "10to9"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
@@ -62,7 +82,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "9-1"
+            "pathName": "9to10s"
           }
         },
         {

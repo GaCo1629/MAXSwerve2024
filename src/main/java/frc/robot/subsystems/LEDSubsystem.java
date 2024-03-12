@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.utils.Globals;
+import frc.robot.utils.LEDmode;
 
 
 public class LEDSubsystem extends SubsystemBase {
@@ -55,7 +57,11 @@ public class LEDSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (DriverStation.isDisabled()) {
-      Globals.setLEDMode(LEDmode.ALLIANCE);
+      if (Globals.noteInIntake) {
+        Globals.setLEDMode(LEDmode.ALLIANCE);
+      } else {
+        Globals.setLEDMode(LEDmode.SYSTEM_ERROR);
+      }
     }
 
     SmartDashboard.putString("LED Mode", Globals.getLEDMode().toString());
@@ -93,7 +99,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SEEKING:             // Seeling a speaker to score
-        flashStrip(GREEN, 0.3, 0.3);
+        flashStrip(GREEN, 0.25, 0.25);
         break;
 
       case SPEAKER_DETECTED:   // Speaker Apriltag has been detected
@@ -102,6 +108,7 @@ public class LEDSubsystem extends SubsystemBase {
 
       case SHOOTING:            // Green
         flashStrip(GREEN, 0.1, 0.1);
+        break;
 
       case SHOOTING_TIMEOUT:    // Waiting to shoot Shooting took too long
         flashStrip(BLUE, 0.25, 0.0);
@@ -117,7 +124,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case SYSTEM_ERROR:       // Displaying system error code
-        flashStrip(RED, 0.1, 0.1);
+        flashStrip(RED, 0.2, 0.2);
         break;
 
     }

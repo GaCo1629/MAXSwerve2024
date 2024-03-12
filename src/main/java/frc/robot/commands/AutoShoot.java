@@ -5,10 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.BatonState;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Globals;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.BackImageSource;
+import frc.robot.utils.BatonState;
+import frc.robot.utils.Globals;
 
 public class AutoShoot extends Command {
   BatonSubsystem baton;
@@ -25,6 +27,7 @@ public class AutoShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
     Globals.setSpeakerTracking(true);
     baton.setState(BatonState.AUTO_SHOOT);
   }
@@ -33,7 +36,7 @@ public class AutoShoot extends Command {
   @Override
   public void execute() {
     // Read baton sensors
-    robotDrive.drive();
+    robotDrive.driveAutoShoot();
   }
 
   // Called once the command ends or is interrupted.

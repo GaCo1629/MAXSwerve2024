@@ -7,49 +7,52 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.BatonState;
-import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 
-public class AutoAmp extends Command {
+public class AutoShootNow extends Command {
   BatonSubsystem baton;
   DriveSubsystem robotDrive;
+  double tiltAngle = 0;
+  double shooterSpeed = 0;
 
-  /** Creates a new Auto Amp. */
-  public AutoAmp(BatonSubsystem baton, DriveSubsystem robotDrive) {
+  /** Creates a new Shoot. */
+  public AutoShootNow(BatonSubsystem baton, DriveSubsystem robotDrive, double tiltAngle, double shooterSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
     this.robotDrive = robotDrive;
+    this.tiltAngle = tiltAngle;
+    this.shooterSpeed = shooterSpeed;
     addRequirements(baton, robotDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
-    baton.amplify(true);  // start the scoring process
-   }
+    //Globals.setSpeakerTracking(true);
+    baton.setManualTiltAngle(tiltAngle);
+    baton.setManualShooterSpeed(shooterSpeed);
+    baton.setManualShooting(true);
+    baton.setState(BatonState.AUTO_SHOOT);
+
+    //  robotDrive.setRoll();  line up wheels straight
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.driveAutoAmplify();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
-   Globals.setAmplifying(false);
+    baton.setManualShooting(false);
+    Globals.setSpeakerTracking(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // wailt till note is picked up, but don't wait too long
-    return ((baton.getState() == BatonState.IDLE) );
+    return (baton.getState() == BatonState.IDLE);
   }
-
 }

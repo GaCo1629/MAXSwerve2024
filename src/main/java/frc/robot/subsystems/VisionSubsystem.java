@@ -1,94 +1,168 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.utils.BackImageSource;
+import frc.robot.utils.FrontImageSource;
+import frc.robot.utils.Globals;
+import frc.robot.utils.Limelight;
+import frc.robot.utils.Target;
 
 public class VisionSubsystem extends SubsystemBase{
 
-    public VisionSubsystem (){
+    double  lastNoteTargetHash ;
+    boolean needFreshNote;
 
+    public VisionSubsystem (){
+        lastNoteTargetHash = 0;
+        needFreshNote = false;
+        setFrontImageSource(FrontImageSource.NOTE);
+        setBackImageSource(BackImageSource.SPEAKER);
     }
 
     @Override
     public void periodic(){
         getSpeakerTarget();
-        getNoteTarget();
-        if (DriverStation.isDisabled()){
-            getRobotPoseFromApriltag();
-            SmartDashboard.putString("BotPose", Globals.robotPoseFromApriltag.toString());
-        } else {
-            getSpeakerTarget();
+        if (Globals.frontSource == FrontImageSource.NOTE) {
             getNoteTarget();
-            SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
-            SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
+            Globals.ampTarget = new Target();
+        } else {
+            getAmpTarget();
+            Globals.noteTarget = new Target();
         }
+
+        SmartDashboard.putString("Speaker", Globals.speakerTarget.toString());
+        SmartDashboard.putString("Note"   , Globals.noteTarget.toString());
+        SmartDashboard.putString("Amp"   ,  Globals.ampTarget.toString());
+
         SmartDashboard.putBoolean("ValidSpeaker", Globals.speakerTarget.valid);
         SmartDashboard.putBoolean("ValidNote", Globals.noteTarget.valid);
+        SmartDashboard.putBoolean("ValidAmp", Globals.ampTarget.valid);
     }
 
-    //  ======================  AprilTag 3D Vision processing
-    public RobotPoseFromApriltag getRobotPoseFromApriltag() {
+    public void flushNoteTargets() {
+        Globals.noteTarget  = new Target();
+        needFreshNote        = true;
+    }
 
-        if (LimelightHelpers.getTV("")) {
-            Globals.robotPoseFromApriltag = new RobotPoseFromApriltag(true, LimelightHelpers.getBotPose2d_wpiBlue(""));
+    public static void setFrontImageSource(FrontImageSource source) {
+        // Use the network tables to update the camera pipeline
+
+        if (source == FrontImageSource.NOTE) {
+            Limelight.setPipelineIndex("limelight-note", 0);
         } else {
-            Globals.robotPoseFromApriltag = new RobotPoseFromApriltag();
+        Limelight.setPipelineIndex("limelight-note", 1);
+            if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+                Limelight.setTagPriority("limelight-note", 5);
+            } else {
+                Limelight.setTagPriority("limelight-note", 6);
+            }
         }
 
-        return  Globals.robotPoseFromApriltag;
+        Globals.frontSource = source;
     }
 
+    public static void setBackImageSource(BackImageSource source) {
+        // Use the network tables to update the camera pipeline
+
+        if (source == BackImageSource.SPEAKER) {
+            if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
+                Limelight.setTagPriority("limelight", 4);
+            } else {
+                Limelight.setTagPriority("limelight", 7);
+            }
+        } else {
+            Limelight.setTagPriority("limelight", -1);
+        }
+
+        Globals.backSource = source;
+    }
+    
     //  ======================  Speaker Tracking Vision processing
-    public SpeakerTarget getSpeakerTarget() {
-        double x,y,z = 0;
-        double range = 0;
-        double bearing = 0;
-        double elevation = 0;
-        SpeakerTarget aTarget;
-
-        Pose3d targetLocation = LimelightHelpers.getTargetPose3d_RobotSpace("limelight");
-
-        x = targetLocation.getX();
-        y = targetLocation.getZ();
-        z = -targetLocation.getY();
-
-        // SmartDashboard.putString("Target Coord", String.format("X:Y:Z %5.2f  %5.2f  %5.2f ", x,y,z));
-
-        range = Math.hypot(x, y);
-        bearing = -Math.atan2(x, y);
-        elevation = Math.atan2(z, range);
-
-        if (range > 0.5) {
-            aTarget = new SpeakerTarget(true, range, Math.toDegrees(bearing), Math.toDegrees(elevation));
-        }else{
-            aTarget = new SpeakerTarget();
-        }
-        Globals.speakerTarget = aTarget;
-        return aTarget;
-    }
-
-    //  ======================  Note Tracking Vision processing
-    public NoteTarget getNoteTarget() {
+    public Target getSpeakerTarget() {
         double y = 0;
         double range = 0;
         double bearing = 0;
-        NoteTarget aTarget;
+        Target aTarget;
 
-        if (LimelightHelpers.getTV("limelight-note")) {
+        if (Limelight.getTV("limelight")) {
 
-            bearing = LimelightHelpers.getTX("limelight-note");
-            y = LimelightHelpers.getTY("limelight-note");
+            bearing = Limelight.getTX("limelight");
+            y = Limelight.getTY("limelight");
 
-            range = Math.tan((Math.toRadians(VisionConstants.noteCameraAngle + y) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset);
-            aTarget = new NoteTarget(true, range, bearing);
+            range   = (VisionConstants.speakerTagHeightAboveCamera / Math.tan(Math.toRadians(VisionConstants.speakerCameraAngle + y))) + VisionConstants.speakerCameraCenterOffset;
+            range *= VisionConstants.rangeAdjustV2O ; 
+            aTarget = new Target(true, range, bearing);
         }else{
-            aTarget = new NoteTarget();
+            aTarget = new Target();
         }
+        Globals.speakerTarget = aTarget;
+        return aTarget;
+
+    }
+
+    //  ======================  Note Tracking Vision processing
+    public Target getNoteTarget() {
+        double x = 0;
+        double y = 0;
+        double a = 0;
+        double range = 0;
+        double hash  = 0;
+        Target aTarget = new Target();
+
+        if (Limelight.getTV("limelight-note") && 
+            (Limelight.getTClass("limelight-note").equals("note"))) {
+
+            x = Limelight.getTX("limelight-note");
+            y = Limelight.getTY("limelight-note");
+            a = Limelight.getTA("limelight-note");
+            hash = x + y + a;  // come up with a value that will probably change for each note target.
+
+            // do we need a guarenteed fresh Note?
+            if ((hash != lastNoteTargetHash) || !needFreshNote) {
+                if (a > VisionConstants.noteAreaThreshold){
+                    range = (Math.tan(Math.toRadians(VisionConstants.noteCameraAngle + y)) * VisionConstants.noteCameraHeight) + VisionConstants.noteRollerOffset;
+                    aTarget = new Target(true, range, x);
+                    lastNoteTargetHash = hash ;
+                    needFreshNote = false;
+                }
+                
+            }
+        }
+
         Globals.noteTarget = aTarget;
         return aTarget;
     }
+
+    //  ======================  AMP Tracking Vision processing
+    public Target getAmpTarget() {
+        double x = 0;
+        double l = 0;
+        double range = 0;
+        Target aTarget = new Target();
+
+        // Use the X value for Bearing, but use the area for range.
+        // It would be nice to use the Y value for range, but the baton tilt will not be stable, so just use the area with a minimum 
+
+        if (Limelight.getTV("limelight-note")  && 
+            (Limelight.getTClass("limelight-note").equals(""))) {
+
+            x = Limelight.getTX("limelight-note");
+            l = Limelight.getTLong("limelight-note");
+
+            if (l > VisionConstants.ampLongThreshold){
+                range = (97.5 / l) - 0.965;
+                aTarget = new Target(true, range, x);
+            }
+        }
+        Globals.ampTarget = aTarget;
+        return aTarget;
+    }
+
+    
 }
 
