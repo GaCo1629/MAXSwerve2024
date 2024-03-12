@@ -175,6 +175,8 @@ public RobotContainer() {
     new JoystickButton(copilot_1, Button.kTriangle.value)
         .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle));
   
+    new JoystickButton(copilot_1, Button.kCircle.value)
+        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.defaultRPM, BatonConstants.defaultTilt));
   }
 
   /**
