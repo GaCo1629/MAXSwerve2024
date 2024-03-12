@@ -140,6 +140,12 @@ public final class Constants {
     public static double defaultTilt = 2;
     public static double defaultRPM = 3000;
 
+    public static double highNoteShareAngle = 16;
+    public static double lowNoteShareAngle  = 58;
+
+    public static double highNoteShareSpeed = 3000;
+    public static double lowNoteShareSpeed  = 4500;
+
     public static double noteApproachSpeed = 0.12;
     public static double amplifierApproachSpeed = 0.1;
   }

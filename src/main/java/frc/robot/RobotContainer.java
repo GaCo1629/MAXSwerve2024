@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
-
+import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
@@ -170,8 +170,10 @@ public RobotContainer() {
         .onTrue(baton.bumpShooterCmd(-250));
 
     new JoystickButton(copilot_1, Button.kSquare.value)
-        .onTrue(baton.setManualSpeedAndTiltCmd(0, 0));
+        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.lowNoteShareSpeed, BatonConstants.lowNoteShareAngle));
     
+    new JoystickButton(copilot_1, Button.kTriangle.value)
+        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle));
   
   }
 
