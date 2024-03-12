@@ -25,6 +25,7 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.Globals;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -65,7 +66,9 @@ public RobotContainer() {
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
     NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, robotDrive, 0, 3000));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
-    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
+    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision, 0 , false));
+    NamedCommands.registerCommand("FindNoteLater",  new AutoFindNote(vision, 0 , true));
+    NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));

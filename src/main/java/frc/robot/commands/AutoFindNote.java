@@ -13,10 +13,14 @@ import frc.robot.utils.Globals;
 public class AutoFindNote extends Command {
   Timer      downTimer = new Timer();
   VisionSubsystem vision;
+  double  fieldOfView;
+  boolean delayLooking;
 
-  /** Creates a new AutoFindNote. */
-  public AutoFindNote(VisionSubsystem vision) {
-    this.vision = vision;
+
+  public AutoFindNote(VisionSubsystem vision, double fieldOfView, boolean delayLooking) {
+    this.vision = vision; 
+    this.fieldOfView = fieldOfView;
+    this.delayLooking = delayLooking;
   }
 
   // Called when the command is initially scheduled.
@@ -45,6 +49,14 @@ public class AutoFindNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (downTimer.hasElapsed(0.1) && Globals.noteTarget.valid);
+    boolean finished = false;
+    if (downTimer.hasElapsed(0.1) && Globals.noteTarget.valid) {
+      if ((fieldOfView == 0)  ||  (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) {
+        if ((!delayLooking) || (Globals.startNoteFinding)) {
+          finished = true;
+        }
+      }
+    }
+    return finished;
   }
 }
