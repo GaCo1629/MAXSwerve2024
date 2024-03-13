@@ -14,6 +14,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
 import frc.robot.commands.AutoFindNote;
+import frc.robot.commands.AutoFindNoteLater;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootNow;
 import frc.robot.commands.AutoTurnToHeading;
@@ -66,8 +67,8 @@ public RobotContainer() {
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
     NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, robotDrive, 0, 3000));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
-    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision, 0 , true));
-    NamedCommands.registerCommand("FindNoteLater",  new AutoFindNote(vision, 0 , false));
+    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
+    NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));
     NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));

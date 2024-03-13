@@ -12,11 +12,12 @@ import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 import frc.robot.utils.LEDmode;
 
-public class AutoFindNote extends Command {
+public class AutoFindNoteLater extends Command {
   Timer      downTimer = new Timer();
   VisionSubsystem vision;
+  boolean    keepLooking;
 
-  public AutoFindNote(VisionSubsystem vision) {
+  public AutoFindNoteLater(VisionSubsystem vision) {
     this.vision = vision; 
   }
 
@@ -26,9 +27,10 @@ public class AutoFindNote extends Command {
     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     downTimer.restart();
     vision.flushNoteTargets();
-    SmartDashboard.putString("FindNote", "Now");
-    SmartDashboard.putString("Mode", "Follow Path")  ;
-
+    Globals.startNoteFinding = false;
+    keepLooking = false;
+    SmartDashboard.putString("Mode", "Follow Path");
+    SmartDashboard.putString("FindNote", "Later");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,17 +42,29 @@ public class AutoFindNote extends Command {
       downTimer.reset();
       vision.flushNoteTargets();
     }
+
+    //timeToLook = Globals.startNoteFinding;
+    SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
+    if (Globals.startNoteFinding) {
+      keepLooking = true;
+      Globals.startNoteFinding = false;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+        Globals.startNoteFinding = false;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     boolean finished = false;
-    if (downTimer.hasElapsed(0.1)){
+
+    SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
+
+    if (downTimer.hasElapsed(0.1) && (keepLooking)){
       Globals.setLEDMode(LEDmode.DONE_WAITING);
 
       if (Globals.noteTarget.valid){
