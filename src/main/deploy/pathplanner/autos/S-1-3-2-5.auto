@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4072529462910246,
-      "y": 7.0087226194216985
+      "x": 1.3215899708152692,
+      "y": 5.552384529270483
     },
     "rotation": 0
   },
@@ -14,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo0"
+            "name": "ShootNow"
           }
         },
         {
@@ -33,6 +27,30 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo90"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo0"
           }
         },
         {
@@ -63,7 +81,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5to2"
+            "pathName": "5to3s"
           }
         },
         {

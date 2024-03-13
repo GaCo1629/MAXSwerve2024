@@ -16,6 +16,7 @@ public class AutoFindNoteLater extends Command {
   Timer      downTimer = new Timer();
   VisionSubsystem vision;
   boolean    keepLooking;
+  int        counter = 0;
 
   public AutoFindNoteLater(VisionSubsystem vision) {
     this.vision = vision; 
@@ -29,7 +30,8 @@ public class AutoFindNoteLater extends Command {
     vision.flushNoteTargets();
     Globals.startNoteFinding = false;
     keepLooking = false;
-    SmartDashboard.putString("Mode", "Follow Path");
+    counter = 0;
+    SmartDashboard.putString("Mode", "Path Later");
     SmartDashboard.putString("FindNote", "Later");
   }
 
@@ -45,6 +47,8 @@ public class AutoFindNoteLater extends Command {
 
     //timeToLook = Globals.startNoteFinding;
     SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
+    SmartDashboard.putString("Mode", String.format("Path Later %d", counter++));
+    
     if (Globals.startNoteFinding) {
       keepLooking = true;
       Globals.startNoteFinding = false;

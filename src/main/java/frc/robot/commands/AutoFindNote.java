@@ -15,6 +15,7 @@ import frc.robot.utils.LEDmode;
 public class AutoFindNote extends Command {
   Timer      downTimer = new Timer();
   VisionSubsystem vision;
+  int   counter = 0;
 
   public AutoFindNote(VisionSubsystem vision) {
     this.vision = vision; 
@@ -27,7 +28,8 @@ public class AutoFindNote extends Command {
     downTimer.restart();
     vision.flushNoteTargets();
     SmartDashboard.putString("FindNote", "Now");
-    SmartDashboard.putString("Mode", "Follow Path")  ;
+    SmartDashboard.putString("Mode", "Path Now")  ;
+    counter = 0;
 
   }
 
@@ -40,6 +42,8 @@ public class AutoFindNote extends Command {
       downTimer.reset();
       vision.flushNoteTargets();
     }
+    SmartDashboard.putString("Mode", String.format("Path %d", counter++));
+ 
   }
 
   // Called once the command ends or is interrupted.

@@ -79,7 +79,7 @@ public class BatonSubsystem extends SubsystemBase {
         tiltLeft.restoreFactoryDefaults();
         tiltLeft.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltLeft.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
-        tiltLeft.setSoftLimit(SoftLimitDirection.kForward, 0);
+        tiltLeft.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
         tiltLeft.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
         tiltLeft.enableSoftLimit(SoftLimitDirection.kForward, true);
         tiltLeft.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -92,7 +92,7 @@ public class BatonSubsystem extends SubsystemBase {
         tiltRight.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltRight.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
         tiltRight.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
-        tiltRight.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        tiltRight.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
         tiltRight.enableSoftLimit(SoftLimitDirection.kForward, true);
         tiltRight.enableSoftLimit(SoftLimitDirection.kReverse, true);
         
