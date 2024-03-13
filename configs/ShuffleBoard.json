@@ -52,7 +52,7 @@
           },
           "0,8": {
             "size": [
-              4,
+              3,
               2
             ],
             "content": {
@@ -280,7 +280,7 @@
               "_showGlyph": false
             }
           },
-          "4,8": {
+          "7,8": {
             "size": [
               2,
               2
@@ -323,7 +323,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,8": {
+          "3,8": {
             "size": [
               4,
               2
@@ -355,21 +355,6 @@
               "fps": -1,
               "imageWidth": -1,
               "imageHeight": -1
-            }
-          },
-          "11,7": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Start Looking",
-              "_title": "SmartDashboard/Start Looking",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
@@ -403,9 +388,7 @@
               "Y-axis/Automatic bounds": false,
               "Y-axis/Upper bound": 35.0,
               "Y-axis/Lower bound": 0.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt angle": true,
-              "Visible data/SmartDashboard/tilt setpoint": true
+              "Y-axis/Unit": "ul"
             }
           },
           "2,3": {
@@ -440,9 +423,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Bot RPM": true,
-              "Visible data/SmartDashboard/Top RPM": true
+              "Y-axis/Unit": "ul"
             }
           }
         }
