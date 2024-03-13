@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.FrontImageSource;
@@ -15,13 +16,13 @@ public class AutoFindNote extends Command {
   Timer      downTimer = new Timer();
   VisionSubsystem vision;
   double  fieldOfView;
-  boolean delayLooking;
+  boolean immediateStart;
 
 
-  public AutoFindNote(VisionSubsystem vision, double fieldOfView, boolean delayLooking) {
+  public AutoFindNote(VisionSubsystem vision, double fieldOfView, boolean immediateStart) {
     this.vision = vision; 
     this.fieldOfView = fieldOfView;
-    this.delayLooking = delayLooking;
+    this.immediateStart = immediateStart;
   }
 
   // Called when the command is initially scheduled.
@@ -42,6 +43,8 @@ public class AutoFindNote extends Command {
       downTimer.reset();
       vision.flushNoteTargets();
     }
+
+    SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
   }
 
   // Called once the command ends or is interrupted.
@@ -52,17 +55,14 @@ public class AutoFindNote extends Command {
   @Override
   public boolean isFinished() {
     boolean finished = false;
-    if (downTimer.hasElapsed(0.1) && ((!delayLooking) || (Globals.startNoteFinding))){
+    if (downTimer.hasElapsed(0.1) && (immediateStart || Globals.startNoteFinding)){
+      Globals.setLEDMode(LEDmode.DONE_WAITING);
 
-      if (Globals.noteTarget.valid && ((fieldOfView == 0) || (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) ){
-      
+//    if (Globals.noteTarget.valid && ((fieldOfView == 0) || (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) ){  // FOV
+      if (Globals.noteTarget.valid){
         Globals.startNoteFinding = false;
         finished = true;
-      
-      } else {
-        Globals.setLEDMode(LEDmode.DONE_WAITING);
       }
-
     } else {
       Globals.setLEDMode(LEDmode.WAITING);
     }

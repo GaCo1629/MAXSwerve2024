@@ -66,8 +66,8 @@ public RobotContainer() {
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
     NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, robotDrive, 0, 3000));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
-    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision, 0 , false));
-    NamedCommands.registerCommand("FindNoteLater",  new AutoFindNote(vision, 0 , true));
+    NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision, 0 , true));
+    NamedCommands.registerCommand("FindNoteLater",  new AutoFindNote(vision, 0 , false));
     NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
