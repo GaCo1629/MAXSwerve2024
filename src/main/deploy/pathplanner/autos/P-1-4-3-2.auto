@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3005404928188775,
-      "y": 5.5430292057165325
+      "x": 1.4174820372432768,
+      "y": 4.128036518181299
     },
     "rotation": 0
   },
@@ -14,38 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNow"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3to7C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
+            "name": "TurnTo0"
           }
         },
         {
@@ -57,13 +32,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "7to3"
+            "pathName": "4to4B"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo80"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo90"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2to5C"
           }
         }
       ]

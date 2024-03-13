@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4454257887138118,
-      "y": 7.039325432570105
+      "x": 1.4338538534626928,
+      "y": 6.99778201835606
     },
     "rotation": 0
   },
@@ -18,22 +18,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Ato2C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNote"
-                }
-              }
-            ]
+            "name": "TurnTo0"
           }
         },
         {
@@ -49,22 +36,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "2to3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
+            "name": "TurnTo-90"
           }
         },
         {

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8968988847068604,
-        "y": 4.113976955226638
+        "x": 2.6,
+        "y": 4.114397967513275
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6916664742420395,
-        "y": 1.3246819220911168
+        "x": 2.8675571881058293,
+        "y": 0.9472265098376368
       },
       "isLocked": true,
-      "linkedName": "4"
+      "linkedName": "4B"
     },
     {
       "anchor": {
@@ -24,7 +24,7 @@
         "y": 1.2167350048985814
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "8C"
     }
   ],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.75,
       "command": {
         "type": "parallel",
         "data": {
@@ -63,7 +63,7 @@
   "reversed": false,
   "folder": "4",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -39.923701176536326,
     "velocity": 0
   },
   "useDefaultConstraints": true
