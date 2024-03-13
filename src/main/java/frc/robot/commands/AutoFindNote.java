@@ -17,6 +17,7 @@ public class AutoFindNote extends Command {
   VisionSubsystem vision;
   double  fieldOfView;
   boolean immediateStart;
+  boolean timeToLook = false;
 
 
   public AutoFindNote(VisionSubsystem vision, double fieldOfView, boolean immediateStart) {
@@ -32,6 +33,8 @@ public class AutoFindNote extends Command {
     downTimer.restart();
     vision.flushNoteTargets();
     Globals.startNoteFinding = false;
+    SmartDashboard.putString("Mode", "Follow Path")  ;
+    SmartDashboard.putBoolean("Immediate Start", immediateStart);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,7 +47,8 @@ public class AutoFindNote extends Command {
       vision.flushNoteTargets();
     }
 
-    SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
+    timeToLook = Globals.startNoteFinding;
+    SmartDashboard.putBoolean("Start Looking", timeToLook);
   }
 
   // Called once the command ends or is interrupted.
@@ -55,7 +59,8 @@ public class AutoFindNote extends Command {
   @Override
   public boolean isFinished() {
     boolean finished = false;
-    if (downTimer.hasElapsed(0.1) && (immediateStart || Globals.startNoteFinding)){
+//    if (downTimer.hasElapsed(0.1) && (immediateStart || Globals.startNoteFinding)){
+    if (timeToLook){
       Globals.setLEDMode(LEDmode.DONE_WAITING);
 
 //    if (Globals.noteTarget.valid && ((fieldOfView == 0) || (Math.abs(Globals.noteTarget.bearingDeg) < fieldOfView)) ){  // FOV

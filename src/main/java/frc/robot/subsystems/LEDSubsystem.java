@@ -39,6 +39,7 @@ public class LEDSubsystem extends SubsystemBase {
   public static final int ORANGE   = 5;
   public static final int GREEN   = 60;
   public static final int BLUE   = 120;
+  public static final int PURPLE = 140;
 
   /** Creates a new LED Strip. */
   public LEDSubsystem(int port) {
@@ -124,7 +125,7 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case WAITING:
-        flashStrip(BLUE, 0.2, 0.2);
+        flashStrip(PURPLE, 0.2, 0.2);
         break;
 
      case DONE_WAITING:
