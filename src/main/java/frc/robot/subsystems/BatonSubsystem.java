@@ -364,7 +364,7 @@ public class BatonSubsystem extends SubsystemBase {
     public double rangeToAngle(double range) {
         double X2 =   -3.2043;  // Was -3.204
         double X  =   29.8560;  // Was 29.85
-        double C  =  -34.5   ;  // Was -33.96
+        double C  =  -35.0   ;  // Was -33.96
 
 
         double angle = (X2 * range * range) + (X * range) + C;
