@@ -269,7 +269,7 @@ public class BatonSubsystem extends SubsystemBase {
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
-                } else if(stateTimer.hasElapsed(3)){
+                } else if(stateTimer.hasElapsed(2.5)){
                    intake.set(BatonConstants.fire);
                    Globals.setLEDMode(LEDmode.SHOOTING_TIMEOUT);
                    setState(BatonState.SHOOTING); 
