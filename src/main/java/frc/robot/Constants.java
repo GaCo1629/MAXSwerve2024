@@ -199,7 +199,7 @@ public final class Constants {
     public static final double ampHighAngle = 70;
 
 
-    public static final double tiltThresholdDeg = 0.9;  //  was 1.0
+    public static final double tiltThresholdDeg = 0.85;  //  was 1.0
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     public static final double kTiltConversion = 4.6f; // 360 / gear ratio / 1.2
