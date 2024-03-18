@@ -111,7 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
               new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
               new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
               4.5, // Max module speed, in m/s
-              0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+              0.413, // Drive base radius in meters. Distance from robot center to furthest module.
               new ReplanningConfig() // Default path replanning config. See the API for the options here
       ),
       () -> {
@@ -221,6 +221,9 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void ppResetOdometry(Pose2d pose) {
     Globals.startingLocationSet = true;
+
+    // skew the angle returned by the IMU
+    imu.setAngleOffset(pose.getRotation().getDegrees());
     resetOdometry(pose);
   }
 

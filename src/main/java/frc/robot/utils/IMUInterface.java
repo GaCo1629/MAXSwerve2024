@@ -19,7 +19,6 @@ public class IMUInterface{
     public Rotation2d  rotation2d = new Rotation2d();
     public Rotation2d  fCDrotation2d = new Rotation2d();
   
-    private double m_gyro2FieldOffset = 0;
     private final AHRS m_robotIMU = new AHRS(SPI.Port.kMXP);
 
     public IMUInterface() {
@@ -29,11 +28,11 @@ public class IMUInterface{
           
         double angle = -m_robotIMU.getAngle();
         
-        headingRad    = Math.IEEEremainder(Math.toRadians(angle) + m_gyro2FieldOffset, Math.PI * 2);
+        headingRad    = Math.IEEEremainder(Math.toRadians(angle), Math.PI * 2);
         headingDeg    = Math.toDegrees(headingRad);
         // <ust adjust Field Centric driving if starting pointing backwards
         // fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
-        fCDheadingRad = Math.IEEEremainder(headingRad + m_gyro2FieldOffset, Math.PI * 2);
+        fCDheadingRad = Math.IEEEremainder(headingRad, Math.PI * 2);
         pitch      = -m_robotIMU.getPitch();
         roll       = -m_robotIMU.getRoll();
         yawRate    = m_robotIMU.getRate();
@@ -59,9 +58,13 @@ public class IMUInterface{
 
     public void setFieldOrientation() {
         if (DriverStation.getAlliance().get() == Alliance.Red){
-            m_gyro2FieldOffset = Math.PI;
+            m_robotIMU.setAngleAdjustment(180);
         } else {
-            m_gyro2FieldOffset = 0.0;  
+            m_robotIMU.setAngleAdjustment(0);
         }
+    }
+
+    public void setAngleOffset(double offsetDeg){
+        m_robotIMU.setAngleAdjustment(-offsetDeg);  // Native IMU has negative rotation which is reversed elsewhere
     }
 }
