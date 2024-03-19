@@ -30,6 +30,7 @@ public class AutoCollect extends Command {
   public void initialize() {
     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
     Globals.setNoteTracking(true);
+    robotDrive.lockCurrentHeading();
     baton.collect();
     collectTimer.restart();
   }

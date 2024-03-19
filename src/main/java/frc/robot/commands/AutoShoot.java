@@ -30,6 +30,7 @@ public class AutoShoot extends Command {
     VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
     Globals.setSpeakerTracking(true);
     baton.setState(BatonState.AUTO_SHOOT);
+    robotDrive.lockCurrentHeading();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

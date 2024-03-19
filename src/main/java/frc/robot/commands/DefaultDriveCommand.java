@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveCommand extends Command {
+public class DefaultDriveCommand extends Command {
   DriveSubsystem robotDrive;
   /** Creates a new DriveCommand. */
-  public DriveCommand(DriveSubsystem robotDrive) {
+  public DefaultDriveCommand(DriveSubsystem robotDrive) {
     this.robotDrive = robotDrive;
     addRequirements(robotDrive);
   }
@@ -29,7 +29,9 @@ public class DriveCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    robotDrive.lockCurrentHeading();
+  }
 
   // Returns true when the command should end.
   @Override

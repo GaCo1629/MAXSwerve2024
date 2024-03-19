@@ -18,7 +18,7 @@ import frc.robot.commands.AutoFindNoteLater;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootNow;
 import frc.robot.commands.AutoTurnToHeading;
-import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -66,7 +66,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, robotDrive, 0, 3000));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 3000));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
     NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));
@@ -93,16 +93,11 @@ public RobotContainer() {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
-    robotDrive.setDefaultCommand(new DriveCommand(robotDrive));
+    robotDrive.setDefaultCommand(new DefaultDriveCommand(robotDrive));
 
     Globals.startingLocationSet = false ;
-
-  }
-
-  private Command DriveCommand(DriveSubsystem robotDrive2) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'DriveCommand'");
 }
+
 
 private void configureButtonBindings() {
 

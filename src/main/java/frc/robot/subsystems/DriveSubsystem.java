@@ -88,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose (use pose estimator for ading vision)
   SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
-    imu.rotation2d,
+    imu.getRotation2d(),
     new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_rearLeft.getPosition(),  m_rearRight.getPosition()
     },
@@ -172,7 +172,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     imu.update();
     odometry.update(
-      imu.rotation2d,
+      imu.getRotation2d(),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -243,9 +243,23 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband)) *  speedFactor;
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband)) * DriveConstants.kAtleeTurnFactor;
  
-    // smooth out the translation requests
-    xSpeed = XLimiter.calculate(xSpeed);
-    ySpeed = YLimiter.calculate(ySpeed);
+    // smooth out the translation requests, unless we are in Defense mode
+    if (driver.getRawButton(11)) {
+      XLimiter.reset(xSpeed);  
+      YLimiter.reset(ySpeed);  
+    } else {
+      xSpeed = XLimiter.calculate(xSpeed);
+      ySpeed = YLimiter.calculate(ySpeed);
+    }
+
+    // Turn to Source ?
+    if (driver.getRawButton(12)) {
+      if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
+        newHeadingSetpoint(FieldConstants.redSourceAngle);          
+      } else {
+        newHeadingSetpoint(FieldConstants.blueSourceAngle);          
+      }
+    }
 
     // TARGET TRACKING =======================================================
 
@@ -367,7 +381,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveRobot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     ChassisSpeeds chassisSpeeds = fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, imu.fCDrotation2d)
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, imu.getFCDRotation2d())
             : new ChassisSpeeds(xSpeed, ySpeed, rot);
     driveRobotRelative(chassisSpeeds);          
   }
@@ -502,7 +516,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // If the speaker target is valid, select the correct speaker and offset robot location by target range, bearing.
     if (Globals.speakerTarget.valid){
-      if (DriverStation.getAlliance().get() == Alliance.Red) {
+      if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)) {
         speaker = FieldConstants.redSpeaker;
       } else {
         speaker = FieldConstants.blueSpeaker;
@@ -511,7 +525,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       X = speaker.x + (Math.cos(bearingToTarget) * Globals.speakerTarget.range);
       Y = speaker.y + (Math.sin(bearingToTarget) * Globals.speakerTarget.range);
-      ppResetOdometry(new Pose2d(X, Y, imu.rotation2d));
+      ppResetOdometry(new Pose2d(X, Y, imu.getRotation2d()));
     }    
   }
 
@@ -520,7 +534,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Zeroes the heading of the robot. And zeros out heading for Odometry */
   public void resetHeading() {
     imu.reset();
-    resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), imu.rotation2d )); 
+    resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), imu.getRotation2d() )); 
     lockCurrentHeading();
   }
   
@@ -654,7 +668,7 @@ SmartDashboard.putString("Mode", "Amplify")  ;
       rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
       rotate = MathUtil.clamp(rotate, -0.4, 0.4);
       lockCurrentHeading();  // prepare for return to heading hold
-      SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
+      SmartDashboard.putString("odo", String.format("Deg Head %.1f  SP %.1f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
     }
     
     // Convert the commanded speeds into the correct units for the drivetrain
@@ -665,7 +679,6 @@ SmartDashboard.putString("Mode", "Amplify")  ;
   }
 
   // ============ Public Command Interface  ========================================
-  public Command driveCmd()                       {return runOnce(() -> driveTeleop());}
   public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
   public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
   public Command setXCmd()                        {return runOnce(() -> setX());}

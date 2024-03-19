@@ -12,18 +12,16 @@ import frc.robot.utils.Globals;
 
 public class AutoShootNow extends Command {
   BatonSubsystem baton;
-  DriveSubsystem robotDrive;
   double tiltAngle = 0;
   double shooterSpeed = 0;
 
   /** Creates a new Shoot. */
-  public AutoShootNow(BatonSubsystem baton, DriveSubsystem robotDrive, double tiltAngle, double shooterSpeed) {
+  public AutoShootNow(BatonSubsystem baton, double tiltAngle, double shooterSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.baton = baton;
-    this.robotDrive = robotDrive;
     this.tiltAngle = tiltAngle;
     this.shooterSpeed = shooterSpeed;
-    addRequirements(baton, robotDrive);
+    addRequirements(baton);
   }
 
   // Called when the command is initially scheduled.
@@ -34,8 +32,6 @@ public class AutoShootNow extends Command {
     baton.setManualShooterSpeed(shooterSpeed);
     baton.setManualShooting(true);
     baton.setState(BatonState.AUTO_SHOOT);
-
-    //  robotDrive.setRoll();  line up wheels straight
   }
 
   // Called every time the scheduler runs while the command is scheduled.

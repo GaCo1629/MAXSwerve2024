@@ -231,7 +231,7 @@ public final class Constants {
     public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
 
     // Used in Teleop Heading lock Command
-    public static final double kPHeadingLockController = 1.2;
+    public static final double kPHeadingLockController = 1.2;  // Based on Radian Error
     public static final double kIHeadingLockController = 0;
     public static final double kDHeadingLockController = 0; // try to slow down approach
 
@@ -245,7 +245,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.010; //  0.015 before slower detection
+    public static final double kPTrackingController = 0.015; //  0.010 during quals.  Based on Degree Error
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
     public static final double kToleranceTrackingController = 4.0; // was 2.0
@@ -287,6 +287,8 @@ public final class Constants {
     public static double INCH_TO_M = 0.0254;
     public static Point redSpeaker =  new Point(16.58, 5.54);
     public static Point blueSpeaker = new Point(  -0.04, 5.54);
+    public static double blueSourceAngle = Math.toRadians(50);
+    public static double redSourceAngle  = -blueSourceAngle;
   }
   
 

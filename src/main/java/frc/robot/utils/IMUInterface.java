@@ -12,13 +12,11 @@ public class IMUInterface{
 
     public double      headingRad = 0;
     public double      headingDeg = 0;
-    public double      fCDheadingRad = 0;
     public double      pitch = 0;
     public double      roll = 0;
     public double      yawRate = 0;
-    public Rotation2d  rotation2d = new Rotation2d();
-    public Rotation2d  fCDrotation2d = new Rotation2d();
-  
+    
+    private double     fCDOffset  = 0;
     private final AHRS m_robotIMU = new AHRS(SPI.Port.kMXP);
 
     public IMUInterface() {
@@ -26,27 +24,16 @@ public class IMUInterface{
   
     public void update(){
           
-        double angle = -m_robotIMU.getAngle();
-        
-        headingRad    = Math.IEEEremainder(Math.toRadians(angle), Math.PI * 2);
-        headingDeg    = Math.toDegrees(headingRad);
-        // <ust adjust Field Centric driving if starting pointing backwards
-        // fCDheading = Math.IEEEremainder(Math.toRadians(angle) + Math.PI, Math.PI * 2);
-        fCDheadingRad = Math.IEEEremainder(headingRad, Math.PI * 2);
-        pitch      = -m_robotIMU.getPitch();
-        roll       = -m_robotIMU.getRoll();
-        yawRate    = m_robotIMU.getRate();
-
-        rotation2d = Rotation2d.fromRadians(headingRad);
-        fCDrotation2d = Rotation2d.fromRadians(fCDheadingRad);
+        headingDeg    = -m_robotIMU.getAngle();
+        headingRad    = Math.toRadians(headingDeg);
+        pitch         = -m_robotIMU.getPitch();
+        roll          = -m_robotIMU.getRoll();
+        yawRate       = m_robotIMU.getRate();
 
         Globals.robotPitch = pitch;
         Globals.robotRoll  = roll;
 
-        SmartDashboard.putNumber("Robot Heading", Math.toDegrees(headingRad));
-        SmartDashboard.putNumber("Robot Pitch", pitch);
-        SmartDashboard.putNumber("Robot roll", roll);
-        SmartDashboard.putNumber("Robot rate", Math.toDegrees(yawRate));
+        SmartDashboard.putString("Robot Heading", String.format("%.1", headingDeg));
     }
 
     public void reset() {
@@ -57,14 +44,25 @@ public class IMUInterface{
     }
 
     public void setFieldOrientation() {
-        if (DriverStation.getAlliance().get() == Alliance.Red){
+        if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
             m_robotIMU.setAngleAdjustment(180);
+            fCDOffset = Math.PI;
         } else {
             m_robotIMU.setAngleAdjustment(0);
+            fCDOffset = 0;
         }
     }
 
     public void setAngleOffset(double offsetDeg){
         m_robotIMU.setAngleAdjustment(-offsetDeg);  // Native IMU has negative rotation which is reversed elsewhere
     }
+
+    public Rotation2d getFCDRotation2d(){
+        return Rotation2d.fromRadians(Math.IEEEremainder(headingRad + fCDOffset, Math.PI * 2));
+    }
+
+    public Rotation2d getRotation2d(){
+        return Rotation2d.fromRadians(headingRad);
+    }
+
 }
