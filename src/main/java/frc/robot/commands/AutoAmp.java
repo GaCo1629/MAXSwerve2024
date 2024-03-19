@@ -4,7 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.BatonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -34,8 +38,40 @@ public class AutoAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.driveAutoAmplify();
+    double xSpeed = 0;
+    double ySpeed = 0;
+    double rotate = 0;
+
+    SmartDashboard.putString("Mode", "Amplify")  ;
+   
+    // If we can see the amp. try to get directly in front of it.
+    if (Globals.ampTarget.valid) {
+      // If we are coming in, use the heading error (from 90) to strafe.
+      // once we are close, use the angle error 
+      if (Globals.ampTarget.range > 0.3) {
+        // Point to amp and strafe sideways to get to point to 90 (centered on target)
+        xSpeed = (Globals.ampTarget.range * 0.25);
+        ySpeed = (robotDrive.getHeadingDeg() - 90) * 0.00556;
+        rotate = robotDrive.trackingCalculate(Globals.ampTarget.bearingDeg); 
+      } else {
+        // Point to 90 degrees and strafe sideways to get the tag centered
+        robotDrive.newHeadingSetpoint(Math.PI / 2);
+        xSpeed = BatonConstants.amplifierApproachSpeed;
+        ySpeed = Globals.ampTarget.bearingDeg * -0.02;
+        rotate = robotDrive.headingLockCalculate();
+      }
+
+      xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
+      ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
+    }
+    
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // prepare for return to heading hold & Send power to swerve modules
+    robotDrive.lockCurrentHeading();  
+    robotDrive.driveRobot(xSpeedMPS, ySpeedMPS, rotRPS, false);
   }
 
   // Called once the command ends or is interrupted.

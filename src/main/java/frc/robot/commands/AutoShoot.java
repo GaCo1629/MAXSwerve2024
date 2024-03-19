@@ -4,13 +4,17 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.BackImageSource;
 import frc.robot.utils.BatonState;
 import frc.robot.utils.Globals;
+import frc.robot.utils.LEDmode;
 
 public class AutoShoot extends Command {
   BatonSubsystem baton;
@@ -36,8 +40,30 @@ public class AutoShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.driveAutoShoot();
+
+    double rotate = 0;
+    SmartDashboard.putString("Mode", "Auto Shoot")  ;
+
+    if (Globals.speakerTarget.valid) {
+      Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
+
+      // Calculate turn power to point to speaker.
+      rotate = robotDrive.trackingCalculate(Globals.speakerTarget.bearingDeg);
+      robotDrive.lockCurrentHeading();  // prepare for return to heading hold
+
+    } else if (Globals.odoTarget.valid) {
+      Globals.setLEDMode(LEDmode.SEEKING);
+
+      rotate = robotDrive.trackingCalculate(robotDrive.getHeadingDeg() - Globals.odoTarget.bearingDeg);
+      rotate = MathUtil.clamp(rotate, -0.4, 0.4);
+      robotDrive.lockCurrentHeading();  // prepare for return to heading hold
+    }
+    
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // Send required power to swerve drives
+    robotDrive.driveRobot(0, 0, rotRPS, false);
   }
 
   // Called once the command ends or is interrupted.

@@ -7,7 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class AutoTurnToHeading extends Command {
@@ -41,8 +43,21 @@ public class AutoTurnToHeading extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Let drive turn to new heading.  Disable target tracking if we are rasing baton
-    robotDrive.driveAutoTurnToHeading();
+  
+    SmartDashboard.putString("Mode", "Turn To Heading")  ;
+
+    // PID Yaw control.
+    double rotate = robotDrive.headingLockCalculate();
+    if (Math.abs(rotate) < 0.025) {
+      rotate = 0;
+    } 
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // Send required power to swerve drives
+    robotDrive.driveRobot(0, 0, rotRPS, false);
+
   }
 
   // Called once the command ends or is interrupted.

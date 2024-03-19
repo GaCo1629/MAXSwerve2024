@@ -556,126 +556,16 @@ public class DriveSubsystem extends SubsystemBase {
     return headingLockController.atGoal();
   }
 
-  // ===============================================================================
-  // ============ Autonomous Drive Methods  ========================================
-  // ===============================================================================
-
-  /**
-   * Drive Method to Turn To Heading -------------------------------------
-   */
-  public void driveAutoTurnToHeading() {
-    
-    SmartDashboard.putString("Mode", "Turn To Heading")  ;
-
-    // PID Yaw control.
-    double rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-    if (Math.abs(rotate) < 0.025) {
-      rotate = 0;
-    } 
-
-    // Convert the commanded speeds into the correct units for the drivetrain
-    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
-
-    // Send required power to swerve drives
-    driveRobot(0, 0, rotRPS, false);
+  public double getHeadingDeg() {
+    return imu.headingDeg;
   }
 
-  /**
-   * Drive Method to Amplify ----------------------------------------------
-   */
-  public void driveAutoAmplify() {
-    
-SmartDashboard.putString("Mode", "Amplify")  ;
-    double xSpeed = 0;
-    double ySpeed = 0;
-    double rotate = 0;
-
-    // If we can see the amp. try to get directly in front of it.
-    if (Globals.ampTarget.valid) {
-      // If we are coming in, use the heading error (from 90) to strafe.
-      // once we are close, use the angle error 
-      if (Globals.ampTarget.range > 0.3) {
-        // Point to amp and strafe sideways to get to point to 90 (centered on target)
-        xSpeed = (Globals.ampTarget.range * 0.25);
-        ySpeed = (imu.headingDeg - 90) * 0.00556;
-        rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
-      } else {
-        // Point to 90 degrees and strafe sideways to get the tag centered
-        xSpeed = BatonConstants.amplifierApproachSpeed;
-        ySpeed = Globals.ampTarget.bearingDeg * -0.02;
-        rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
-      }
-
-      xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
-      ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
-    }
-    
-    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedMPS = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
-
-    // prepare for return to heading hold & Send power to swerve modules
-    lockCurrentHeading();  
-    driveRobot(xSpeedMPS, ySpeedMPS, rotRPS, false);
+  public double trackingCalculate(double bearingDeg){
+    return trackingController.calculate(bearingDeg, 0);
   }
 
-  /**
-   * Drive Methods to do Note Collection  ----------------------------------------------
-   */
-  public void driveAutoCollect() {
-    
-    double xSpeed = BatonConstants.noteApproachSpeed;
-    double rotate = 0;
-    SmartDashboard.putString("Mode", "Auto Collect")  ;
-
-    if (Globals.noteTarget.valid){
-      // Calculate turn power to point to note.
-      rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0);
-      if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
-        xSpeed = Globals.noteTarget.range * 0.35; 
-      }
-      lockCurrentHeading(); 
-    } else {
-      rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-    }
-
-    // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
-
-    // prepare for return to heading hold & Send power to swerve modules
-    driveRobot(xSpeedMPS, 0, rotRPS, false);
-  }
-
-  /**
-   * Method to drive while shooting in auto  ---------------------------------------
-   */
-  public void driveAutoShoot() {
-  
-    double rotate = 0;
-    SmartDashboard.putString("Mode", "Auto Shoot")  ;
-
-    if (Globals.speakerTarget.valid) {
-      Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
-
-      // Calculate turn power to point to speaker.
-      rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
-      lockCurrentHeading();  // prepare for return to heading hold
-
-    } else if (Globals.odoTarget.valid) {
-      Globals.setLEDMode(LEDmode.SEEKING);
-
-      rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
-      rotate = MathUtil.clamp(rotate, -0.4, 0.4);
-      lockCurrentHeading();  // prepare for return to heading hold
-      SmartDashboard.putString("odo", String.format("Deg Head %.1f  SP %.1f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
-    }
-    
-    // Convert the commanded speeds into the correct units for the drivetrain
-    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
-
-    // Send required power to swerve drives
-    driveRobot(0, 0, rotRPS, false);
+  public double headingLockCalculate() {
+      return headingLockController.calculate(imu.headingRad, headingSetpoint);
   }
 
   // ============ Public Command Interface  ========================================

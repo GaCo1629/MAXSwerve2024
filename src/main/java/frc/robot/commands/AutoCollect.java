@@ -5,7 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.BatonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -38,8 +41,28 @@ public class AutoCollect extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read baton sensors
-    robotDrive.driveAutoCollect();
+    double xSpeed = BatonConstants.noteApproachSpeed;
+    double rotate = 0;
+    SmartDashboard.putString("Mode", "Auto Collect")  ;
+
+    if (Globals.noteTarget.valid){
+      // Calculate turn power to point to note.
+      rotate = robotDrive.trackingCalculate(Globals.noteTarget.bearingDeg);
+      if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
+        xSpeed = Globals.noteTarget.range * 0.35; 
+      }
+      robotDrive.lockCurrentHeading(); 
+    } else {
+      rotate = robotDrive.headingLockCalculate();
+    }
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double xSpeedMPS = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotRPS    = rotate * DriveConstants.kMaxAngularSpeed;
+
+    // prepare for return to heading hold & Send power to swerve modules
+    robotDrive.driveRobot(xSpeedMPS, 0, rotRPS, false);
+
   }
 
   // Called once the command ends or is interrupted.
