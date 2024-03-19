@@ -205,7 +205,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
-      imu.rotation2d,
+     pose.getRotation(),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -225,12 +225,13 @@ public class DriveSubsystem extends SubsystemBase {
     // skew the angle returned by the IMU
     imu.setAngleOffset(pose.getRotation().getDegrees());
     resetOdometry(pose);
+    newHeadingSetpoint(pose.getRotation().getRadians());
   }
 
   /**
    * Drive Method for Teleop ------------------------------------------
    */
-  public void driveTelep() {
+  public void driveTeleop() {
     
     double xSpeed;
     double ySpeed;
@@ -664,7 +665,7 @@ SmartDashboard.putString("Mode", "Amplify")  ;
   }
 
   // ============ Public Command Interface  ========================================
-  public Command driveCmd()                       {return runOnce(() -> driveTelep());}
+  public Command driveCmd()                       {return runOnce(() -> driveTeleop());}
   public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
   public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
   public Command setXCmd()                        {return runOnce(() -> setX());}

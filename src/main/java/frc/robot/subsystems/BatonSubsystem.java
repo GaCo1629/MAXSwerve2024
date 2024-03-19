@@ -360,7 +360,6 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     // ===== TILT Methods  ===================================
-
     public double rangeToAngle(double range) {
         double X2 =   -3.2043;  // Was -3.204
         double X  =   29.8560;  // Was 29.85

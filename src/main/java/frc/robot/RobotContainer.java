@@ -18,6 +18,7 @@ import frc.robot.commands.AutoFindNoteLater;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootNow;
 import frc.robot.commands.AutoTurnToHeading;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.WaitForTiltInPosition;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -92,13 +93,18 @@ public RobotContainer() {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
-    robotDrive.setDefaultCommand(robotDrive.driveCmd());
+    robotDrive.setDefaultCommand(new DriveCommand(robotDrive));
 
     Globals.startingLocationSet = false ;
 
   }
 
-  private void configureButtonBindings() {
+  private Command DriveCommand(DriveSubsystem robotDrive2) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'DriveCommand'");
+}
+
+private void configureButtonBindings() {
 
     // -----------------   Pilot Functions
     // Turbo
