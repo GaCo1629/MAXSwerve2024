@@ -33,7 +33,7 @@ public class IMUInterface{
         Globals.robotPitch = pitch;
         Globals.robotRoll  = roll;
 
-        SmartDashboard.putString("Robot Heading", String.format("%.1", headingDeg));
+        SmartDashboard.putString("Robot Heading", String.format("%.1f", headingDeg));
     }
 
     public void reset() {

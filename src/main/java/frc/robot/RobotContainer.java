@@ -104,10 +104,18 @@ private void configureButtonBindings() {
     // -----------------   Pilot Functions
     // Turbo
     new JoystickButton(driverController, Button.kR1.value)    
-        .onTrue(robotDrive.setTurboModeCmd(true))
-        .onFalse(robotDrive.setTurboModeCmd(false));
+        .onTrue(Commands.runOnce(() -> robotDrive.setTurboOn()))
+        .onFalse(Commands.runOnce(() -> robotDrive.setTurboOff()));
+
+    // Turn to source
+    new JoystickButton(driverController, Button.kTriangle.value)    
+        .onTrue(Commands.runOnce(() -> robotDrive.turnToFaceForward()));
     
-    // Collect
+    // Turn to face forward again
+    new JoystickButton(driverController, Button.kSquare.value)    
+        .onTrue(Commands.runOnce(() -> robotDrive.turnToSource()));
+    
+       // Collect
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(baton.collectCmd())
         .onTrue(baton.setNoteTrackingCmd(true))
@@ -117,7 +125,7 @@ private void configureButtonBindings() {
     // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
         .whileTrue(baton.fireCmd())  // Repeats Automatically
-        .onTrue(robotDrive.updateOdometryFromSpeakerCmd());  //  test this to see if it works.
+        .onTrue(robotDrive.updateOdometryFromSpeakerCmd());  
 
     // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    

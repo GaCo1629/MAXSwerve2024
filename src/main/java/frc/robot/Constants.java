@@ -34,11 +34,11 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
-    public static final double kMaxAngularSpeed    = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed    = 3 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate  = 1.2; // radians per second
     public static final double kMagnitudeSlewRate  = 2.0; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 4.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(21.5);
@@ -227,8 +227,8 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kAutoMaxAngularSpeedRPS = 6;
-    public static final double kAutoMaxAngularAccelerationRPS2 = 6 ;
+    public static final double kAutoMaxAngularSpeedRPS = Math.PI * 2;
+    public static final double kAutoMaxAngularAccelerationRPS2 = Math.PI * 4 ;
 
     // Used in Teleop Heading lock Command
     public static final double kPHeadingLockController = 1.2;  // Based on Radian Error
@@ -245,19 +245,11 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.015; //  0.010 during quals.  Based on Degree Error
+    public static final double kPTrackingController = 0.012; //  0.010 during quals.  Based on Degree Error
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
     public static final double kToleranceTrackingController = 4.0; // was 2.0
     public static final double kOutputLimitTrackingController = 0.4;
-
-    public static final TrapezoidProfile.Constraints kTrackingConstraints = new TrapezoidProfile.Constraints(
-      kAutoMaxAngularSpeedRPS, kAutoMaxAngularAccelerationRPS2);
-  
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaTrackingConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-
   }
 
   public static final class NeoMotorConstants {
@@ -287,8 +279,8 @@ public final class Constants {
     public static double INCH_TO_M = 0.0254;
     public static Point redSpeaker =  new Point(16.58, 5.54);
     public static Point blueSpeaker = new Point(  -0.04, 5.54);
-    public static double blueSourceAngle = Math.toRadians(50);
-    public static double redSourceAngle  = -blueSourceAngle;
+    public static double blueSourceAngle = Math.toRadians(-60);
+    public static double redSourceAngle  = Math.toRadians(-120);
   }
   
 

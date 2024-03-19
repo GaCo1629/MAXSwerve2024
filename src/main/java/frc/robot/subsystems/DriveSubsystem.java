@@ -182,6 +182,7 @@ public class DriveSubsystem extends SubsystemBase {
     
     Globals.robotAtHeading = trackingController.atSetpoint();
     SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
+    //SmartDashboard.putString("heading Setpoint",  String.format("%.1f",Math.toDegrees(headingSetpoint)));
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
@@ -243,24 +244,11 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband)) *  speedFactor;
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband)) * DriveConstants.kAtleeTurnFactor;
  
-    // smooth out the translation requests, unless we are in Defense mode
-    if (driver.getRawButton(11)) {
-      XLimiter.reset(xSpeed);  
-      YLimiter.reset(ySpeed);  
-    } else {
-      xSpeed = XLimiter.calculate(xSpeed);
-      ySpeed = YLimiter.calculate(ySpeed);
-    }
 
-    // Turn to Source ?
-    if (driver.getRawButton(12)) {
-      if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
-        newHeadingSetpoint(FieldConstants.redSourceAngle);          
-      } else {
-        newHeadingSetpoint(FieldConstants.blueSourceAngle);          
-      }
-    }
+    xSpeed = XLimiter.calculate(xSpeed);
+    ySpeed = YLimiter.calculate(ySpeed);
 
+    
     // TARGET TRACKING =======================================================
 
     if (Globals.getSpeakerTracking()) {  // --- TRACKING SPEAKER  ---------------------
@@ -338,7 +326,7 @@ public class DriveSubsystem extends SubsystemBase {
       VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
 
       // should we be in auto or not?
-      if (rotate != 0) {
+      if (Math.abs(rotate) > 0.05) {
         headingLocked = false;
       } else if (!headingLocked && isNotRotating()) {
         lockCurrentHeading();
@@ -467,14 +455,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public  void setTurboMode(boolean on){
-    if (on){
+  public  void setTurboOn(){
       speedFactor = DriveConstants.kAlexSpeedFactor;
-    } else {
+  } 
+  
+  public void setTurboOff(){
       speedFactor = DriveConstants.kAtleeSpeedFactor;
-    }
   }
-
+  
   /** 
    * Calculates the range and bearing to the active speaker based on odometry.
    */
@@ -542,10 +530,28 @@ public class DriveSubsystem extends SubsystemBase {
     headingSetpoint = newSetpointRad;
     headingLockController.reset(imu.headingRad);
     headingLocked = true;
+    SmartDashboard.putString("heading Setpoint",  String.format("%.1f",Math.toDegrees(headingSetpoint)));
+
   }
 
   public void lockCurrentHeading() {
     newHeadingSetpoint(imu.headingRad);
+  }
+
+  public void turnToSource() {
+    if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
+      newHeadingSetpoint(FieldConstants.redSourceAngle);          
+    } else {
+      newHeadingSetpoint(FieldConstants.blueSourceAngle);          
+    }
+  }
+
+  public void turnToFaceForward() {
+    if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
+      newHeadingSetpoint(Math.PI);          
+    } else {
+      newHeadingSetpoint(0);          
+    }
   }
 
   public boolean isNotRotating() {
@@ -570,7 +576,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // ============ Public Command Interface  ========================================
   public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
-  public Command setTurboModeCmd(boolean on)      {return runOnce(() -> setTurboMode(on));}
   public Command setXCmd()                        {return runOnce(() -> setX());}
   public Command updateOdometryFromSpeakerCmd()   {return runOnce(() -> updateOdometryFromSpeaker());}
+
+  
 }

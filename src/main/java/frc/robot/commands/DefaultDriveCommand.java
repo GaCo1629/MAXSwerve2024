@@ -4,11 +4,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DefaultDriveCommand extends Command {
   DriveSubsystem robotDrive;
+  int initCounter = 0;
+
   /** Creates a new DriveCommand. */
   public DefaultDriveCommand(DriveSubsystem robotDrive) {
     this.robotDrive = robotDrive;
@@ -19,6 +22,7 @@ public class DefaultDriveCommand extends Command {
   @Override
   public void initialize() {
     robotDrive.lockCurrentHeading();
+    SmartDashboard.putNumber("Init Count", initCounter++);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +34,6 @@ public class DefaultDriveCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    robotDrive.lockCurrentHeading();
   }
 
   // Returns true when the command should end.

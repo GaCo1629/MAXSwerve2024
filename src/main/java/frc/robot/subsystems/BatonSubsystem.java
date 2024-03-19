@@ -179,10 +179,10 @@ public class BatonSubsystem extends SubsystemBase {
         runTiltPID();
         runStateMachine();
 
-        SmartDashboard.putNumber("Intake Range",            shooterTop.getVoltage());
+        SmartDashboard.putString("Intake Range",        String.format("%.2f", shooterTop.getVoltage()));
 
-        SmartDashboard.putNumber("tilt setpoint",           tiltAngleSetPoint);
-        SmartDashboard.putNumber("tilt angle",              currentTiltAngle);
+        SmartDashboard.putNumber("tilt setpoint",       tiltAngleSetPoint);
+        SmartDashboard.putString("tilt angle",          String.format("%.2f",currentTiltAngle));
         SmartDashboard.putNumber("tilt Power",              tiltRight.getAppliedOutput());
         SmartDashboard.putBoolean("tilt In Position",       tiltIsInPosition());
         SmartDashboard.putBoolean("Note In Intake",         noteInIntake());
@@ -218,7 +218,7 @@ public class BatonSubsystem extends SubsystemBase {
                     Globals.setLEDMode(LEDmode.LOWERING);
 
                     // Assist Baton lowering by spinning wheels backwards as it passes the Bumper & Frame
-                    if (currentTiltAngle < 20) {
+                    if ((currentTiltAngle < 20) && (currentTiltAngle > 1.5)) {
                         intake.set(BatonConstants.eject);
                         rememberToStopIntake = true;
                     }
@@ -375,6 +375,9 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void setTiltAngle(double angle){
+
+        // !!!!!!!  TEMPORARY TESTING
+        /*
         // load new setpoint and reset "inPosition" if it has changed
         double newSetpoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         if (newSetpoint != tiltAngleSetPoint) {
@@ -382,6 +385,7 @@ public class BatonSubsystem extends SubsystemBase {
             tiltControl.setSetpoint(tiltAngleSetPoint);
             tiltInPosition = calculateTiltInPosition();
         }
+        */
     }
 
     public double getSafeTiltAngle() {
