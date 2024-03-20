@@ -83,8 +83,8 @@ public RobotContainer() {
     NamedCommands.registerCommand("TurnTo-45",      new AutoTurnToHeading(robotDrive, -45, 2.0));
     NamedCommands.registerCommand("TurnTo-90",      new AutoTurnToHeading(robotDrive, -90, 2.0));
 
-    NamedCommands.registerCommand("CollectorOn",    baton.collectCmd());
-    NamedCommands.registerCommand("CollectorOff",   baton.stopIntakeCmd());
+    NamedCommands.registerCommand("CollectorOn",    Commands.runOnce(() -> baton.collect()));
+    NamedCommands.registerCommand("CollectorOff",   Commands.runOnce(() -> baton.stopIntake()));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -117,76 +117,76 @@ private void configureButtonBindings() {
     
        // Collect
     new JoystickButton(driverController, Button.kL1.value)    
-        .onTrue(baton.collectCmd())
-        .onTrue(baton.setNoteTrackingCmd(true))
-        .onFalse(baton.stopIntakeCmd())
-        .onFalse(baton.setNoteTrackingCmd(false));
+        .onTrue(Commands.runOnce(() -> baton.collect()))
+        .onTrue(Commands.runOnce(() -> baton.setNoteTracking(true)))
+        .onFalse(Commands.runOnce(() -> baton.stopIntake()))
+        .onFalse(Commands.runOnce(() -> baton.setNoteTracking(false)));
 
     // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
-        .whileTrue(baton.fireCmd())  // Repeats Automatically
-        .onTrue(robotDrive.updateOdometryFromSpeakerCmd());  
+        .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
+        .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
 
     // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    
-        .onTrue(baton.setSpeakerTrackingCmd(true))
-        .onFalse(baton.setSpeakerTrackingCmd(false));
+        .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
+        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)));
 
     // Reset Heading    
     new JoystickButton(driverController, Button.kTouchpad.value)
-        .onTrue(robotDrive.resetHeadingCmd());
+        .onTrue(Commands.runOnce(() -> robotDrive.resetHeading()));
 
     //  Eject Note   
     new JoystickButton(driverController, Button.kCross.value)
-        .onTrue(baton.ejectCmd())
-        .onFalse(baton.stopIntakeCmd());
+        .onTrue(Commands.runOnce(() -> baton.eject()))
+        .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // --------------   Co-Pilot Functions
 
     // Manual Collect
     new JoystickButton(copilot_1, Button.kL1.value)    
-        .onTrue(baton.collectCmd())
-        .onFalse(baton.stopIntakeCmd());
+        .onTrue(Commands.runOnce(() -> baton.collect()))
+        .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // Eject Note
     new JoystickButton(copilot_1, Button.kCross.value)
-        .onTrue(baton.ejectCmd())
-        .onFalse(baton.stopIntakeCmd());
+        .onTrue(Commands.runOnce(() -> baton.eject()))
+        .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // Amplify    
     new JoystickButton(copilot_1, Button.kTouchpad.value)
-        .onTrue(baton.amplifyCmd(true))
-        .onFalse(baton.amplifyCmd(false));
+        .onTrue(Commands.runOnce(() -> baton.amplify(true)))
+        .onFalse(Commands.runOnce(() -> baton.amplify(false)));
 
 
     // Manual shooting controls
     new JoystickButton(copilot_1, Button.kL2.value)
-        .onTrue(baton.enableManualShootingCmd(true))
-        .onFalse(baton.enableManualShootingCmd(false));
+        .onTrue(Commands.runOnce(() -> baton.setManualShooting(true)))
+        .onFalse(Commands.runOnce(() -> baton.setManualShooting(false)));
 
     new JoystickButton(copilot_1, Button.kR2.value)
-        .whileTrue(baton.fireCmd());  // Repeats Automatically
+        .whileTrue(Commands.runOnce(() -> baton.fire()));  // Repeats Automatically
 
     new POVButton(copilot_1, 0)
-        .onTrue(baton.bumpTiltCmd(2));
+        .onTrue(Commands.runOnce(() -> baton.bumpTilt(2)));
 
     new POVButton(copilot_1, 180)
-        .onTrue(baton.bumpTiltCmd(-2));
+        .onTrue(Commands.runOnce(() -> baton.bumpTilt(-2)));
 
     new POVButton(copilot_1, 90)
-        .onTrue(baton.bumpShooterCmd(250));
+        .onTrue(Commands.runOnce(() -> baton.bumpShooter(200)));
 
     new POVButton(copilot_1, 270)
-        .onTrue(baton.bumpShooterCmd(-250));
+        .onTrue(Commands.runOnce(() -> baton.bumpShooter(-200)));
 
     new JoystickButton(copilot_1, Button.kSquare.value)
-        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.lowNoteShareSpeed, BatonConstants.lowNoteShareAngle));
+        .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.lowNoteShareSpeed, BatonConstants.lowNoteShareAngle)));
     
     new JoystickButton(copilot_1, Button.kTriangle.value)
-        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle));
+        .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle)));
   
     new JoystickButton(copilot_1, Button.kCircle.value)
-        .onTrue(baton.setManualSpeedAndTiltCmd(BatonConstants.defaultRPM, BatonConstants.defaultTilt));
+        .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.defaultRPM, BatonConstants.defaultTilt)));
   }
 
   /**

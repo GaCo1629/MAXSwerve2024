@@ -45,7 +45,6 @@ public class AutoFindNoteLater extends Command {
       vision.flushNoteTargets();
     }
 
-    //timeToLook = Globals.startNoteFinding;
     SmartDashboard.putBoolean("Start Looking", Globals.startNoteFinding);
     SmartDashboard.putString("Mode", String.format("Path Later %d", counter++));
     

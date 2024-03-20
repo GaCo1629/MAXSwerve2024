@@ -40,7 +40,6 @@ import frc.robot.utils.IMUInterface;
 import frc.robot.utils.LEDmode;
 import frc.robot.utils.MAXSwerveModule;
 import frc.robot.utils.Target;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -574,10 +573,4 @@ public class DriveSubsystem extends SubsystemBase {
       return headingLockController.calculate(imu.headingRad, headingSetpoint);
   }
 
-  // ============ Public Command Interface  ========================================
-  public Command resetHeadingCmd()                {return runOnce(() -> resetHeading());}
-  public Command setXCmd()                        {return runOnce(() -> setX());}
-  public Command updateOdometryFromSpeakerCmd()   {return runOnce(() -> updateOdometryFromSpeaker());}
-
-  
 }
