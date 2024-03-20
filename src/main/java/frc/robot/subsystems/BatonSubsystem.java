@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -551,26 +550,11 @@ public class BatonSubsystem extends SubsystemBase {
         manualShooterSpeed = MathUtil.clamp(speedRPM, 0, BatonConstants.maxShooterRPM);
     }
 
-    public void setManualSpeedAndTilt(double speed, double angle){
+    public void setSpeedAndTilt(double speed, double angle){
         manualShooterSpeed = MathUtil.clamp(speed, 0, BatonConstants.maxShooterRPM);
         manualTiltAngle = MathUtil.clamp(angle, 0, BatonConstants.maxTiltAngle);
     }
 
-    // ============ Public Command Interface  ========================================
-    public Command collectCmd()                     {return runOnce(() -> collect());}
-    public Command ejectCmd()                       {return runOnce(() -> eject());}
-    public Command fireCmd()                        {return run(() -> fire());}
-    public Command amplifyCmd(boolean on)           {return runOnce(() -> amplify(on));}
-    public Command setShooterRPMCmd(double speed)   {return runOnce(() -> setShooterRPM(speed));}
-    public Command setTiltAngleCmd(double angle)    {return runOnce(() -> setTiltAngle(angle));}
-    public Command stopIntakeCmd()                  {return runOnce(() -> stopIntake());}
-    public Command setManualSpeedAndTiltCmd(double speed, double angle)       {return runOnce(() -> setManualSpeedAndTilt(speed, angle));}
-    
-    public Command bumpTiltCmd(double bump)         {return runOnce(() -> bumpTilt(bump));}
-    public Command bumpShooterCmd(double bump)      {return runOnce(() -> bumpShooter(bump));}
-    public Command enableManualShootingCmd(boolean on) {return runOnce(() -> setManualShooting(on));}
-    public Command setNoteTrackingCmd(boolean on)   {return runOnce(() -> setNoteTracking(on));}
-    public Command setSpeakerTrackingCmd(boolean on){return runOnce(() -> setSpeakerTracking(on));}
 
     
 }
