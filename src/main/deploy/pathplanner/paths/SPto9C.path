@@ -8,29 +8,69 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3955411225493488,
-        "y": 1.8062063727708293
+        "x": 1.2337167531477924,
+        "y": 3.7967995935991876
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "SP"
     },
     {
       "anchor": {
-        "x": 7.9875135522242555,
-        "y": 0.8482289648664817
+        "x": 2.6850030842918833,
+        "y": 2.858594288617149
       },
       "prevControl": {
-        "x": 7.422027575646602,
-        "y": 0.8384792066496263
+        "x": 1.3509924162705473,
+        "y": 3.430313146340579
+      },
+      "nextControl": {
+        "x": 4.114662456659923,
+        "y": 2.245883129030845
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.742516056460684,
+        "y": 0.9235458470916952
+      },
+      "prevControl": {
+        "x": 6.705907834618518,
+        "y": 1.2773924292334518
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "9C"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -20.924501744921155,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "LookNow"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 7.0,
@@ -39,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.0952525646238023,
+    "rotation": -17.90444750624816,
     "rotateFast": false
   },
   "reversed": false,

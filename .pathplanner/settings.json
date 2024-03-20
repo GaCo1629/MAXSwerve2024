@@ -18,7 +18,11 @@
     "P",
     "S"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Amp",
+    "Podium",
+    "Speaker"
+  ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 300.0,

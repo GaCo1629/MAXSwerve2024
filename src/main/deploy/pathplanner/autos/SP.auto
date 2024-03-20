@@ -18,9 +18,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SPto9C"
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SPto9C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LookNow"
+                }
+              }
+            ]
           }
         },
         {
@@ -28,10 +47,16 @@
           "data": {
             "name": "Collect"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpinUp"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Speaker",
   "choreoAuto": false
 }
