@@ -245,7 +245,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // Used in Teleop Heading lock Command
-    public static final double kPTrackingController = 0.012; //  0.010 during quals.  Based on Degree Error
+    public static final double kPTrackingController = 0.008; //  0.010 during quals.  Based on Degree Error
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
     public static final double kToleranceTrackingController = 4.0; // was 2.0

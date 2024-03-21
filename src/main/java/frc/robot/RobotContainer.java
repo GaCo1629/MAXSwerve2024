@@ -66,11 +66,15 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 3000));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 2800));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
     NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));
     NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
+    NamedCommands.registerCommand("SpinUpShooter",  Commands.runOnce(() -> baton.setShooterRPM(2000)));
+    NamedCommands.registerCommand("StopShooter",    Commands.runOnce(() -> baton.setShooterRPM(0)));
+    NamedCommands.registerCommand("Lob",            Commands.runOnce(() -> baton.lob()));
+    
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
     NamedCommands.registerCommand("TurnTo20",       new AutoTurnToHeading(robotDrive, 20, 2.0));
@@ -107,11 +111,11 @@ private void configureButtonBindings() {
         .onTrue(Commands.runOnce(() -> robotDrive.setTurboOn()))
         .onFalse(Commands.runOnce(() -> robotDrive.setTurboOff()));
 
-    // Turn to source
+    // Turn to face forward again
     new JoystickButton(driverController, Button.kTriangle.value)    
         .onTrue(Commands.runOnce(() -> robotDrive.turnToFaceForward()));
     
-    // Turn to face forward again
+    // Turn to source
     new JoystickButton(driverController, Button.kSquare.value)    
         .onTrue(Commands.runOnce(() -> robotDrive.turnToSource()));
     
@@ -127,10 +131,12 @@ private void configureButtonBindings() {
         .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
         .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
 
+
     // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
-        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)));
+        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
+        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
 
     // Reset Heading    
     new JoystickButton(driverController, Button.kTouchpad.value)

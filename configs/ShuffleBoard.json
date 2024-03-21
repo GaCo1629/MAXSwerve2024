@@ -76,7 +76,7 @@
               "_showGlyph": false
             }
           },
-          "9,6": {
+          "9,8": {
             "size": [
               2,
               2
@@ -356,6 +356,19 @@
               "imageWidth": -1,
               "imageHeight": -1
             }
+          },
+          "9,6": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Top RPM",
+              "_title": "Top RPM",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -378,8 +391,8 @@
             ],
             "content": {
               "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt setpoint",
-              "_source1": "network_table:///SmartDashboard/tilt angle",
+              "_source0": "network_table:///SmartDashboard/tilt angle",
+              "_source1": "network_table:///SmartDashboard/tilt setpoint",
               "_title": "SmartDashboard/tilt angle",
               "_glyph": 148,
               "_showGlyph": false,
@@ -388,7 +401,8 @@
               "Y-axis/Automatic bounds": false,
               "Y-axis/Upper bound": 35.0,
               "Y-axis/Lower bound": 0.0,
-              "Y-axis/Unit": "ul"
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/tilt setpoint": true
             }
           },
           "2,3": {
@@ -423,7 +437,9 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/Bot RPM": true,
+              "Visible data/SmartDashboard/Top RPM": true
             }
           }
         }

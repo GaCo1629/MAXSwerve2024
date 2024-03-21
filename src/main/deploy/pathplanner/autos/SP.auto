@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -36,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "LookNow"
+                  "name": "FindNoteLater"
                 }
               }
             ]
@@ -51,7 +45,57 @@
         {
           "type": "named",
           "data": {
-            "name": "SpinUp"
+            "name": "SpinUpShooter"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "9to8C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpinUpShooter"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "8to7C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         }
       ]

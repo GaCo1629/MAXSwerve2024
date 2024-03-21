@@ -3,72 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.298242778303738,
-        "y": 0.7742859122081884
+        "x": 8.288914032373519,
+        "y": 2.4441314337174136
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.745311971593922,
-        "y": 1.0682335291925462
+        "x": 6.703239845226128,
+        "y": 3.0053976917070653
       },
-      "isLocked": true,
-      "linkedName": "9"
+      "isLocked": false,
+      "linkedName": "8"
     },
     {
       "anchor": {
-        "x": 6.144635146413151,
-        "y": 1.7298160310606336
+        "x": 5.884649034255332,
+        "y": 3.98770666487202
       },
       "prevControl": {
-        "x": 6.1153162306324615,
-        "y": 1.495264704815125
+        "x": 5.696769998855976,
+        "y": 3.677808249944395
       },
       "nextControl": {
-        "x": 6.175759120292354,
-        "y": 1.9788078220942529
+        "x": 6.072528069654688,
+        "y": 4.297605079799644
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.774991835697957,
-        "y": 2.2135781414419977
+        "x": 7.697242972833523,
+        "y": 4.081259900411539
       },
       "prevControl": {
-        "x": 6.48180267789107,
-        "y": 2.1695997677709644
-      },
-      "nextControl": {
-        "x": 7.115331312420312,
-        "y": 2.2646290629503514
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.727856598570341,
-        "y": 2.3455132624550967
-      },
-      "prevControl": {
-        "x": 7.302732319750355,
-        "y": 2.330853804564752
+        "x": 7.030676169614447,
+        "y": 4.11634236373886
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "7C2"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -21.801409486351822,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2,
-      "rotationDegrees": 9.039482803355122,
+      "rotationDegrees": -1.507435758775037,
       "rotateFast": false
     }
   ],
@@ -93,7 +72,7 @@
     },
     {
       "name": "Collect",
-      "waypointRelativePos": 1.75,
+      "waypointRelativePos": 1.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -117,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 7.853313301978229,
-    "rotateFast": true
+    "rotation": 0.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "9",
+  "folder": "8",
   "previewStartingState": {
-    "rotation": -12.369061525925428,
+    "rotation": 17.284475197205936,
     "velocity": 0
   },
   "useDefaultConstraints": true

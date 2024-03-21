@@ -132,13 +132,10 @@ public class BatonSubsystem extends SubsystemBase {
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
         Globals.batonIsDown = (currentTiltAngle < 1.0);
-
         shooterBot.getVoltage();
-        
-        
+       
         // noteSensor          = getNoteSensorValue();
         noteSensor          = shooterTop.getVoltage();
-
         tiltInPosition      = calculateTiltInPosition();
         shooterUpToSpeed    = areShootersUpToSpeed();
 
@@ -161,20 +158,21 @@ public class BatonSubsystem extends SubsystemBase {
                 setTiltAngle(rangeToAngle(range)); 
                 setShooterRPM(rangeToRPM(range));
             } 
+            manualShooting = false;
 
         } else if(Globals.getAmplifying()){
             //being done in state machine (so nothing)
+            manualShooting = false;
 
-        } else {
-            if (manualShooting) {
-                setTiltAngle(manualTiltAngle);
-                setShooterRPM(manualShooterSpeed);
-            } else{
-                setTiltAngle(0);
-                setShooterRPM(0);
-            }
+        } else if (manualShooting) {
+            setTiltAngle(manualTiltAngle);
+            setShooterRPM(manualShooterSpeed);
+
+        } else {   // I'd ike to remove these so I can control the shooter from Auto.
+            setTiltAngle(0);
+//            setShooterRPM(0);
         }
-
+     
         runTiltPID();
         runStateMachine();
 
@@ -234,8 +232,6 @@ public class BatonSubsystem extends SubsystemBase {
                         rememberToStopIntake = false; 
                     }
                 }
-
-                
 
                 // Exits by button press.
                 break;
@@ -502,6 +498,12 @@ public class BatonSubsystem extends SubsystemBase {
         }
     }
 
+    // Kist fire the ring with whatever speed is set.
+    public void lob (){
+        intake.set(BatonConstants.fire);
+        setState(BatonState.SHOOTING);
+    }
+
     public void amplify (boolean enable){
         if (enable) {
             VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
@@ -554,7 +556,5 @@ public class BatonSubsystem extends SubsystemBase {
         manualShooterSpeed = MathUtil.clamp(speed, 0, BatonConstants.maxShooterRPM);
         manualTiltAngle = MathUtil.clamp(angle, 0, BatonConstants.maxTiltAngle);
     }
-
-
-    
+  
 }
