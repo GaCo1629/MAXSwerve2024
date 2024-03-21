@@ -23,6 +23,7 @@ public final class Globals{
     public static Target  noteTarget            = new Target();
     public static Target  odoTarget             = new Target();
     public static Target  ampTarget             = new Target();
+    public static Target  lobTarget             = new Target();
  
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
 

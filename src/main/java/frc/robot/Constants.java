@@ -281,6 +281,8 @@ public final class Constants {
     public static Point blueSpeaker = new Point(  -0.04, 5.54);
     public static double blueSourceAngle = Math.toRadians(-60);
     public static double redSourceAngle  = Math.toRadians(-120);
+    public static Point redLob  =  new Point(15.0, 1.5);
+    public static Point blueLob = new Point(  1.5, 1.5);
   }
   
 

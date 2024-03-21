@@ -187,6 +187,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
 
     getSpeakerTargetFromOdometry();
+    getLobTargetFromOdometry();
   }
 
   /**
@@ -461,35 +462,48 @@ public class DriveSubsystem extends SubsystemBase {
   public void setTurboOff(){
       speedFactor = DriveConstants.kAtleeSpeedFactor;
   }
-  
-  /** 
-   * Calculates the range and bearing to the active speaker based on odometry.
-   */
-  public void getSpeakerTargetFromOdometry() {
-    Pose2d position = odometry.getEstimatedPosition();
-    Point  speaker  = new Point();
-    Point  robot    = new Point(position.getX(), position.getY());
-    Target estimate = new Target();
 
-    // only do this if we really know where we are on the field and we have an alliance color
+  // set the global odometry speaker target
+  public void getSpeakerTargetFromOdometry() {
     if (Globals.startingLocationSet && DriverStation.getAlliance().isPresent()) {
       if (DriverStation.getAlliance().get() == Alliance.Red) {
-        speaker = FieldConstants.redSpeaker;
+        Globals.odoTarget = getTargetFromOdometry(FieldConstants.redSpeaker);
       } else {
-        speaker = FieldConstants.blueSpeaker;
+        Globals.odoTarget = getTargetFromOdometry(FieldConstants.blueSpeaker);
       }
-
-      double dX = robot.x - speaker.x ;
-      double dY = robot.y - speaker.y ;
-
-      double range   = Math.hypot(dX, dY);
-      double bearing = Math.atan2(dY, dX);
-
-      estimate = new Target(true, range, Math.toDegrees(bearing));
+    } else {
+      Globals.odoTarget = new Target();
     }
+    SmartDashboard.putString("Odo Target", Globals.odoTarget.toString());
+  }
 
-    Globals.odoTarget = estimate;
-    SmartDashboard.putString("Odo Target", estimate.toString());
+  // set the global odometry speaker target
+  public void getLobTargetFromOdometry() {
+    if (Globals.startingLocationSet && DriverStation.getAlliance().isPresent()) {
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        Globals.lobTarget = getTargetFromOdometry(FieldConstants.redLob);
+      } else {
+        Globals.lobTarget = getTargetFromOdometry(FieldConstants.blueLob);
+      }
+    } else {
+      Globals.lobTarget = new Target();
+    }
+    SmartDashboard.putString("Lob Target", Globals.lobTarget.toString());
+  }
+
+  /** 
+   * Calculates the range and bearing to the pont of Focus
+   */
+  public Target getTargetFromOdometry(Point focus) {
+    Pose2d position = odometry.getEstimatedPosition();
+    Point  robot    = new Point(position.getX(), position.getY());
+
+    double dX = robot.x - focus.x ;
+    double dY = robot.y - focus.y ;
+    double range   = Math.hypot(dX, dY);
+    double bearing = Math.atan2(dY, dX);
+    
+    return new Target(true, range, Math.toDegrees(bearing));
   }
 
   /**
