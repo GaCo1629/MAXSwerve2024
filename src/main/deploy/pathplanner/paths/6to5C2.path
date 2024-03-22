@@ -3,51 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.288914032373519,
-        "y": 2.4441314337174136
+        "x": 8.2795852864433,
+        "y": 5.774493730805644
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.703239845226128,
-        "y": 3.0053976917070653
+        "x": 6.55376728935276,
+        "y": 6.119657330223752
       },
       "isLocked": true,
-      "linkedName": "8"
+      "linkedName": "6"
     },
     {
       "anchor": {
-        "x": 5.807467614935229,
-        "y": 4.092954054853979
+        "x": 5.770152631214353,
+        "y": 6.586094626734709
       },
       "prevControl": {
-        "x": 5.619588579535873,
-        "y": 3.783055639926354
+        "x": 5.800776885779425,
+        "y": 6.18722467275986
       },
       "nextControl": {
-        "x": 5.995346650334585,
-        "y": 4.402852469781603
+        "x": 5.740518276491099,
+        "y": 6.972071489597525
       },
       "isLocked": true,
-      "linkedName": "Trap"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.697242972833523,
-        "y": 4.081259900411539
+        "x": 7.72918927656037,
+        "y": 7.239106841850047
       },
       "prevControl": {
-        "x": 7.030676169614447,
-        "y": 4.11634236373886
+        "x": 6.591082273073637,
+        "y": 7.015216939524788
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": "7C2"
+      "linkedName": "5C"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -1.507435758775037,
+      "rotationDegrees": -1.1691393279073938,
       "rotateFast": false
     }
   ],
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "Lob",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -72,7 +72,7 @@
     },
     {
       "name": "Collect",
-      "waypointRelativePos": 1.55,
+      "waypointRelativePos": 1.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -96,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 21.317912275461538,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "8",
+  "folder": "6",
   "previewStartingState": {
-    "rotation": 17.284475197205936,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
