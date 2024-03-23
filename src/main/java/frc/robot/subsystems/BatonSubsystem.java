@@ -290,18 +290,21 @@ public class BatonSubsystem extends SubsystemBase {
             case AMP_APPROACH:
                 if (Globals.ampTarget.valid && (Globals.ampTarget.range > 0.01) && (Globals.ampTarget.range < 0.1)) {
                     setTiltAngle(TiltConstants.ampLowAngle);
-                    setState(BatonState.TILTING);
+                    setState(BatonState.AMP_TILTING);
                 }
                 break;
 
-            case TILTING:
+            case AMP_READY:
+                break;
+
+            case AMP_TILTING:
                 if (tiltIsInPosition()){
                     eject();
-                    setState(BatonState.EJECTING);
+                    setState(BatonState.AMP_EJECTING);
                 }
                 break;
             
-            case EJECTING:
+            case AMP_EJECTING:
                 if (!noteInIntake()){
                     setState(BatonState.AMP_HOLDING);
                 }
@@ -438,7 +441,6 @@ public class BatonSubsystem extends SubsystemBase {
             shooterTop.setRPM(shooterSpeedSetPoint);
             if (speed > 0) {
                 Globals.lastShooterSpeed = shooterSpeedSetPoint;      
-                //  shooterUpToSpeed = false;  //   maybe do this... 
             }
         }
     }
@@ -491,10 +493,15 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void fire (){
-        VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
-        if (shooterIsUpToSpeed()){
-            intake.set(BatonConstants.fire);
-            setState(BatonState.SHOOTING);
+        // could be shooting to speaker or into Amp
+        if (Globals.getAmplifying()) {
+            setState(BatonState.AMP_TILTING);
+        } else {
+            VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
+            if (shooterIsUpToSpeed()){
+                intake.set(BatonConstants.fire);
+                setState(BatonState.SHOOTING);
+            }
         }
     }
 
@@ -504,7 +511,7 @@ public class BatonSubsystem extends SubsystemBase {
         setState(BatonState.SHOOTING);
     }
 
-    public void amplify (boolean enable){
+    public void autoAmplify (boolean enable){
         if (enable) {
             VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
             if (currentState == BatonState.HOLDING){
@@ -514,6 +521,21 @@ public class BatonSubsystem extends SubsystemBase {
             }
         } else {
             VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+            Globals.setAmplifying(false);
+            setTiltAngle(TiltConstants.homeAngle);
+            intake.set(BatonConstants.stopCollector);
+            setState(BatonState.IDLE);
+        }
+    }
+
+    public void manualAmplify (boolean enable){
+        if (enable) {
+            if (currentState == BatonState.HOLDING){
+                Globals.setAmplifying(true);
+                setTiltAngle(TiltConstants.ampLowAngle);
+                setState(BatonState.AMP_READY);
+            }
+        } else {
             Globals.setAmplifying(false);
             setTiltAngle(TiltConstants.homeAngle);
             intake.set(BatonConstants.stopCollector);

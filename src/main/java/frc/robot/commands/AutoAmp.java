@@ -32,7 +32,7 @@ public class AutoAmp extends Command {
   @Override
   public void initialize() {
     VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
-    baton.amplify(true);  // start the scoring process
+    baton.autoAmplify(true);  // start the scoring process
    }
 
   // Called every time the scheduler runs while the command is scheduled.

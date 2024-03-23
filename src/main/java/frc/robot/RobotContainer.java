@@ -131,7 +131,6 @@ private void configureButtonBindings() {
         .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
         .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
 
-
     // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
@@ -149,6 +148,10 @@ private void configureButtonBindings() {
 
     // --------------   Co-Pilot Functions
 
+    // Fire
+    new JoystickButton(copilot_1, Button.kR2.value)
+        .whileTrue(Commands.runOnce(() -> baton.fire()));  // Repeats Automatically
+
     // Manual Collect
     new JoystickButton(copilot_1, Button.kL1.value)    
         .onTrue(Commands.runOnce(() -> baton.collect()))
@@ -161,17 +164,13 @@ private void configureButtonBindings() {
 
     // Amplify    
     new JoystickButton(copilot_1, Button.kTouchpad.value)
-        .onTrue(Commands.runOnce(() -> baton.amplify(true)))
-        .onFalse(Commands.runOnce(() -> baton.amplify(false)));
-
+        .onTrue(Commands.runOnce(() -> baton.manualAmplify(true)))
+        .onFalse(Commands.runOnce(() -> baton.manualAmplify(false)));
 
     // Manual shooting controls
     new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(Commands.runOnce(() -> baton.setManualShooting(true)))
         .onFalse(Commands.runOnce(() -> baton.setManualShooting(false)));
-
-    new JoystickButton(copilot_1, Button.kR2.value)
-        .whileTrue(Commands.runOnce(() -> baton.fire()));  // Repeats Automatically
 
     new POVButton(copilot_1, 0)
         .onTrue(Commands.runOnce(() -> baton.bumpTilt(2)));
