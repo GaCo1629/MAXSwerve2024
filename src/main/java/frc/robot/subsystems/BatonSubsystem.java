@@ -51,7 +51,8 @@ public class BatonSubsystem extends SubsystemBase {
     private double shooterSpeedSetPoint;
     private double shooterSpeedTop;
     private double shooterSpeedBot;
-    private double noteSensor;
+    private double noteSensorIntake;
+    private double noteSensorShooter;
     private BatonState currentState;
 
     private boolean manualShooting;
@@ -132,10 +133,11 @@ public class BatonSubsystem extends SubsystemBase {
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
         Globals.batonIsDown = (currentTiltAngle < 1.0);
-        shooterBot.getVoltage();
        
         // noteSensor          = getNoteSensorValue();
-        noteSensor          = shooterTop.getVoltage();
+        noteSensorShooter   = shooterBot.getVoltage();
+        noteSensorIntake    = shooterTop.getVoltage();
+
         tiltInPosition      = calculateTiltInPosition();
         shooterUpToSpeed    = areShootersUpToSpeed();
 
@@ -373,9 +375,6 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void setTiltAngle(double angle){
-
-        // !!!!!!!  TEMPORARY TESTING
-        /*
         // load new setpoint and reset "inPosition" if it has changed
         double newSetpoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         if (newSetpoint != tiltAngleSetPoint) {
@@ -383,7 +382,6 @@ public class BatonSubsystem extends SubsystemBase {
             tiltControl.setSetpoint(tiltAngleSetPoint);
             tiltInPosition = calculateTiltInPosition();
         }
-        */
     }
 
     public double getSafeTiltAngle() {
@@ -482,7 +480,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public boolean noteInIntake(){
-        return ((noteSensor > BatonConstants.seeingNote) && (noteSensor < BatonConstants.readingError) );
+        return ((noteSensorIntake > BatonConstants.seeingNote) && (noteSensorIntake < BatonConstants.readingError) );
     }
 
     public void collect (){

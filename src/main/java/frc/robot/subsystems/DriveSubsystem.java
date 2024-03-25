@@ -559,11 +559,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public void turnToFaceForward() {
-    if (DriverStation.getAlliance().isPresent() && (DriverStation.getAlliance().get() == Alliance.Red)){
-      newHeadingSetpoint(Math.PI);          
-    } else {
-      newHeadingSetpoint(0);          
+  public void turnToFaceAmp() {
+    if (Globals.lobTarget.valid) {
+      newHeadingSetpoint(Globals.lobTarget.bearingRad);  
     }
   }
 

@@ -71,7 +71,9 @@ public RobotContainer() {
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
     NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));
     NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
-    NamedCommands.registerCommand("SpinUpShooter",  Commands.runOnce(() -> baton.setShooterRPM(2000)));
+    NamedCommands.registerCommand("SpinUpLong",     Commands.runOnce(() -> baton.setShooterRPM(3000)));
+    NamedCommands.registerCommand("SpinUpTrap",     Commands.runOnce(() -> baton.setShooterRPM(2600)));
+    NamedCommands.registerCommand("SpinUpShort",    Commands.runOnce(() -> baton.setShooterRPM(1500)));
     NamedCommands.registerCommand("StopShooter",    Commands.runOnce(() -> baton.setShooterRPM(0)));
     NamedCommands.registerCommand("Lob",            Commands.runOnce(() -> baton.lob()));
     
@@ -111,9 +113,20 @@ private void configureButtonBindings() {
         .onTrue(Commands.runOnce(() -> robotDrive.setTurboOn()))
         .onFalse(Commands.runOnce(() -> robotDrive.setTurboOff()));
 
-    // Turn to face forward again
+    // Speaker Aim
+    new JoystickButton(driverController, Button.kL2.value)    
+        .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
+        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
+        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
+
+    // Shoot    
+    new JoystickButton(driverController, Button.kR2.value)
+        .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
+        .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
+
+    // Turn to Lob to Amp
     new JoystickButton(driverController, Button.kTriangle.value)    
-        .onTrue(Commands.runOnce(() -> robotDrive.turnToFaceForward()));
+        .onTrue(Commands.runOnce(() -> robotDrive.turnToFaceAmp()));
     
     // Turn to source
     new JoystickButton(driverController, Button.kSquare.value)    
@@ -125,18 +138,7 @@ private void configureButtonBindings() {
         .onTrue(Commands.runOnce(() -> baton.setNoteTracking(true)))
         .onFalse(Commands.runOnce(() -> baton.stopIntake()))
         .onFalse(Commands.runOnce(() -> baton.setNoteTracking(false)));
-
-    // Shoot    
-    new JoystickButton(driverController, Button.kR2.value)
-        .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
-        .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
-
-    // Speaker Aim
-    new JoystickButton(driverController, Button.kL2.value)    
-        .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
-        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
-        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
-
+   
     // Reset Heading    
     new JoystickButton(driverController, Button.kTouchpad.value)
         .onTrue(Commands.runOnce(() -> robotDrive.resetHeading()));
@@ -184,12 +186,15 @@ private void configureButtonBindings() {
     new POVButton(copilot_1, 270)
         .onTrue(Commands.runOnce(() -> baton.bumpShooter(-200)));
 
+    // Manual Low Lob
     new JoystickButton(copilot_1, Button.kSquare.value)
         .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.lowNoteShareSpeed, BatonConstants.lowNoteShareAngle)));
     
+    // Manual High Lob
     new JoystickButton(copilot_1, Button.kTriangle.value)
         .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle)));
   
+    // Return to manual default
     new JoystickButton(copilot_1, Button.kCircle.value)
         .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.defaultRPM, BatonConstants.defaultTilt)));
   }
