@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4199314885116257,
-      "y": 4.421825570923869
+      "x": 0.7297935355965739,
+      "y": 4.440039891956269
     },
-    "rotation": 0
+    "rotation": -60.497285812514434
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,44 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pto8C"
+                  "pathName": "SPto9C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "9to10s"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "10to8C"
                 }
               },
               {
@@ -61,7 +98,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "10to9"
+                  "pathName": "10to7C"
                 }
               },
               {
@@ -78,22 +115,10 @@
           "data": {
             "name": "Collect"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "9to10s"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
         }
       ]
     }
   },
-  "folder": "Podium",
+  "folder": "Speaker",
   "choreoAuto": false
 }

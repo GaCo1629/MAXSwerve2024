@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4199314885116257,
-      "y": 4.421825570923869
+      "x": 1.3005404928188775,
+      "y": 5.5430292057165325
     },
     "rotation": 0
   },
@@ -14,6 +14,18 @@
         {
           "type": "named",
           "data": {
+            "name": "ShootNow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
@@ -24,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pto8C"
+                  "pathName": "3to7C"
                 }
               },
               {
@@ -45,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8to10s"
+            "pathName": "7to3"
           }
         },
         {
@@ -61,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "10to9"
+                  "pathName": "3to6C"
                 }
               },
               {
@@ -82,7 +94,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "9to10s"
+            "pathName": "6to3S"
           }
         },
         {
@@ -94,6 +106,6 @@
       ]
     }
   },
-  "folder": "Podium",
+  "folder": "Speaker",
   "choreoAuto": false
 }
