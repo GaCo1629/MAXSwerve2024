@@ -365,12 +365,14 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
     public double rangeToAngle(double range) {
-        double X2 =   -3.2043;  // Was -3.204
-        double X  =   29.8560;  // Was 29.85
-        double C  =  -35.0   ;  // Was -33.96
+        double X3 =     0.4245; 
+        double X2 =    -7.0375; 
+        double X  =   40.843;  
+        double C  =  -43.196;  
+        //   y = 0.4245x3 - 7.0375x2 + 40.843x - 43.196
 
 
-        double angle = (X2 * range * range) + (X * range) + C;
+        double angle = (X3 * range * range * range) + (X2 * range * range) + (X * range) + C;
         return angle;
     }
         
@@ -432,9 +434,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToRPM(double range) {
-        double speed = MathUtil.clamp(ShooterConstants.baseShooterSpeed + (range * 200), 
-                                      ShooterConstants.baseShooterSpeed, 
-                                      ShooterConstants.topShooterSpeed);
+        double speed = 2300 + (250 * range);
         return speed;
     }
     
