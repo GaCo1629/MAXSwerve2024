@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -18,14 +19,12 @@ import frc.robot.utils.BackImageSource;
 import frc.robot.utils.BatonState;
 import frc.robot.utils.FLEXShooter;
 import frc.robot.utils.FrontImageSource;
-import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
 import frc.robot.utils.LEDmode;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkAnalogSensor;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake;
@@ -33,7 +32,7 @@ public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax tiltRight;
     private FLEXShooter shooterTop;
     private FLEXShooter shooterBot;
-    private GPIDController  tiltControl;
+    private ProfiledPIDController  tiltControl;
     private AbsoluteEncoder tiltEncoder;
     private RelativeEncoder tiltEncoderRel;
     private Timer           stateTimer = new Timer();
@@ -79,10 +78,10 @@ public class BatonSubsystem extends SubsystemBase {
         tiltLeft.restoreFactoryDefaults();
         tiltLeft.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltLeft.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
-        tiltLeft.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
-        tiltLeft.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
-        tiltLeft.enableSoftLimit(SoftLimitDirection.kForward, true);
-        tiltLeft.enableSoftLimit(SoftLimitDirection.kReverse, true);
+//        tiltLeft.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
+//        tiltLeft.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
+//        tiltLeft.enableSoftLimit(SoftLimitDirection.kForward, true);
+//        tiltLeft.enableSoftLimit(SoftLimitDirection.kReverse, true);
         tiltLeft.burnFlash();
 
         tiltEncoderRel = tiltLeft.getEncoder();
@@ -91,20 +90,30 @@ public class BatonSubsystem extends SubsystemBase {
         tiltRight.restoreFactoryDefaults();
         tiltRight.setIdleMode(TiltConstants.kMotorIdleMode);
         tiltRight.setSmartCurrentLimit(TiltConstants.kMotorCurrentLimit);
-        tiltRight.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
-        tiltRight.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
-        tiltRight.enableSoftLimit(SoftLimitDirection.kForward, true);
-        tiltRight.enableSoftLimit(SoftLimitDirection.kReverse, true);
+//        tiltRight.setSoftLimit(SoftLimitDirection.kForward, TiltConstants.softLimitRev);
+//        tiltRight.setSoftLimit(SoftLimitDirection.kReverse, -TiltConstants.softLimitRev);
+//       tiltRight.enableSoftLimit(SoftLimitDirection.kForward, true);
+//        tiltRight.enableSoftLimit(SoftLimitDirection.kReverse, true);
         
         tiltEncoder = tiltRight.getAbsoluteEncoder(Type.kDutyCycle);
         tiltEncoder.setPositionConversionFactor(TiltConstants.kEncoderPositionFactor);
+        tiltEncoder.setVelocityConversionFactor(TiltConstants.kEncoderVelocityFactor);
         tiltRight.burnFlash();
 
-        tiltControl = new GPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD);    
-        tiltControl.setIZone(TiltConstants.kZone);
-        tiltControl.setIntegralDeadband(TiltConstants.kIDeadband);
-        tiltControl.setIntegratorRange(TiltConstants.kIMin,TiltConstants.kIMax);
-        tiltControl.setSetpoint(0);
+/*
+            headingLockController = new ProfiledPIDController(AutoConstants.kPHeadingLockController, 
+                                                      AutoConstants.kIHeadingLockController, 
+                                                      AutoConstants.kDHeadingLockController, 
+                                                      AutoConstants.kHeadingLockConstraints );
+    headingLockController.enableContinuousInput(-Math.PI, Math.PI);
+    headingLockController.setTolerance(AutoConstants.kDHeadingLockTollerance);
+    */
+  
+        tiltControl = new ProfiledPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD, TiltConstants.kConstraints);    
+        tiltControl.setTolerance(TiltConstants.kTollerance);
+        //tiltControl.setIZone(TiltConstants.kZone);
+        //tiltControl.setIntegratorRange(TiltConstants.kIMin,TiltConstants.kIMax);
+        tiltControl.setGoal(0);
 
         shooterBot = new FLEXShooter("Bot", BatonConstants.shooterBotID, true);
         shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
@@ -125,6 +134,7 @@ public class BatonSubsystem extends SubsystemBase {
         Globals.setNoteTracking(false);
         Globals.setSpeakerTracking(false);
         stateTimer.restart();
+        tiltControl.reset(getSafeTiltAngle());
     }
 
     @Override
@@ -170,10 +180,10 @@ public class BatonSubsystem extends SubsystemBase {
             setTiltAngle(manualTiltAngle);
             setShooterRPM(manualShooterSpeed);
 
-        } else {   // I'd ike to remove these so I can control the shooter from Auto.
-            setTiltAngle(0);
+        } //else {   // I'd ike to remove these so I can control the shooter from Auto.
+//            setTiltAngle(0);
 //            setShooterRPM(0);
-        }
+//        }
      
         runTiltPID();
         runStateMachine();
@@ -379,7 +389,7 @@ public class BatonSubsystem extends SubsystemBase {
         double newSetpoint = MathUtil.clamp(angle, TiltConstants.minEncoderPosition, TiltConstants.maxEncoderPosition);
         if (newSetpoint != tiltAngleSetPoint) {
             tiltAngleSetPoint = newSetpoint;
-            tiltControl.setSetpoint(tiltAngleSetPoint);
+            tiltControl.setGoal(tiltAngleSetPoint);
             tiltInPosition = calculateTiltInPosition();
         }
     }
@@ -403,6 +413,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void runTiltPID() {
         double output = tiltControl.calculate(currentTiltAngle);
 
+        /*
         // clip output to acceptable range
         output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
 
@@ -418,6 +429,7 @@ public class BatonSubsystem extends SubsystemBase {
         if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 2)) {
             output = 0;
         }
+        */
 
         // Send power to motors.  Flip the power for the left side.
         tiltPower = output;

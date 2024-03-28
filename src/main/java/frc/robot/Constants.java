@@ -140,7 +140,7 @@ public final class Constants {
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
     public static double defaultTilt = 2;
-    public static double defaultRPM = 3000;
+    public static double defaultRPM = 000; ///        DEBUG !!!!!!!!!!  set to 3000
 
     public static double highNoteShareAngle = 16;
     public static double lowNoteShareAngle  = 58;
@@ -179,16 +179,17 @@ public final class Constants {
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.02;  // 0.12
-    public static final double kI = 0.03;  // 0.027
-    public static final double kD = 0.0005; // 0.001
+    public static final double kP = 0.05;  
+    public static final double kI = 0.00;  
+    public static final double kD = 0.00; 
     public static final double kFF = 0;
     public static final double kZone = 4;    
     public static final double kIMin = 0.0;    
     public static final double kIMax = 0.25;
     public static final double kIDeadband = 0.25;
-    public static final double kMinOutput = -0.03;
-    public static final double kMaxOutput = 0.3;
+
+    public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(
+      60, 80);
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 80.0;
@@ -198,16 +199,17 @@ public final class Constants {
     public static final double ampLowAngle = 63;
     public static final double ampHighAngle = 70;
 
-
+    public static final double kTollerance = 2;
     public static final double tiltThresholdDeg = 0.85;  //  was 1.0
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
-    public static final double kTiltConversion = 4.6f; // 360 / gear ratio / 1.2
+    public static final double kTiltConversion = 360f / 192 ; // 360 / gear ratio 
     public static final float  softLimitRev = (float)(maxEncoderPosition / kTiltConversion);  // Set this to limit Baton tilt angle
 
     public static final int kMotorCurrentLimit = 40; // amps
 
     public static final double kEncoderPositionFactor = 360; // degrees
+    public static final double kEncoderVelocityFactor = kEncoderPositionFactor / 60; // degrees / sec
   }
 
   public static final class OIConstants {
