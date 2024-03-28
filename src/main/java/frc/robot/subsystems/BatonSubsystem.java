@@ -100,23 +100,12 @@ public class BatonSubsystem extends SubsystemBase {
         tiltEncoder.setVelocityConversionFactor(TiltConstants.kEncoderVelocityFactor);
         tiltRight.burnFlash();
 
-/*
-            headingLockController = new ProfiledPIDController(AutoConstants.kPHeadingLockController, 
-                                                      AutoConstants.kIHeadingLockController, 
-                                                      AutoConstants.kDHeadingLockController, 
-                                                      AutoConstants.kHeadingLockConstraints );
-    headingLockController.enableContinuousInput(-Math.PI, Math.PI);
-    headingLockController.setTolerance(AutoConstants.kDHeadingLockTollerance);
-    */
-  
         tiltControl = new ProfiledPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD, TiltConstants.kConstraints);    
         tiltControl.setTolerance(TiltConstants.kTollerance);
-        //tiltControl.setIZone(TiltConstants.kZone);
-        //tiltControl.setIntegratorRange(TiltConstants.kIMin,TiltConstants.kIMax);
         tiltControl.setGoal(0);
 
-        shooterBot = new FLEXShooter("Bot", BatonConstants.shooterBotID, true);
-        shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, false);
+        shooterBot = new FLEXShooter("Bot", BatonConstants.shooterBotID, false);
+        shooterTop = new FLEXShooter("Top", BatonConstants.shooterTopID, true);
 
         init();
     }
@@ -128,9 +117,7 @@ public class BatonSubsystem extends SubsystemBase {
         rememberToStopIntake = true;
 
         setState(BatonState.IDLE);
-        setShooterRPM(0);
-        setTiltAngle(0);
-        intake.set(BatonConstants.stopCollector);
+        relaxBaton();
         Globals.setNoteTracking(false);
         Globals.setSpeakerTracking(false);
         stateTimer.restart();
@@ -191,16 +178,19 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putString("Intake Range",        String.format("%.2f", shooterTop.getVoltage()));
 
         SmartDashboard.putNumber("tilt setpoint",       tiltAngleSetPoint);
-        SmartDashboard.putString("tilt angle",          String.format("%.2f",currentTiltAngle));
+        SmartDashboard.putNumber("tilt angle",          currentTiltAngle);
         SmartDashboard.putNumber("tilt Power",              tiltRight.getAppliedOutput());
         SmartDashboard.putBoolean("tilt In Position",       tiltIsInPosition());
         SmartDashboard.putBoolean("Note In Intake",         noteInIntake());
+        SmartDashboard.putBoolean("Note At Shooter",        noteAtShooter());
+        
         SmartDashboard.putNumber("tilt relative encoder",   tiltEncoderRel.getPosition());
         SmartDashboard.putNumber("tilt Error",              tiltAngleSetPoint - currentTiltAngle);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
         SmartDashboard.putNumber("shooter top RPM", shooterSpeedTop);
+
         SmartDashboard.putBoolean("top UTS",        topUpToSpeed);
         SmartDashboard.putBoolean("bot UTS",        botUpToSpeed);
         SmartDashboard.putBoolean("Ready To Shoot", readyToShoot());
@@ -291,9 +281,8 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case SHOOTING_WAIT:    
-                if (stateTimer.hasElapsed(0.25)){
-                    stopIntake();
-                    stopShooter();
+                if (stateTimer.hasElapsed(1.25)){ /// was 0.25
+                    relaxBaton();
                     Globals.setSpeakerTracking(false);
                     setState(BatonState.IDLE);
                 }
@@ -337,8 +326,7 @@ public class BatonSubsystem extends SubsystemBase {
 
             case AMP_WAIT:
                 if (stateTimer.hasElapsed(0.5)){
-                    stopIntake();
-                    setTiltAngle(TiltConstants.homeAngle);
+                    relaxBaton();
                     Globals.setAmplifying(false);
                     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
                     setState(BatonState.IDLE);
@@ -348,6 +336,12 @@ public class BatonSubsystem extends SubsystemBase {
             default:
                 break;
         }
+    }
+
+    public void relaxBaton() {
+        stopIntake();
+        stopShooter();
+        setTiltAngle(TiltConstants.homeAngle);
     }
 
     public void  setState(BatonState state) {
@@ -413,24 +407,6 @@ public class BatonSubsystem extends SubsystemBase {
     public void runTiltPID() {
         double output = tiltControl.calculate(currentTiltAngle);
 
-        /*
-        // clip output to acceptable range
-        output = MathUtil.clamp(output, TiltConstants.kMinOutput, TiltConstants.kMaxOutput);
-
-        // if we are in auto, then make sure we get to the ground quickly
-        if (tiltAngleSetPoint == 0){
-            if (currentTiltAngle > 6) {
-                output = -0.2;
-            } else  {
-                output = 0;
-            }
-        } else 
-        // if we are lowering, and are close to our target, just set power to zero to brake
-        if ((output < 0) && (Math.abs(tiltControl.getPositionError()) < 2)) {
-            output = 0;
-        }
-        */
-
         // Send power to motors.  Flip the power for the left side.
         tiltPower = output;
         tiltLeft.set(-tiltPower);
@@ -467,7 +443,6 @@ public class BatonSubsystem extends SubsystemBase {
     }
        
     public boolean readyToShoot() {
-        // return noteInIntake() && tiltIsInPosition() && shooterIsUpToSpeed();
         return  tiltIsInPosition() && shooterIsUpToSpeed() && Globals.robotAtHeading;
     }
      
@@ -493,6 +468,10 @@ public class BatonSubsystem extends SubsystemBase {
 
     public boolean noteInIntake(){
         return ((noteSensorIntake > BatonConstants.seeingNote) && (noteSensorIntake < BatonConstants.readingError) );
+    }
+
+    public boolean noteAtShooter(){
+        return ((noteSensorShooter > BatonConstants.seeingNote) && (noteSensorShooter < BatonConstants.readingError) );
     }
 
     public void collect (){
@@ -532,8 +511,7 @@ public class BatonSubsystem extends SubsystemBase {
         } else {
             VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
             Globals.setAmplifying(false);
-            setTiltAngle(TiltConstants.homeAngle);
-            intake.set(BatonConstants.stopCollector);
+            relaxBaton();
             setState(BatonState.IDLE);
         }
     }
@@ -547,8 +525,7 @@ public class BatonSubsystem extends SubsystemBase {
             }
         } else {
             Globals.setAmplifying(false);
-            setTiltAngle(TiltConstants.homeAngle);
-            intake.set(BatonConstants.stopCollector);
+            relaxBaton();
             setState(BatonState.IDLE);
         }
     }
@@ -574,6 +551,10 @@ public class BatonSubsystem extends SubsystemBase {
 
     public void setManualShooting(boolean on){
         manualShooting = on;
+        if (!manualShooting) {
+            setTiltAngle(0);
+            setShooterRPM(0);
+        }
     }
 
     public void setManualTiltAngle(double angle) {

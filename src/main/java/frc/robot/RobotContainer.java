@@ -117,7 +117,7 @@ private void configureButtonBindings() {
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
         .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
-        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
+        .onFalse(Commands.runOnce(() -> baton.relaxBaton()));
 
     // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
@@ -173,6 +173,7 @@ private void configureButtonBindings() {
     new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(Commands.runOnce(() -> baton.setManualShooting(true)))
         .onFalse(Commands.runOnce(() -> baton.setManualShooting(false)));
+
 
     new POVButton(copilot_1, 0)
         .onTrue(Commands.runOnce(() -> baton.bumpTilt(2)));

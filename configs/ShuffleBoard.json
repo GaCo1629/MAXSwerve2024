@@ -158,7 +158,7 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "3,3": {
+          "6,3": {
             "size": [
               3,
               3
@@ -173,7 +173,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "9,3": {
+          "12,3": {
             "size": [
               3,
               3
@@ -188,7 +188,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "6,3": {
+          "9,3": {
             "size": [
               3,
               3
@@ -203,7 +203,7 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "12,3": {
+          "11,6": {
             "size": [
               3,
               2
@@ -229,45 +229,7 @@
               "_showGlyph": false
             }
           },
-          "0,2": {
-            "size": [
-              3,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "MANUAL",
-              "_glyph": 149,
-              "_showGlyph": false,
-              "Layout/Label position": "HIDDEN",
-              "_children": [
-                {
-                  "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Manual Shooting",
-                  "_title": "Manual",
-                  "_glyph": 148,
-                  "_showGlyph": false,
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Manual Tilt",
-                  "_title": "Manual Tilt",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Manual Speed",
-                  "_title": "Manual Speed",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                }
-              ]
-            }
-          },
-          "12,5": {
+          "11,8": {
             "size": [
               3,
               2
@@ -293,7 +255,7 @@
               "_showGlyph": false
             }
           },
-          "3,0": {
+          "3,3": {
             "size": [
               3,
               3
@@ -369,6 +331,68 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "0,2": {
+            "size": [
+              3,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "List Layout",
+                  "_title": "MANUAL",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "HIDDEN",
+                  "_children": [
+                    {
+                      "_type": "Boolean Box",
+                      "_source0": "network_table:///SmartDashboard/Manual Shooting",
+                      "_title": "Manual",
+                      "_glyph": 148,
+                      "_showGlyph": false,
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Manual Tilt",
+                      "_title": "Manual Tilt",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Manual Speed",
+                      "_title": "Manual Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Note At Shooter",
+              "_title": "SmartDashboard/Note At Shooter",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -391,8 +415,8 @@
             ],
             "content": {
               "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt angle",
-              "_source1": "network_table:///SmartDashboard/tilt setpoint",
+              "_source0": "network_table:///SmartDashboard/tilt setpoint",
+              "_source1": "network_table:///SmartDashboard/tilt angle",
               "_title": "SmartDashboard/tilt angle",
               "_glyph": 148,
               "_showGlyph": false,
@@ -402,6 +426,7 @@
               "Y-axis/Upper bound": 35.0,
               "Y-axis/Lower bound": 0.0,
               "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/tilt angle": true,
               "Visible data/SmartDashboard/tilt setpoint": true
             }
           },
@@ -483,8 +508,8 @@
             ],
             "content": {
               "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt Error",
-              "_source1": "network_table:///SmartDashboard/tilt setpoint",
+              "_source0": "network_table:///SmartDashboard/tilt setpoint",
+              "_source1": "network_table:///SmartDashboard/tilt Error",
               "_title": "SmartDashboard/tilt Error",
               "_glyph": 148,
               "_showGlyph": false,
@@ -496,6 +521,71 @@
               "Y-axis/Unit": "ul",
               "Visible data/SmartDashboard/tilt Error": true,
               "Visible data/SmartDashboard/tilt setpoint": true
+            }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Manual Speed",
+              "_title": "SmartDashboard/Manual Speed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Manual Tilt",
+              "_title": "SmartDashboard/Manual Tilt",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tilt Error",
+              "_title": "SmartDashboard/tilt Error",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Note Intake",
+              "_title": "/SmartDashboard/Note Intake",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Note Shooter",
+              "_title": "/SmartDashboard/Note Shooter",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
