@@ -129,9 +129,10 @@ public final class Constants {
     public static int intakeID = 24;
     public static double maxTiltAngle  = 95;
     public static double maxShooterRPM = 6500;
-    public static double collect = -0.45;  // was 0.5
+    public static double collect = -0.5;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
+    public static double creep = -0.25;
     public static double stopCollector = 0;
 
     public static double seeingNote = 0.6;

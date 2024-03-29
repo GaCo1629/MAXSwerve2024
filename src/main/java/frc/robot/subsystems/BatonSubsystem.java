@@ -240,8 +240,8 @@ public class BatonSubsystem extends SubsystemBase {
 
             case COLLECTING:
                 if (noteInIntake()){
-                    stopIntake();
-                    setState(BatonState.HOLDING);
+                    creepIntake();
+                    setState(BatonState.INDEXING);
                     Globals.setNoteTracking(false);
                 } else {
                     if (Globals.noteTarget.valid) {
@@ -250,6 +250,14 @@ public class BatonSubsystem extends SubsystemBase {
                         Globals.setLEDMode(LEDmode.NOTE_COLLECTING);                        
                     }
                 }
+                break;
+
+            case INDEXING:
+                if (noteAtShooter()){
+                    stopIntake();
+                    setState(BatonState.HOLDING);
+                }
+                Globals.setLEDMode(LEDmode.NOTE_DETECTED);
                 break;
         
             case HOLDING:
@@ -275,13 +283,13 @@ public class BatonSubsystem extends SubsystemBase {
                 
             case SHOOTING:
                 Globals.setLEDMode(LEDmode.SHOOTING);
-                if (!noteInIntake()){
+                if (!noteAtShooter() && !noteInIntake()){
                     setState(BatonState.SHOOTING_WAIT);
                 }
                 break;
 
             case SHOOTING_WAIT:    
-                if (stateTimer.hasElapsed(1.25)){ /// was 0.25
+                if (stateTimer.hasElapsed(0.5)){ 
                     relaxBaton();
                     Globals.setSpeakerTracking(false);
                     setState(BatonState.IDLE);
@@ -533,6 +541,10 @@ public class BatonSubsystem extends SubsystemBase {
     public void stopIntake (){
         intake.set(BatonConstants.stopCollector);
         Globals.setNoteTracking(false);
+    }
+
+    public void creepIntake() {
+        intake.set(BatonConstants.creep);    
     }
 
     public void eject (){
