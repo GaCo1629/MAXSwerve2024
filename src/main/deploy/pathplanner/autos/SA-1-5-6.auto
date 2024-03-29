@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootNow"
+            "name": "ShootNowSA"
           }
         },
         {
@@ -82,7 +82,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6to3s"
+            "pathName": "6to3S"
           }
         },
         {

@@ -66,7 +66,8 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 7, 3400));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 2800));
+    NamedCommands.registerCommand("ShootNowSA",     new AutoShootNow(baton, 7, 3400));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
     NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));

@@ -74,6 +74,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "3toS"
