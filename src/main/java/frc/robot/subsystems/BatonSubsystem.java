@@ -434,7 +434,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToRPM(double range) {
-        double speed = 2300 + (250 * range);
+        double speed = 2300 + (500 * range);
         return speed;
     }
     
