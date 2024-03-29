@@ -394,6 +394,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  public void stopRobot(){
+    driveRobotRelative(new ChassisSpeeds());
+  }
+
   /**
    * Calculates the current chassis speeds derived from module states.
    * Required for PathPlanner

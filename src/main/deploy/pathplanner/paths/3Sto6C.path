@@ -3,15 +3,15 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.527723812204381,
-        "y": 6.110748798074173
+        "x": 4.779843098878597,
+        "y": 6.42509066490817
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.722667731049748,
-        "y": 6.362204724409449
+        "x": 5.979063359551898,
+        "y": 6.7858317189318464
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "3S"
     },
     {
@@ -20,11 +20,11 @@
         "y": 6.035100336233927
       },
       "prevControl": {
-        "x": 6.774991835697957,
-        "y": 6.303566892848072
+        "x": 6.817542566201523,
+        "y": 6.42509066490817
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "6C"
     }
   ],
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.7,
+      "name": "Look Now",
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "parallel",
         "data": {

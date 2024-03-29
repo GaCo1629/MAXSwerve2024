@@ -135,8 +135,8 @@ public final class Constants {
     public static double creep = -0.25;
     public static double stopCollector = 0;
 
-    public static double seeingNote = 0.6;
-    public static double readingError = 2.2;
+    public static double seeingNote = 0.7;  // was 0.6
+    public static double readingError = 3.0;  // was 2.25
 
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters

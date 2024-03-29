@@ -70,6 +70,7 @@ public class AutoCollect extends Command {
   public void end(boolean interrupted) {
     baton.stopIntake();  //  also stops note tracking
     collectTimer.stop();
+    robotDrive.stopRobot();
   }
 
   // Returns true when the command should end.

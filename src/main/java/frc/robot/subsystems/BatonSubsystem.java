@@ -139,6 +139,7 @@ public class BatonSubsystem extends SubsystemBase {
         shooterUpToSpeed    = areShootersUpToSpeed();
 
         Globals.noteInIntake = noteInIntake();
+        Globals.noteAtShooter = noteAtShooter();
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking()) {
@@ -186,6 +187,8 @@ public class BatonSubsystem extends SubsystemBase {
         
         SmartDashboard.putNumber("tilt relative encoder",   tiltEncoderRel.getPosition());
         SmartDashboard.putNumber("tilt Error",              tiltAngleSetPoint - currentTiltAngle);
+        SmartDashboard.putNumber("Note Sensor Shooter",     noteSensorShooter);
+        SmartDashboard.putNumber("Note Sensor Intake",      noteSensorIntake);
 
         SmartDashboard.putNumber("shooter setpoint", shooterSpeedSetPoint);
         SmartDashboard.putNumber("shooter bot RPM", shooterSpeedBot);
@@ -439,6 +442,14 @@ public class BatonSubsystem extends SubsystemBase {
                 Globals.lastShooterSpeed = shooterSpeedSetPoint;      
             }
         }
+    }
+
+    public void readyShooter (double range){
+        SmartDashboard.putString("Mode", "Ready Shooter");
+        double shooterSpeed = rangeToRPM (range);
+        double angle = rangeToAngle(range);
+        setShooterRPM(shooterSpeed);
+        setTiltAngle(angle);
     }
 
     public double rangeToRPM(double range) {

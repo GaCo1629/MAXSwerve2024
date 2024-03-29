@@ -58,7 +58,7 @@ public class LEDSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (DriverStation.isDisabled()) {
-      if (Globals.noteInIntake) {
+      if (Globals.noteInIntake || Globals.noteAtShooter) {
         Globals.setLEDMode(LEDmode.ALLIANCE);
       } else {
         Globals.setLEDMode(LEDmode.SYSTEM_ERROR);
