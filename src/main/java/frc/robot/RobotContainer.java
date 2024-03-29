@@ -66,16 +66,17 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 2800));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 7, 3400));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
     NamedCommands.registerCommand("FindNoteLater",  new AutoFindNoteLater(vision));
     NamedCommands.registerCommand("LookNow",        Commands.runOnce(() -> Globals.setStartNoteFinding()));
-    NamedCommands.registerCommand("SpinUpLong",     Commands.runOnce(() -> baton.setShooterRPM(3000)));
+    NamedCommands.registerCommand("SpinUpLong",     Commands.runOnce(() -> baton.setShooterRPM(1500)));
     NamedCommands.registerCommand("SpinUpTrap",     Commands.runOnce(() -> baton.setShooterRPM(2600)));
-    NamedCommands.registerCommand("SpinUpShort",    Commands.runOnce(() -> baton.setShooterRPM(1500)));
+    NamedCommands.registerCommand("SpinUpShort",    Commands.runOnce(() -> baton.setShooterRPM(1000)));
     NamedCommands.registerCommand("StopShooter",    Commands.runOnce(() -> baton.setShooterRPM(0)));
     NamedCommands.registerCommand("Lob",            Commands.runOnce(() -> baton.lob()));
+    NamedCommands.registerCommand("ReadyShooter3s", Commands.runOnce(() -> baton.readyShooter(3.7)));
     
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
@@ -117,7 +118,7 @@ private void configureButtonBindings() {
     new JoystickButton(driverController, Button.kL2.value)    
         .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
         .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
-        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
+        .onFalse(Commands.runOnce(() -> baton.relaxBaton()));
 
     // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
@@ -173,6 +174,7 @@ private void configureButtonBindings() {
     new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(Commands.runOnce(() -> baton.setManualShooting(true)))
         .onFalse(Commands.runOnce(() -> baton.setManualShooting(false)));
+
 
     new POVButton(copilot_1, 0)
         .onTrue(Commands.runOnce(() -> baton.bumpTilt(2)));

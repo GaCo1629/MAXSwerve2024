@@ -8,29 +8,47 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.103813636198701,
-        "y": 6.611415508545304
+        "x": 5.4818256904922364,
+        "y": 6.834580510016127
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "6"
     },
     {
       "anchor": {
-        "x": 3.527723812204381,
-        "y": 6.110748798074173
+        "x": 4.779843098878597,
+        "y": 6.42509066490817
       },
       "prevControl": {
-        "x": 4.957219057295258,
-        "y": 6.288907434957727
+        "x": 6.4763010286115605,
+        "y": 6.971077125052112
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "3S"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Ready Shooter",
+      "waypointRelativePos": 0.1,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ReadyShooter3s"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 7.0,

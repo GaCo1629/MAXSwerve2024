@@ -328,6 +328,8 @@ public class DriveSubsystem extends SubsystemBase {
       // should we be in auto or not?
       if (Math.abs(rotate) > 0.05) {
         headingLocked = false;
+        updateToCurrentHeading();
+        
       } else if (!headingLocked && isNotRotating()) {
         lockCurrentHeading();
       }
@@ -390,6 +392,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void stopRobot(){
+    driveRobotRelative(new ChassisSpeeds());
   }
 
   /**
@@ -526,7 +532,8 @@ public class DriveSubsystem extends SubsystemBase {
 
       X = speaker.x + (Math.cos(bearingToTarget) * Globals.speakerTarget.range);
       Y = speaker.y + (Math.sin(bearingToTarget) * Globals.speakerTarget.range);
-      ppResetOdometry(new Pose2d(X, Y, imu.getRotation2d()));
+      resetOdometry(new Pose2d(X, Y, imu.getRotation2d()));
+      Globals.startingLocationSet = true;
     }    
   }
 
@@ -544,7 +551,10 @@ public class DriveSubsystem extends SubsystemBase {
     headingLockController.reset(imu.headingRad);
     headingLocked = true;
     SmartDashboard.putString("heading Setpoint",  String.format("%.1f",Math.toDegrees(headingSetpoint)));
+  }
 
+  public void updateToCurrentHeading() {
+    headingLockController.reset(imu.headingRad);
   }
 
   public void lockCurrentHeading() {

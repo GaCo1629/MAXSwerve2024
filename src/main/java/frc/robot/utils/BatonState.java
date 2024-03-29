@@ -3,6 +3,7 @@ package frc.robot.utils;
 public enum BatonState {
     IDLE,
     COLLECTING,
+    INDEXING,
     HOLDING,
     AUTO_SHOOT,
     SHOOTING,
