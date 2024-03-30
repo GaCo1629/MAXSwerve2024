@@ -101,6 +101,7 @@ public class BatonSubsystem extends SubsystemBase {
         tiltRight.burnFlash();
 
         tiltControl = new ProfiledPIDController(TiltConstants.kP, TiltConstants.kI, TiltConstants.kD, TiltConstants.kConstraints);    
+        tiltControl.setIZone(TiltConstants.kIzone);
         tiltControl.setTolerance(TiltConstants.kTollerance);
         tiltControl.setGoal(0);
 
@@ -220,10 +221,10 @@ public class BatonSubsystem extends SubsystemBase {
                     Globals.setLEDMode(LEDmode.LOWERING);
 
                     // Assist Baton lowering by spinning wheels backwards as it passes the Bumper & Frame
-                    if ((currentTiltAngle < 20) && (currentTiltAngle > 1.5)) {
-                        intake.set(BatonConstants.eject);
-                        rememberToStopIntake = true;
-                    }
+                    //if ((currentTiltAngle < 20) && (currentTiltAngle > 1.5)) {
+                    //    intake.set(BatonConstants.eject);
+                    //    rememberToStopIntake = true;
+                    //}
             
                 } else {
                     if (!Globals.getSpeakerTracking()) {

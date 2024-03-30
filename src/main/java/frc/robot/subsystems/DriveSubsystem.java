@@ -107,10 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
       this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+              new PIDConstants(8.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(4.0, 0.0, 0.0), // Rotation PID constants
               4.5, // Max module speed, in m/s
-              0.413, // Drive base radius in meters. Distance from robot center to furthest module.
+              0.409, // Drive base radius in meters. 16.125" Distance from robot center to furthest module.
               new ReplanningConfig() // Default path replanning config. See the API for the options here
       ),
       () -> {
@@ -326,7 +326,7 @@ public class DriveSubsystem extends SubsystemBase {
       VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
 
       // should we be in auto or not?
-      if (Math.abs(rotate) > 0.05) {
+      if (Math.abs(rotate) > 0.02) {
         headingLocked = false;
         updateToCurrentHeading();
         
@@ -349,6 +349,8 @@ public class DriveSubsystem extends SubsystemBase {
       }
 
     }
+
+    SmartDashboard.putNumber("Rotate", rotate)  ;
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;

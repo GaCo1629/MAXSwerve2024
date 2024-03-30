@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.0535215356145,
-        "y": 2.1256213940999316
+        "x": 6.59799245524417,
+        "y": 0.8185908109707958
       },
       "isLocked": false,
       "linkedName": "9"
     },
     {
       "anchor": {
-        "x": 2.9078895212422267,
-        "y": 3.3051680355142192
+        "x": 2.4114851648506717,
+        "y": 3.2977515527680636
       },
       "prevControl": {
-        "x": 3.274375968500836,
-        "y": 2.616173514668035
+        "x": 2.777971612109281,
+        "y": 2.6087570319218796
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ReadyShooter3s"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 7.0,
@@ -45,7 +63,7 @@
   "reversed": false,
   "folder": "9",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -5.9971177041332195,
     "velocity": 0
   },
   "useDefaultConstraints": false

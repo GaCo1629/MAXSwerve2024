@@ -122,6 +122,8 @@ public final class Constants {
 
   public class BatonConstants {
     
+    public static double offTargetShooting = 4.0;  // +ve values compensate for robot shooting to the left.
+
     public static int shooterTopID = 20;
     public static int shooterBotID = 21;
     public static int tiltLeftID = 22;
@@ -129,7 +131,7 @@ public final class Constants {
     public static int intakeID = 24;
     public static double maxTiltAngle  = 95;
     public static double maxShooterRPM = 6500;
-    public static double collect = -0.5;  // was 0.5
+    public static double collect = -0.7;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
     public static double creep = -0.25;
@@ -172,7 +174,7 @@ public final class Constants {
     public static double topShooterSpeed  = 4000;  // RPM
     public static final IdleMode kMotorIdleMode = IdleMode.kCoast;
     public static final int kMotorCurrentLimit = 50; // amps
-    public static final double speedThresholdRPM = 20;
+    public static final double speedThresholdRPM = 40; // was 20
 
     public static final double MinTargetRange = 1.0; // meters
     public static final double MaxTargetRange = 5.0; // meters
@@ -184,6 +186,7 @@ public final class Constants {
     public static final double kI = 0.0005;  
     public static final double kD = 0.00; 
     public static final double kFF = 0;
+    public static final double kIzone = 2;
 
     public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(
       100, 150);
@@ -197,7 +200,7 @@ public final class Constants {
     public static final double ampHighAngle = 70;
 
     public static final double kTollerance = 1;
-    public static final double tiltThresholdDeg = 0.6;  //  was 1.0
+    public static final double tiltThresholdDeg = 0.7;  //  was 1.0
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     public static final double kTiltConversion = 360f / 192 ; // 360 / gear ratio 

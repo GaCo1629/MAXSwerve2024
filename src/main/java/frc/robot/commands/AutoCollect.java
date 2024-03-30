@@ -45,15 +45,17 @@ public class AutoCollect extends Command {
     double rotate = 0;
     SmartDashboard.putString("Mode", "Auto Collect")  ;
 
-    if (Globals.noteTarget.valid){
-      // Calculate turn power to point to note.
-      rotate = robotDrive.trackingCalculate(Globals.noteTarget.bearingDeg);
-      if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
-        xSpeed = Globals.noteTarget.range * 0.35; 
+    if (baton.getState() == BatonState.COLLECTING){
+      if (Globals.noteTarget.valid){
+        // Calculate turn power to point to note.
+        rotate = robotDrive.trackingCalculate(Globals.noteTarget.bearingDeg);
+        if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
+          xSpeed = Globals.noteTarget.range * 0.35; 
+        }
+        robotDrive.lockCurrentHeading(); 
+      } else {
+        rotate = robotDrive.headingLockCalculate();
       }
-      robotDrive.lockCurrentHeading(); 
-    } else {
-      rotate = robotDrive.headingLockCalculate();
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain

@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -48,7 +49,7 @@ public class AutoShoot extends Command {
       Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
       // Calculate turn power to point to speaker.
-      rotate = robotDrive.trackingCalculate(Globals.speakerTarget.bearingDeg);
+      rotate = robotDrive.trackingCalculate(Globals.speakerTarget.bearingDeg + BatonConstants.offTargetShooting);
       robotDrive.lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.odoTarget.valid) {

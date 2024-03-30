@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8959227491104554,
-      "y": 4.525637769224256
+      "x": 0.7531929553170285,
+      "y": 4.475139021536951
     },
-    "rotation": -60.497285812514434
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootNow"
           }
         },
         {
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SPto9C"
+                  "pathName": "SPto4C"
                 }
               },
               {
@@ -45,7 +45,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "9to10s"
+            "pathName": "4to4B"
           }
         },
         {
@@ -55,65 +55,45 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "10to8C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
+            "name": "TurnTo80"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo90"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "8to10s"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "10to7C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
+            "pathName": "2to5C"
           }
         }
       ]

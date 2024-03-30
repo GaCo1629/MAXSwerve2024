@@ -387,7 +387,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Note At Shooter",
-              "_title": "SmartDashboard/Note At Shooter",
+              "_title": "Note At Shooter",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -408,28 +408,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "6,0": {
-            "size": [
-              4,
-              4
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt setpoint",
-              "_source1": "network_table:///SmartDashboard/tilt angle",
-              "_title": "SmartDashboard/tilt angle",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 35.0,
-              "Y-axis/Lower bound": 0.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt angle": true,
-              "Visible data/SmartDashboard/tilt setpoint": true
-            }
-          },
           "2,3": {
             "size": [
               1,
@@ -443,28 +421,6 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "3,0": {
-            "size": [
-              3,
-              4
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Top RPM",
-              "_source1": "network_table:///SmartDashboard/Bot RPM",
-              "_title": "SmartDashboard/Bot RPM",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Bot RPM": true,
-              "Visible data/SmartDashboard/Top RPM": true
             }
           }
         }
@@ -481,48 +437,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "1,0": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt Power",
-              "_title": "SmartDashboard/tilt Power",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt Power": true
-            }
-          },
-          "6,0": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt setpoint",
-              "_source1": "network_table:///SmartDashboard/tilt Error",
-              "_title": "SmartDashboard/tilt Error",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt Error": true,
-              "Visible data/SmartDashboard/tilt setpoint": true
-            }
-          },
           "1,3": {
             "size": [
               1,
@@ -558,32 +472,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/tilt Error",
               "_title": "SmartDashboard/tilt Error",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "5,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Note Intake",
-              "_title": "/SmartDashboard/Note Intake",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "5,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Note Shooter",
-              "_title": "/SmartDashboard/Note Shooter",
               "_glyph": 148,
               "_showGlyph": false
             }

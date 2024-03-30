@@ -66,7 +66,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
-    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 2800));
+    NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 3000));
     NamedCommands.registerCommand("ShootNowSA",     new AutoShootNow(baton, 7, 3400));
     NamedCommands.registerCommand("WaitForTilt",    new WaitForTiltInPosition(baton));
     NamedCommands.registerCommand("FindNote",       new AutoFindNote(vision));
@@ -124,7 +124,7 @@ private void configureButtonBindings() {
 
     // Shoot    
     new JoystickButton(driverController, Button.kR2.value)
-        .whileTrue(Commands.runOnce(() -> baton.fire()))  // Repeats Automatically
+        .whileTrue(Commands.run(() -> baton.fire()))  // Repeats Automatically
         .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
 
     // Turn to Lob to Amp
