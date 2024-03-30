@@ -43,34 +43,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ReadyShooterClose"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "4toS"
+            "pathName": "4to2B"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootNow"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "S-3C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
+            "name": "Shoot"
           }
         },
         {
@@ -80,34 +67,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "3toS"
+            "name": "Shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootNow"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Sto2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
+            "name": "TurnTo90"
           }
         },
         {
@@ -182,18 +150,6 @@
           "type": "named",
           "data": {
             "name": "Collect"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6toLS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]

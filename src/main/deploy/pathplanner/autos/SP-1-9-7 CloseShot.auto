@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7297935355965739,
-      "y": 4.440039891956269
+      "x": 0.8912450873334795,
+      "y": 4.537331923666697
     },
     "rotation": -60.497285812514434
   },
@@ -43,9 +43,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ReadyShooter3s"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "9toCS"
+            "pathName": "9to10s"
           }
         },
         {
@@ -67,50 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CSto8C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "8toCS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CSto7C"
+                  "pathName": "10to7C"
                 }
               },
               {

@@ -78,6 +78,7 @@ public RobotContainer() {
     NamedCommands.registerCommand("StopShooter",    Commands.runOnce(() -> baton.setShooterRPM(0)));
     NamedCommands.registerCommand("Lob",            Commands.runOnce(() -> baton.lob()));
     NamedCommands.registerCommand("ReadyShooter3s", Commands.runOnce(() -> baton.readyShooter(3.7)));
+    NamedCommands.registerCommand("ReadyShooterClose", Commands.runOnce(() -> baton.readyShooter(2.4))); //Range should be calibrated on field
     
 
     NamedCommands.registerCommand("TurnTo0",        new AutoTurnToHeading(robotDrive, 0, 2.0));
