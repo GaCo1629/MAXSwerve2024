@@ -26,8 +26,8 @@
     "Podium",
     "Speaker"
   ],
-  "defaultMaxVel": 4.25,
-  "defaultMaxAccel": 3.25,
+  "defaultMaxVel": 4.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 360.0,
   "defaultMaxAngAccel": 600.0,
   "maxModuleSpeed": 4.5

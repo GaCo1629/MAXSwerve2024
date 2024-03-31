@@ -70,7 +70,7 @@ public class AutoCollect extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // baton.stopIntake();  // Skip this to spped up action after collection.. also stops note tracking
+    baton.stopIntake();  // Skip this to speed up action after collection.. also stops note tracking
     Globals.setNoteTracking(false);
     collectTimer.stop();
     robotDrive.stopRobot();

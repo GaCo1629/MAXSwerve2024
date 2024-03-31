@@ -169,10 +169,7 @@ public class BatonSubsystem extends SubsystemBase {
             setTiltAngle(manualTiltAngle);
             setShooterRPM(manualShooterSpeed);
 
-        } //else {   // I'd ike to remove these so I can control the shooter from Auto.
-//            setTiltAngle(0);
-//            setShooterRPM(0);
-//        }
+        }
      
         runTiltPID();
         runStateMachine();
@@ -394,9 +391,11 @@ public class BatonSubsystem extends SubsystemBase {
         double C  =  -43.196;  
         //   y = 0.4245x3 - 7.0375x2 + 40.843x - 43.196
 
+        range = MathUtil.clamp(range, 1, 6.0);
 
         double angle = (X3 * range * range * range) + (X2 * range * range) + (X * range) + C;
-        return angle;
+        
+        return MathUtil.clamp(angle, 0, 40);
     }
         
     public boolean tiltIsInPosition() {
@@ -465,8 +464,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToRPM(double range) {
-        double speed = 2300 + (500 * range);
-        return speed;
+        return MathUtil.clamp(2300 + (500 * range), 0,5000);
     }
     
     public void stopShooter(){

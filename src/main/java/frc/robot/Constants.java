@@ -179,7 +179,7 @@ public final class Constants {
     public static final double speedThresholdRPM = 40; // was 20
 
     public static final double MinTargetRange = 1.0; // meters
-    public static final double MaxTargetRange = 5.0; // meters
+    public static final double MaxTargetRange = 5.5; // meters
   }
 
   public static final class TiltConstants { 

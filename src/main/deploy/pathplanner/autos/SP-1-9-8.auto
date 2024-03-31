@@ -90,31 +90,6 @@
           "data": {
             "name": "Shoot"
           }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "10to7C"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FindNoteLater"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
         }
       ]
     }

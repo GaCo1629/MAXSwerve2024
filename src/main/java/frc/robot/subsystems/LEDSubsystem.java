@@ -125,11 +125,11 @@ public class LEDSubsystem extends SubsystemBase {
         break;
 
       case WAITING:
-        flashStrip(PURPLE, 0.2, 0.2);
+        flashStrip(PURPLE, 0.1, 0);
         break;
 
      case DONE_WAITING:
-        flashStrip(BLUE, 0.25, 0.0);
+        flashStrip(BLUE, 0.1, 0.0);
         break;
 
        case SYSTEM_ERROR:       // Displaying system error code

@@ -286,7 +286,7 @@ public class DriveSubsystem extends SubsystemBase {
       ySpeed = 0;
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
-        rotate = trackingCalculate(Globals.noteTarget.bearingDeg) * 0.75;
+        rotate = trackingCalculate(Globals.noteTarget.bearingDeg) * 0.70;  // was 0.75
         if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
