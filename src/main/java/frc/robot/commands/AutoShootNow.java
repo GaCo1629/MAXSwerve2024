@@ -30,7 +30,7 @@ public class AutoShootNow extends Command {
     baton.setManualTiltAngle(tiltAngle);
     baton.setManualShooterSpeed(shooterSpeed);
     baton.setManualShooting(true);
-    baton.setState(BatonState.AUTO_SHOOT);
+    baton.setState(BatonState.AUTO_SHOOT_FAST);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

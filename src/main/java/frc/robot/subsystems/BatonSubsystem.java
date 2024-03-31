@@ -61,10 +61,10 @@ public class BatonSubsystem extends SubsystemBase {
     private final SparkAnalogSensor   rangeFinder; 
 
     //private PS4Controller driver;
-    //private Joystick copilot_1;
+    //private PS4Controller copilot_1;
     //private Joystick copilot_2;
 
-    public BatonSubsystem (PS4Controller driver, Joystick copilot_1, Joystick copilot_2){
+    public BatonSubsystem (PS4Controller driver, PS4Controller  copilot_1, Joystick copilot_2){
         //this.driver = driver;
         //this.copilot_1 = copilot_1;
         //this.copilot_2 = copilot_2;
@@ -234,7 +234,7 @@ public class BatonSubsystem extends SubsystemBase {
                     }
 
                     if (rememberToStopIntake) {
-                        intake.set(BatonConstants.stopCollector);   
+                        intake.set(BatonConstants.stop);   
                         rememberToStopIntake = false; 
                     }
                 }
@@ -243,8 +243,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case COLLECTING:
-                if (noteInIntake()){
-                    creepIntake();
+                if (noteInIntake() || noteAtShooter()){
                     setState(BatonState.INDEXING);
                     Globals.setNoteTracking(false);
                 } else {
@@ -257,11 +256,10 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case INDEXING:
-                if (noteAtShooter()){
-                    stopIntake();
+                if (noteInIntake()){
                     setState(BatonState.HOLDING);
                 }
-                Globals.setLEDMode(LEDmode.NOTE_DETECTED);
+                Globals.setLEDMode(LEDmode.NOTE_HOLDING);
                 break;
         
             case HOLDING:
@@ -270,15 +268,43 @@ public class BatonSubsystem extends SubsystemBase {
                 } else {
                     Globals.setLEDMode(LEDmode.NOTE_HOLDING);
                 }
+
+                // center note in intake
+                if (!noteInIntake() && noteAtShooter()) {
+                    intake.set(BatonConstants.indexDown);
+                } else if (noteInIntake() && !noteAtShooter()){
+                    intake.set(BatonConstants.indexUp);
+                } else {
+                    intake.set(BatonConstants.stop);
+                }
+
+                // check to see if the note had been ejected
+                if (!noteInIntake() && !noteAtShooter()){
+                    relaxBaton();
+                    setState(BatonState.IDLE);
+                }
+                
                 // Exits by "fire" button press.
                 break;
                 
             case AUTO_SHOOT:
-                // Exits by being on target and firing
+                // Exits by being on target and ready to fire
                 if (readyToShoot()){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
                 } else if(stateTimer.hasElapsed(2.5)){
+                   intake.set(BatonConstants.fire);
+                   Globals.setLEDMode(LEDmode.SHOOTING_TIMEOUT);
+                   setState(BatonState.SHOOTING); 
+                }
+                break;
+                
+            case AUTO_SHOOT_FAST:
+                // Exits by being up to speed
+                if (shooterIsUpToSpeed()){
+                   intake.set(BatonConstants.fire);
+                   setState(BatonState.SHOOTING); 
+                } else if(stateTimer.hasElapsed(1.5)){
                    intake.set(BatonConstants.fire);
                    Globals.setLEDMode(LEDmode.SHOOTING_TIMEOUT);
                    setState(BatonState.SHOOTING); 
@@ -319,12 +345,6 @@ public class BatonSubsystem extends SubsystemBase {
             
             case AMP_EJECTING:
                 if (!noteInIntake()){
-                    setState(BatonState.AMP_HOLDING);
-                }
-                break;
-
-            case AMP_HOLDING:
-                if(stateTimer.hasElapsed(0.25)){
                     setTiltAngle(TiltConstants.ampHighAngle);
                     setState(BatonState.AMP_SCORING);
                 }
@@ -332,15 +352,15 @@ public class BatonSubsystem extends SubsystemBase {
 
             case AMP_SCORING:
                 if (tiltIsInPosition()){
-                    setState(BatonState.AMP_WAIT);
-                }
-                break;
-
-            case AMP_WAIT:
-                if (stateTimer.hasElapsed(0.5)){
                     relaxBaton();
                     Globals.setAmplifying(false);
                     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
+                    setState(BatonState.AMP_LOWERING);
+                }
+                break;
+
+            case AMP_LOWERING:
+                if (tiltIsInPosition() || stateTimer.hasElapsed(1)){
                     setState(BatonState.IDLE);
                 }
                 break;
@@ -358,21 +378,12 @@ public class BatonSubsystem extends SubsystemBase {
 
     public void  setState(BatonState state) {
         currentState = state;
+        Globals.batonState = state;
         stateTimer.restart();
     }
 
     public BatonState  getState() {
         return currentState;
-    }
-
-    // ===== Conversions
-
-    public  void setSpeakerTracking(boolean on){
-        Globals.setSpeakerTracking(on);
-    }
-
-    public  void setNoteTracking(boolean on){
-        Globals.setNoteTracking(on);
     }
 
     // ===== TILT Methods  ===================================
@@ -503,7 +514,7 @@ public class BatonSubsystem extends SubsystemBase {
 
     public void fire (){
         // could be shooting to speaker or into Amp
-        if (Globals.getAmplifying()) {
+        if (Globals.getAmplifying() && (currentState == BatonState.AMP_READY)) {
             setState(BatonState.AMP_TILTING);
         } else {
             VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
@@ -551,12 +562,12 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public void stopIntake (){
-        intake.set(BatonConstants.stopCollector);
+        intake.set(BatonConstants.stop);
         Globals.setNoteTracking(false);
     }
 
     public void creepIntake() {
-        intake.set(BatonConstants.creep);    
+        intake.set(BatonConstants.indexUp);    
     }
 
     public void eject (){

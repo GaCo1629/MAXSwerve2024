@@ -33,6 +33,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utils.BackImageSource;
+import frc.robot.utils.BatonState;
 import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
@@ -95,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
  
 
   /** Creates a new DriveSubsystem. */
-   public DriveSubsystem(PS4Controller driver, Joystick copilot_1, Joystick copilot_2) {
+   public DriveSubsystem(PS4Controller driver, PS4Controller copilot_1, Joystick copilot_2) {
     this.driver = driver;
     //this.copilot_1 = copilot_1;
     //this.copilot_2 = copilot_2;
@@ -181,7 +182,6 @@ public class DriveSubsystem extends SubsystemBase {
     
     Globals.robotAtHeading = trackingController.atSetpoint();
     SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
-    //SmartDashboard.putString("heading Setpoint",  String.format("%.1f",Math.toDegrees(headingSetpoint)));
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
@@ -244,14 +244,20 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeed     = squareJoystick(-MathUtil.applyDeadband(driver.getLeftX(), OIConstants.kDriveDeadband)) *  speedFactor;
     rotate     = squareJoystick(-MathUtil.applyDeadband(driver.getRightX(), OIConstants.kDriveDeadband)) * DriveConstants.kAtleeTurnFactor;
  
-
-    xSpeed = XLimiter.calculate(xSpeed);
-    ySpeed = YLimiter.calculate(ySpeed);
-
-    
+    SmartDashboard.putBoolean("Defense", Globals.defenseActive);
+    if (Globals.defenseActive) {
+      XLimiter.reset(xSpeed); 
+      YLimiter.reset(ySpeed) ;
+    } else {
+      xSpeed = XLimiter.calculate(xSpeed);
+      ySpeed = YLimiter.calculate(ySpeed);
+    }
+  
     // TARGET TRACKING =======================================================
 
     if (Globals.getSpeakerTracking()) {  // --- TRACKING SPEAKER  ---------------------
+      lockCurrentHeading();  // prepare for return to heading hold
+
       SmartDashboard.putString("Mode", "Speaker")  ;
       VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
 
@@ -259,68 +265,48 @@ public class DriveSubsystem extends SubsystemBase {
         Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
 
         // Calculate turn power to point to speaker.
-        rotate = trackingController.calculate(Globals.speakerTarget.bearingDeg, 0);
+        rotate = trackingCalculate(Globals.speakerTarget.bearingDeg + BatonConstants.offTargetShooting);
         lockCurrentHeading();  // prepare for return to heading hold
 
       } else if (Globals.odoTarget.valid) {
         Globals.setLEDMode(LEDmode.SEEKING);
 
-        rotate = trackingController.calculate(imu.headingDeg - Globals.odoTarget.bearingDeg , 0);
-        lockCurrentHeading();  // prepare for return to heading hold
+        rotate = trackingCalculate(imu.headingDeg - Globals.odoTarget.bearingDeg);
+
         SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));
       }
       rotate += (ySpeed * 0.2);  // Add additional rotation based on robot's sideways motion 
 
     } else if (Globals.getNoteTracking()) {  // --- TRACKING NOTE ---------------
+      lockCurrentHeading();  // prepare for return to heading hold
+
+      SmartDashboard.putString("Mode", "Note")  ;
       VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
       fieldRelative = false;
       ySpeed = 0;
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
-        rotate = trackingController.calculate(Globals.noteTarget.bearingDeg, 0) * 0.75;
+        rotate = trackingCalculate(Globals.noteTarget.bearingDeg) * 0.75;
         if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
         } else {
           xSpeed = BatonConstants.noteApproachSpeed;
         }
-        lockCurrentHeading();  // prepare for return to heading hold
       } else {
         if (Math.abs(xSpeed) < BatonConstants.noteApproachSpeed ){
           xSpeed = BatonConstants.noteApproachSpeed;
         }
         rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
-       
       }
 
-    } else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
-      VisionSubsystem.setFrontImageSource(FrontImageSource.AMP);
-      SmartDashboard.putString("Mode", "Amplify")  ;
-      fieldRelative = false;
-      rotate = 0;
-
-      // If we can see the amp. try to get directly in front of it.
-      if (Globals.ampTarget.valid) {
-        // If we are coming in, use the heading error (from 90) to strafe.
-        // once we are close, use the angle error 
-        if (Globals.ampTarget.range > 0.3) {
-          // Point to amp and strafe sideways to get to point to 90 (centered on target)
-          xSpeed = (Globals.ampTarget.range * 0.25);
-          ySpeed = (imu.headingDeg - 90) * 0.00556;
-          rotate = trackingController.calculate(Globals.ampTarget.bearingDeg, 0); 
-        } else {
-          // Point to 90 degrees and strafe sideways to get the tag centered
-          xSpeed = BatonConstants.amplifierApproachSpeed;
-          ySpeed = Globals.ampTarget.bearingDeg * -0.02;
-          rotate = headingLockController.calculate(imu.headingRad, Math.PI / 2);
-        }
-
-        xSpeed = MathUtil.clamp(xSpeed, 0, 0.4);
-        ySpeed = MathUtil.clamp(ySpeed, -0.2, 0.2);
+    }  else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
+      SmartDashboard.putString("Mode", "AMP")  ;
+      if (Globals.batonState == BatonState.AMP_LOWERING){
+        xSpeed = -0.2;
       }
-
-      lockCurrentHeading();  // prepare for return to heading hold
-
-    }  else {  // ---  MANUAL DRIVING-------------------------------------------------
+    } 
+    
+    else {  // ---  MANUAL DRIVING-------------------------------------------------
 
       VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
       VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
@@ -328,8 +314,8 @@ public class DriveSubsystem extends SubsystemBase {
       // should we be in auto or not?
       if (Math.abs(rotate) > 0.02) {
         headingLocked = false;
-        updateToCurrentHeading();
-        
+        headingSetpoint = imu.headingRad;
+      
       } else if (!headingLocked && isNotRotating()) {
         lockCurrentHeading();
       }
@@ -345,9 +331,13 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         // plain driver control
         SmartDashboard.putString("Mode", "Manual")  ;
-        rotate = rotLimiter.calculate(rotate);
-      }
 
+        if (Globals.defenseActive) {
+          rotLimiter.reset(rotate); 
+        } else {
+          rotate = rotLimiter.calculate(rotate);
+        }        
+      }
     }
 
     SmartDashboard.putNumber("Rotate", rotate)  ;
@@ -553,10 +543,6 @@ public class DriveSubsystem extends SubsystemBase {
     headingLockController.reset(imu.headingRad);
     headingLocked = true;
     SmartDashboard.putString("heading Setpoint",  String.format("%.1f",Math.toDegrees(headingSetpoint)));
-  }
-
-  public void updateToCurrentHeading() {
-    headingLockController.reset(imu.headingRad);
   }
 
   public void lockCurrentHeading() {

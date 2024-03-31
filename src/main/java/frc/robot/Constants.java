@@ -27,8 +27,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double kAtleeSpeedFactor     = 0.5; // Revised down due to new Joystick math // was 0.8
-    public static final double kAtleeTurnFactor      = 0.75; // Revised down due to new Joystick math // was 0.6
+    public static final double kAtleeSpeedFactor     = 0.85; // Revised down due to new Joystick math // was 0.8
+    public static final double kAtleeTurnFactor      = 0.70; // Revised down due to new Joystick math // was 0.6
     public static final double kAlexSpeedFactor      = 1; // Revised down due to new Joystick math // was 0.8
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
@@ -134,16 +134,18 @@ public final class Constants {
     public static double collect = -0.7;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
-    public static double creep = -0.25;
-    public static double stopCollector = 0;
+    public static double indexUp = -0.25;
+    public static double indexDown = 0.15;
+    public static double stop = 0;
 
     public static double seeingNote = 0.7;  // was 0.6
     public static double readingError = 3.0;  // was 2.25
 
     public static double minTargetRange = 1.6;  // meters    
     public static double maxTargetRange = 5.0;  // meters
-    public static double defaultTilt = 20;
-    public static double defaultRPM  = 4000; ///      
+
+    public static double defaultTilt = 6;
+    public static double defaultRPM  = 3200; ///      
 
     public static double highNoteShareAngle = 16;
     public static double lowNoteShareAngle  = 58;
@@ -196,7 +198,7 @@ public final class Constants {
     public static final double homeAngle    = 0;
 
     public static final double ampTrackAngle = 53;
-    public static final double ampLowAngle = 63;
+    public static final double ampLowAngle = 62;
     public static final double ampHighAngle = 70;
 
     public static final double kTollerance = 1;

@@ -3,16 +3,21 @@ package frc.robot.utils;
 import frc.robot.Constants.ShooterConstants;
 
 public final class Globals{
-    public static boolean enableLIftSubsystem   = false;
+    public static boolean enableLIftSubsystem   = true;  // set to false if climber removed.
+
     public static boolean gyroHasBeenReset      = false;
     public static boolean batonIsDown           = false;
     public static boolean robotAtHeading        = false;
     public static boolean startNoteFinding      = false;
     public static boolean noteInIntake          = false;
     public static boolean noteAtShooter         = false;
+    public static boolean liftIsEnabled         = false;
+    public static boolean defenseActive         = false;
 
     public static FrontImageSource frontSource;
     public static BackImageSource  backSource;
+
+    public static BatonState batonState = BatonState.IDLE;
 
     public static double  robotPitch            = 0;
     public static double  robotRoll             = 0;
@@ -42,6 +47,10 @@ public final class Globals{
 
     public static void setStartNoteFinding() {
         startNoteFinding = true;
+    }
+
+    public static void setDefenseMode(boolean on) {
+        defenseActive = on;
     }
 
     public static void setSpeakerTracking(boolean on) {

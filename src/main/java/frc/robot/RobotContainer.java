@@ -45,7 +45,7 @@ public class RobotContainer {
 
         // The driver's controller
     PS4Controller driverController  = new PS4Controller(OIConstants.kDriverControllerPort);
-    Joystick  copilot_1             = new Joystick(OIConstants.kCoPilotController1Port);
+    PS4Controller copilot_1         = new PS4Controller(OIConstants.kCoPilotController1Port);
     Joystick  copilot_2             = new Joystick(OIConstants.kCoPilotController2Port);
 
     // The robot's subsystems
@@ -118,8 +118,8 @@ private void configureButtonBindings() {
 
     // Speaker Aim
     new JoystickButton(driverController, Button.kL2.value)    
-        .onTrue(Commands.runOnce(() -> baton.setSpeakerTracking(true)))
-        .onFalse(Commands.runOnce(() -> baton.setSpeakerTracking(false)))
+        .onTrue(Commands.runOnce(() -> Globals.setSpeakerTracking(true)))
+        .onFalse(Commands.runOnce(() -> Globals.setSpeakerTracking(false)))
         .onFalse(Commands.runOnce(() -> baton.relaxBaton()));
 
     // Shoot    
@@ -138,9 +138,9 @@ private void configureButtonBindings() {
        // Collect
     new JoystickButton(driverController, Button.kL1.value)    
         .onTrue(Commands.runOnce(() -> baton.collect()))
-        .onTrue(Commands.runOnce(() -> baton.setNoteTracking(true)))
+        .onTrue(Commands.runOnce(() -> Globals.setNoteTracking(true)))
         .onFalse(Commands.runOnce(() -> baton.stopIntake()))
-        .onFalse(Commands.runOnce(() -> baton.setNoteTracking(false)));
+        .onFalse(Commands.runOnce(() -> Globals.setNoteTracking(false)));
    
     // Reset Heading    
     new JoystickButton(driverController, Button.kTouchpad.value)
@@ -148,7 +148,7 @@ private void configureButtonBindings() {
 
     //  Eject Note   
     new JoystickButton(driverController, Button.kCross.value)
-        .onTrue(Commands.runOnce(() -> baton.eject()))
+        .whileTrue(Commands.run(() -> baton.eject()))
         .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // --------------   Co-Pilot Functions
@@ -164,7 +164,7 @@ private void configureButtonBindings() {
 
     // Eject Note
     new JoystickButton(copilot_1, Button.kCross.value)
-        .onTrue(Commands.runOnce(() -> baton.eject()))
+        .whileTrue(Commands.run(() -> baton.eject()))
         .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // Amplify    
@@ -172,6 +172,19 @@ private void configureButtonBindings() {
         .onTrue(Commands.runOnce(() -> baton.manualAmplify(true)))
         .onFalse(Commands.runOnce(() -> baton.manualAmplify(false)));
 
+    // Activate Defense
+    new JoystickButton(copilot_1, Button.kR1.value)
+        .onTrue(Commands.runOnce(() -> Globals.setDefenseMode(true)))
+        .onFalse(Commands.runOnce(() -> Globals.setDefenseMode(false)));
+
+    // Enable lift sysyem
+    new JoystickButton(copilot_1, Button.kR3.value)
+        .onTrue(Commands.runOnce(() -> lift.enableLiftSystem()));
+    
+    // Zero out lift sysyem position
+    new JoystickButton(copilot_1, Button.kL3.value)
+        .onTrue(Commands.runOnce(() -> lift.resetHome()));
+    
     // Manual shooting controls
     new JoystickButton(copilot_1, Button.kL2.value)
         .onTrue(Commands.runOnce(() -> baton.setManualShooting(true)))

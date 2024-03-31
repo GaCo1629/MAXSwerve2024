@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.robotDrive.init();
     m_robotContainer.baton.init();
+    m_robotContainer.lift.init();
     
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -96,6 +97,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.robotDrive.init();
     m_robotContainer.baton.init();
+    m_robotContainer.lift.init();
     Globals.setLEDMode(LEDmode.SPEEDOMETER);
   }
 

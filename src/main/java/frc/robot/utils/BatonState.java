@@ -6,13 +6,13 @@ public enum BatonState {
     INDEXING,
     HOLDING,
     AUTO_SHOOT,
+    AUTO_SHOOT_FAST,
     SHOOTING,
     SHOOTING_WAIT,
     AMP_APPROACH,
-    AMP_HOLDING,
     AMP_READY,
     AMP_TILTING,
     AMP_EJECTING,
     AMP_SCORING,
-    AMP_WAIT
+    AMP_LOWERING
 }

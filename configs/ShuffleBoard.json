@@ -255,10 +255,10 @@
               "_showGlyph": false
             }
           },
-          "3,3": {
+          "3,2": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -382,12 +382,27 @@
           "3,0": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Note At Shooter",
               "_title": "Note At Shooter",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,4": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Lift Enable",
+              "_title": "Lift Enable",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -472,6 +487,60 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/tilt Error",
               "_title": "SmartDashboard/tilt Error",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Lift Enable",
+              "_title": "SmartDashboard/Lift Enable",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift Robot Angle",
+              "_title": "/SmartDashboard/Lift Robot Angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift Turns",
+              "_title": "SmartDashboard/Lift Turns",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift Power",
+              "_title": "SmartDashboard/Lift Power",
               "_glyph": 148,
               "_showGlyph": false
             }
