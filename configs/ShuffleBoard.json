@@ -232,7 +232,7 @@
           "11,8": {
             "size": [
               3,
-              2
+              1
             ],
             "content": {
               "_type": "Text View",
@@ -408,6 +408,19 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "11,10": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Heading Error",
+              "_title": "/SmartDashboard/Heading Error",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -478,17 +491,24 @@
               "_showGlyph": false
             }
           },
-          "3,3": {
+          "4,1": {
             "size": [
-              1,
-              1
+              4,
+              3
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/tilt Error",
               "_title": "SmartDashboard/tilt Error",
               "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": false,
+              "Y-axis/Upper bound": 2.0,
+              "Y-axis/Lower bound": -2.0,
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/tilt Error": true
             }
           },
           "3,0": {
@@ -543,6 +563,21 @@
               "_title": "SmartDashboard/Lift Power",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/tilt In Position",
+              "_title": "SmartDashboard/tilt In Position",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }

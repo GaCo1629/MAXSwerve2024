@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 4.779843098878597,
-        "y": 6.42509066490817
+        "x": 3.791395389058584,
+        "y": 6.174513545608288
       },
       "prevControl": {
-        "x": 5.842566744515913,
-        "y": 6.717583411413853
+        "x": 4.8541190346958984,
+        "y": 6.46700629211397
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "3S"
     }
   ],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "ReadyShooter3s",
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {

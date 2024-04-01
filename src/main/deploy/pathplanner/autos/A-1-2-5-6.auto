@@ -63,7 +63,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5to2"
+            "pathName": "5to3s"
           }
         },
         {
@@ -73,9 +73,40 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3Sto6C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "2to6"
+            "pathName": "6to3S"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

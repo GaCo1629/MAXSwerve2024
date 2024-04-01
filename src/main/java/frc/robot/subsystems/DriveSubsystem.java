@@ -181,7 +181,9 @@ public class DriveSubsystem extends SubsystemBase {
     );
     
     Globals.robotAtHeading = trackingController.atSetpoint();
+
     SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
+    SmartDashboard.putNumber("Heading Error", trackingController.getPositionError());
 
     // Display Estimated Position
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());

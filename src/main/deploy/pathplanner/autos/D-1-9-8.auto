@@ -2,33 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4072529462910246,
-      "y": 7.0087226194216985
+      "x": 1.4408703461281565,
+      "y": 2.92
     },
-    "rotation": 0
+    "rotation": -90.9012873670139
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo0"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -42,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2to5C"
+                  "pathName": "Dto9C"
                 }
               },
               {
@@ -63,7 +45,44 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5to2"
+            "pathName": "9to10s"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "10to8C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8to10s"
           }
         },
         {
@@ -75,6 +94,6 @@
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Driver",
   "choreoAuto": false
 }

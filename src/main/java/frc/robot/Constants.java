@@ -131,7 +131,7 @@ public final class Constants {
     public static int intakeID = 24;
     public static double maxTiltAngle  = 95;
     public static double maxShooterRPM = 6500;
-    public static double collect = -0.7;  // was 0.5
+    public static double collect = -0.6;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
     public static double indexUp = -0.25;
@@ -184,11 +184,12 @@ public final class Constants {
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.024;  
-    public static final double kI = 0.0005;  
-    public static final double kD = 0.00; 
+    public static final double kP = 0.020;    // was .24
+    public static final double kI = 0.015;    // was 0.0005
+    public static final double kD = 0.000; 
     public static final double kFF = 0;
-    public static final double kIzone = 2;
+    public static final double kIzone = 1;
+    public static final double tiltThresholdDeg = 1    ;  //  was 1.0
 
     public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(
       100, 150);
@@ -202,7 +203,7 @@ public final class Constants {
     public static final double ampHighAngle = 70;
 
     public static final double kTollerance = 1;
-    public static final double tiltThresholdDeg = 0.7;  //  was 1.0
+
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     public static final double kTiltConversion = 360f / 192 ; // 360 / gear ratio 
@@ -252,7 +253,7 @@ public final class Constants {
     public static final double kPTrackingController = 0.008; //  0.010 during quals.  Based on Degree Error
     public static final double kITrackingController = 0;
     public static final double kDTrackingController = 0; // try to slow down approach
-    public static final double kToleranceTrackingController = 4.0; // was 2.0
+    public static final double kToleranceTrackingController = 2.0; // was 2.0
     public static final double kOutputLimitTrackingController = 0.4;
   }
 

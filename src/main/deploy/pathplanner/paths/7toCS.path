@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.88707863130012,
-        "y": 5.4826372509887875
+        "x": 3.218381821379027,
+        "y": 5.320840271310172
       },
       "prevControl": {
-        "x": 4.502775862694584,
-        "y": 4.177945498748141
+        "x": 4.259161566756177,
+        "y": 4.677661776975975
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ReadyShooterClose"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,

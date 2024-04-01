@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 4.779843098878597,
-        "y": 6.42509066490817
+        "x": 3.791395389058584,
+        "y": 6.174513545608288
       },
       "prevControl": {
-        "x": 6.4763010286115605,
-        "y": 6.971077125052112
+        "x": 4.597021136523838,
+        "y": 6.433795395367221
       },
       "nextControl": null,
       "isLocked": true,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Ready Shooter",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {

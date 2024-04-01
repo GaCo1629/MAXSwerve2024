@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.779843098878597,
-        "y": 6.42509066490817
+        "x": 3.791395389058584,
+        "y": 6.174513545608288
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.979063359551898,
-        "y": 6.7858317189318464
+        "x": 4.990615649731884,
+        "y": 6.535254599631964
       },
       "isLocked": true,
       "linkedName": "3S"
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Look Now",
-      "waypointRelativePos": 0.85,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
