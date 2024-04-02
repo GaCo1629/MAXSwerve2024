@@ -326,6 +326,10 @@ public class DriveSubsystem extends SubsystemBase {
         lockCurrentHeading();
       }
 
+      if (Globals.liftIsEnabled) {
+        headingLocked = false;
+      }
+
       // if Heading lock is engaged, override the user input with data from PID
       if (headingLocked) {
         SmartDashboard.putString("Mode", "Auto")  ;
