@@ -283,6 +283,11 @@ public class BatonSubsystem extends SubsystemBase {
                 
                 // Exits by "fire" button press.
                 break;
+            
+            case AUTO_PRE_SHOOT:
+                setState(BatonState.AUTO_SHOOT);   // guarentee at least one full periodic cycle before checking readyToShoot
+                                                   // We do this to flush out any manual shooting prep position/speeds.
+                break;
                 
             case AUTO_SHOOT:
                 // Exits by being on target and ready to fire

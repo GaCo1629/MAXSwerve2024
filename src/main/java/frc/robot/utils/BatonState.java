@@ -5,6 +5,7 @@ public enum BatonState {
     COLLECTING,
     INDEXING,
     HOLDING,
+    AUTO_PRE_SHOOT,
     AUTO_SHOOT,
     AUTO_SHOOT_FAST,
     SHOOTING,

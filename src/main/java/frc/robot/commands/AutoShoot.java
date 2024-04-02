@@ -21,7 +21,6 @@ public class AutoShoot extends Command {
   BatonSubsystem baton;
   DriveSubsystem robotDrive;
   boolean        hasSeenTarget;
-  boolean        startedAutoShoot;
 
   /** Creates a new Shoot. */
   public AutoShoot(BatonSubsystem baton, DriveSubsystem robotDrive) {
@@ -39,7 +38,6 @@ public class AutoShoot extends Command {
     baton.setState(BatonState.AUTO_SHOOT);
     robotDrive.lockCurrentHeading();
     hasSeenTarget = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
