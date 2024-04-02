@@ -59,7 +59,7 @@ public class LiftSubsystem extends SubsystemBase{
 
                 if ((liftTurns < 0) && (power < 0)) {
                     power = MathUtil.clamp(power, -0.15, 1) ;
-                } else if ((liftTurns > 65) && (power > 0)) {
+                } else if ((liftTurns > 108) && (power > 0)) {  // updated for 20:1 gearbox
                     power = MathUtil.clamp(power, -1, 0);
                 }
             } 
