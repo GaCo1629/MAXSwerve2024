@@ -329,7 +329,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case SHOOTING_WAIT:    
-                if (stateTimer.hasElapsed(0.5)){ 
+                if (stateTimer.hasElapsed(0.0)){   // was 0.5
                     relaxBaton();
                     Globals.setSpeakerTracking(false);
                     setState(BatonState.IDLE);
