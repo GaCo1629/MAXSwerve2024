@@ -37,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "3,10": {
+          "7,10": {
             "size": [
               4,
               2
@@ -76,7 +76,7 @@
               "_showGlyph": false
             }
           },
-          "9,8": {
+          "11,8": {
             "size": [
               2,
               2
@@ -102,7 +102,7 @@
               "_showGlyph": false
             }
           },
-          "7,6": {
+          "9,8": {
             "size": [
               2,
               2
@@ -110,7 +110,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/shooter setpoint",
-              "_title": "RPM",
+              "_title": "RPM Set",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -128,10 +128,10 @@
               "_showGlyph": false
             }
           },
-          "9,0": {
+          "11,4": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -143,10 +143,10 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "12,0": {
+          "11,2": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -158,10 +158,10 @@
               "Colors/Color when false": "#CCCCCCFF"
             }
           },
-          "6,3": {
+          "8,4": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -173,10 +173,10 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "12,3": {
+          "8,2": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -188,10 +188,10 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "9,3": {
+          "11,0": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -200,12 +200,12 @@
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#CCCCCCFF"
+              "Colors/Color when false": "#FFB366FF"
             }
           },
-          "11,6": {
+          "6,4": {
             "size": [
-              3,
+              2,
               2
             ],
             "content": {
@@ -216,7 +216,7 @@
               "_showGlyph": false
             }
           },
-          "7,10": {
+          "3,10": {
             "size": [
               4,
               2
@@ -229,10 +229,10 @@
               "_showGlyph": false
             }
           },
-          "11,8": {
+          "6,0": {
             "size": [
-              3,
-              1
+              2,
+              2
             ],
             "content": {
               "_type": "Text View",
@@ -270,10 +270,10 @@
               "Colors/Color when false": "#FF0000FF"
             }
           },
-          "6,0": {
+          "8,0": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -319,7 +319,7 @@
               "imageHeight": -1
             }
           },
-          "9,6": {
+          "6,2": {
             "size": [
               2,
               2
@@ -339,7 +339,7 @@
             ],
             "content": {
               "_type": "List Layout",
-              "_title": "List Layout",
+              "_title": "MANUAL MODE",
               "_glyph": 149,
               "_showGlyph": false,
               "Layout/Label position": "BOTTOM",
@@ -406,20 +406,52 @@
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "Colors/Color when false": "#B3B3B3FF"
             }
           },
-          "11,10": {
+          "7,6": {
             "size": [
               3,
               2
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Heading Error",
-              "_title": "/SmartDashboard/Heading Error",
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drive Fault",
+              "_title": "/SmartDashboard/Drive Fault",
               "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
+            }
+          },
+          "13,6": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Lift Fault",
+              "_title": "/SmartDashboard/Lift Fault",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
+            }
+          },
+          "10,6": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Baton Fault",
+              "_title": "/SmartDashboard/Baton Fault",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
             }
           }
         }
@@ -436,19 +468,88 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "2,3": {
+          "3,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/tilt In Position",
-              "_title": "/SmartDashboard/tilt In Position",
+              "_source0": "network_table:///SmartDashboard/Baton Fault",
+              "_title": "/SmartDashboard/Baton Fault",
               "_glyph": 148,
               "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Baton Faults",
+              "_title": "/SmartDashboard/Baton Faults",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drive Fault",
+              "_title": "/SmartDashboard/Drive Fault",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
+            }
+          },
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive Faults",
+              "_title": "/SmartDashboard/Drive Faults",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift Faults",
+              "_title": "/SmartDashboard/Lift Faults",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Lift Fault",
+              "_title": "/SmartDashboard/Lift Fault",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#00FF00FF"
             }
           }
         }
@@ -464,123 +565,7 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "titleType": 0,
-        "tiles": {
-          "1,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Manual Speed",
-              "_title": "SmartDashboard/Manual Speed",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Manual Tilt",
-              "_title": "SmartDashboard/Manual Tilt",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "4,1": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/tilt Error",
-              "_title": "SmartDashboard/tilt Error",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 2.0,
-              "Y-axis/Lower bound": -2.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/tilt Error": true
-            }
-          },
-          "3,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Lift Enable",
-              "_title": "SmartDashboard/Lift Enable",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Lift Robot Angle",
-              "_title": "/SmartDashboard/Lift Robot Angle",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "5,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Lift Turns",
-              "_title": "SmartDashboard/Lift Turns",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Lift Power",
-              "_title": "SmartDashboard/Lift Power",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/tilt In Position",
-              "_title": "SmartDashboard/tilt In Position",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          }
-        }
+        "tiles": {}
       }
     }
   ],

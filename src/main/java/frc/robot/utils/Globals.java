@@ -19,8 +19,6 @@ public final class Globals{
 
     public static BatonState batonState = BatonState.IDLE;
 
-    public static double  robotPitch            = 0;
-    public static double  robotRoll             = 0;
     public static double  lastShooterSpeed      = ShooterConstants.baseShooterSpeed;
     public static double  speed                 = 0;
     public static boolean startingLocationSet   = false;

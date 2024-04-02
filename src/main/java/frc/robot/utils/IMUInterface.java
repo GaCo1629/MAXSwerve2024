@@ -30,9 +30,6 @@ public class IMUInterface{
         roll          = -m_robotIMU.getRoll();
         yawRate       = m_robotIMU.getRate();
 
-        Globals.robotPitch = pitch;
-        Globals.robotRoll  = roll;
-
         SmartDashboard.putString("Robot Heading", String.format("%.1f", headingDeg));
     }
 

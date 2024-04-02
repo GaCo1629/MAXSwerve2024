@@ -16,7 +16,6 @@ public class LiftSubsystem extends SubsystemBase{
     private CANSparkFlex rightLift;
     private RelativeEncoder rightEncoder;;
 
-    private double robotAngle       = 0;
     private double liftTurns  = 0;
     
     //private PS4Controller driver;
@@ -47,7 +46,6 @@ public class LiftSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        robotAngle = Globals.robotRoll;
         double power = 0;
 
         // do nothing if susbstem is not present

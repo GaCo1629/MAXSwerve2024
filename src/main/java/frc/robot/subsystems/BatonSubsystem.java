@@ -25,7 +25,6 @@ import frc.robot.utils.LEDmode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkAnalogSensor;
-import com.revrobotics.CANSparkBase.FaultID;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake;
