@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4174820372432768,
-      "y": 4.128036518181299
+      "x": 1.4072529462910246,
+      "y": 7.0087226194216985
     },
     "rotation": 0
   },
@@ -32,25 +32,26 @@
         {
           "type": "named",
           "data": {
-            "name": "ReadyShooterClose"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4to4B"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "TurnTo80"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2to6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
@@ -60,6 +61,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "6to3S"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -68,7 +75,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo90"
+            "name": "TurnTo-90"
           }
         },
         {
@@ -86,6 +93,6 @@
       ]
     }
   },
-  "folder": "Podium",
+  "folder": "Amp",
   "choreoAuto": false
 }

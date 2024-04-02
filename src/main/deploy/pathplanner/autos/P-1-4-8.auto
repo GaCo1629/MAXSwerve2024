@@ -30,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ReadyShooterClose"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4to4B"

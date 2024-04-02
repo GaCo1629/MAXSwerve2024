@@ -1,0 +1,228 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4408703461281565,
+      "y": 2.92
+    },
+    "rotation": -90.25124494947117
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Dto9C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpinUpShort"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Lob"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo90"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpinUpShort"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo45"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lob"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo90"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpinUpShort"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo45"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lob"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo90"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpinUpShort"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo45"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lob"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo90"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpinUpShort"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnTo0"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Driver",
+  "choreoAuto": false
+}

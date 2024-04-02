@@ -15,16 +15,17 @@
     "9",
     "A",
     "CS",
-    "LS",
     "D",
+    "LS",
     "P",
     "S",
-    "SA",
+    "C",
     "SP"
   ],
   "autoFolders": [
     "Amp",
     "Driver",
+    "Corner",
     "Podium",
     "Speaker"
   ],

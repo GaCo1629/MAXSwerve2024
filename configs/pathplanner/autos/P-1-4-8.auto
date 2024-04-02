@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4174820372432768,
-      "y": 4.128036518181299
+      "x": 1.4199314885116257,
+      "y": 4.113892912470511
     },
     "rotation": 0
   },
@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ReadyShooterClose"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "4to4B"
@@ -48,9 +42,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "TurnTo80"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4Bto8"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
@@ -60,21 +67,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo90"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
+            "pathName": "8to10s"
           }
         },
         {

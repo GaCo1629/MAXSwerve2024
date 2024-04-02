@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4174820372432768,
-      "y": 4.128036518181299
+      "x": 1.4338538534626928,
+      "y": 6.99778201835606
     },
     "rotation": 0
   },
@@ -32,7 +32,37 @@
         {
           "type": "named",
           "data": {
-            "name": "ReadyShooterClose"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo-90"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3to4C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
           }
         },
         {
@@ -46,46 +76,10 @@
           "data": {
             "name": "Shoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo80"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo90"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
         }
       ]
     }
   },
-  "folder": "Podium",
+  "folder": "Amp",
   "choreoAuto": false
 }

@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ReadyShooterClose"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "4to4B"
@@ -81,6 +75,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2to5C"
           }
         }
       ]

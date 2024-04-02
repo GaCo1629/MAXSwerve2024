@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4174820372432768,
-      "y": 4.128036518181299
+      "x": 1.4454257887138124,
+      "y": 7.390705607622041
     },
-    "rotation": 0
+    "rotation": -0.022626748793603924
   },
   "command": {
     "type": "sequential",
@@ -18,27 +18,34 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "TurnTo0"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Cto5C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Collect"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReadyShooterClose"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4to4B"
+            "pathName": "5to3s"
           }
         },
         {
@@ -48,9 +55,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "TurnTo80"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3Sto6C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FindNoteLater"
+                }
+              }
+            ]
           }
         },
         {
@@ -60,21 +80,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnTo90"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Collect"
+            "pathName": "6to3S"
           }
         },
         {
@@ -86,6 +94,6 @@
       ]
     }
   },
-  "folder": "Podium",
+  "folder": "Corner",
   "choreoAuto": false
 }

@@ -47,7 +47,7 @@ public class AutoTurnToHeading extends Command {
     SmartDashboard.putString("Mode", "Turn To Heading")  ;
 
     // PID Yaw control.
-    double rotate = robotDrive.headingLockCalculate() * 0.80;
+    double rotate = robotDrive.headingLockCalculate() * 0.60;
     if (Math.abs(rotate) < 0.025) {
       rotate = 0;
     } 
