@@ -37,6 +37,11 @@ public final class Globals{
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;
 
+    public  static int     driveSubsystemFaults = 0;
+    public  static int     batonSubsystemFaults = 0;
+    public  static int     liftSubsystemFaults  = 0;
+    
+
     public static void setNoteTracking(boolean on) {
         noteTrackingEnabled = on;
     }

@@ -25,6 +25,7 @@ import frc.robot.utils.LEDmode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkAnalogSensor;
+import com.revrobotics.CANSparkBase.FaultID;
 
 public class BatonSubsystem extends SubsystemBase {
     private CANSparkMax intake;
@@ -173,6 +174,11 @@ public class BatonSubsystem extends SubsystemBase {
      
         runTiltPID();
         runStateMachine();
+
+        Globals.batonSubsystemFaults = getFaults();
+        SmartDashboard.putBoolean("Baton Fault", Globals.batonSubsystemFaults != 0);
+        SmartDashboard.putString("Baton Faults", String.format("%s", Integer.toBinaryString(Globals.batonSubsystemFaults)));
+
 
         SmartDashboard.putString("Intake Range",        String.format("%.2f", shooterTop.getVoltage()));
 
@@ -606,6 +612,10 @@ public class BatonSubsystem extends SubsystemBase {
     public void setSpeedAndTilt(double speed, double angle){
         manualShooterSpeed = MathUtil.clamp(speed, 0, BatonConstants.maxShooterRPM);
         manualTiltAngle = MathUtil.clamp(angle, 0, BatonConstants.maxTiltAngle);
+    }
+
+    public int getFaults() {
+        return intake.getFaults() + tiltLeft.getFaults() + tiltRight.getFaults() + shooterBot.getFaults() + shooterTop.getFaults();
     }
   
 }

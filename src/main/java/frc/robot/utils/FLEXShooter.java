@@ -92,4 +92,8 @@ public class FLEXShooter {
   public void stop() {
     m_SparkFlex.set(0);
   }
+
+  public short getFaults() {
+    return m_SparkFlex.getFaults();
+  }
 }

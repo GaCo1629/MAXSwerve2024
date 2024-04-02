@@ -66,10 +66,12 @@ public class LiftSubsystem extends SubsystemBase{
             rightLift.set(power); 
         }   
 
-        SmartDashboard.putNumber("Lift Power", power);
+        Globals.liftSubsystemFaults = getFaults();
+        SmartDashboard.putBoolean("Lift Fault", Globals.liftSubsystemFaults != 0);
+        SmartDashboard.putString("Lift Faults", String.format("%s", Integer.toBinaryString(Globals.liftSubsystemFaults)));
+
         SmartDashboard.putBoolean("Lift Enable", Globals.liftIsEnabled);
         SmartDashboard.putNumber("Lift Turns", liftTurns);
-        SmartDashboard.putNumber("Lift Robot Angle", robotAngle);
     }
 
     public void resetHome() {
@@ -79,6 +81,10 @@ public class LiftSubsystem extends SubsystemBase{
 
     public void enableLiftSystem() {
         Globals.liftIsEnabled = true;
+    }
+
+    public int getFaults() {
+        return rightLift.getFaults();
     }
 }
 

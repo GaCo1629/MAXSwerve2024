@@ -182,6 +182,10 @@ public class DriveSubsystem extends SubsystemBase {
     
     Globals.robotAtHeading = trackingController.atSetpoint();
 
+    Globals.driveSubsystemFaults = getFaults();
+    SmartDashboard.putBoolean("Drive Fault", Globals.driveSubsystemFaults != 0);
+    SmartDashboard.putString("Drive Faults", String.format("%s", Integer.toBinaryString(Globals.driveSubsystemFaults)));
+
     SmartDashboard.putBoolean("At Heading", Globals.robotAtHeading);
     SmartDashboard.putNumber("Heading Error", trackingController.getPositionError());
 
@@ -585,4 +589,11 @@ public class DriveSubsystem extends SubsystemBase {
       return headingLockController.calculate(imu.headingRad, headingSetpoint);
   }
 
+  public int getFaults() {
+    return m_frontLeft.getFaults() + m_frontRight.getFaults() + m_rearLeft.getFaults() + m_rearRight.getFaults();
+  }
+
 }
+  
+
+  
