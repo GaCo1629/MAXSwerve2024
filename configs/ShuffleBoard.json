@@ -11,7 +11,7 @@
         "vgap": 24.0,
         "titleType": 0,
         "tiles": {
-          "14,10": {
+          "15,10": {
             "size": [
               9,
               2
@@ -417,7 +417,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Drive Fault",
-              "_title": "/SmartDashboard/Drive Fault",
+              "_title": "Drive Motors",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -432,7 +432,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Lift Fault",
-              "_title": "/SmartDashboard/Lift Fault",
+              "_title": "Climber",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -447,7 +447,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Baton Fault",
-              "_title": "/SmartDashboard/Baton Fault",
+              "_title": "Baton Motors",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -476,7 +476,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Baton Fault",
-              "_title": "/SmartDashboard/Baton Fault",
+              "_title": "Baton Motors",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -491,7 +491,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Baton Faults",
-              "_title": "/SmartDashboard/Baton Faults",
+              "_title": "Baton Faults",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -504,7 +504,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Drive Fault",
-              "_title": "/SmartDashboard/Drive Fault",
+              "_title": "Drive Motors",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -519,7 +519,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Drive Faults",
-              "_title": "/SmartDashboard/Drive Faults",
+              "_title": "Drive Faults",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -532,7 +532,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Lift Faults",
-              "_title": "/SmartDashboard/Lift Faults",
+              "_title": "Lift Faults",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -545,7 +545,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Lift Fault",
-              "_title": "/SmartDashboard/Lift Fault",
+              "_title": "Climber",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#FF0000FF",
@@ -553,19 +553,6 @@
             }
           }
         }
-      }
-    },
-    {
-      "title": "Tab 3",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
       }
     }
   ],
