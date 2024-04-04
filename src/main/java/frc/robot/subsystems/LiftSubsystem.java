@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LiftConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.utils.Globals;
 
 public class LiftSubsystem extends SubsystemBase{
@@ -53,11 +54,12 @@ public class LiftSubsystem extends SubsystemBase{
             liftTurns = rightEncoder.getPosition();
         
             if (Globals.liftIsEnabled) {
-                power = -copilot_1.getRightY();  // forward (-ve) Stick up makes the lifter go up.
-
+                
+                power = (MathUtil.applyDeadband(-copilot_1.getRightY(), OIConstants.kDriveDeadband));
+                
                 if ((liftTurns < 0) && (power < 0)) {
                     power = MathUtil.clamp(power, -0.15, 1) ;
-                } else if ((liftTurns > 108) && (power > 0)) {  // updated for 20:1 gearbox
+                } else if ((liftTurns > 120) && (power > 0)) {  // updated for 20:1 gearbox
                     power = MathUtil.clamp(power, -1, 0);
                 }
             } 
