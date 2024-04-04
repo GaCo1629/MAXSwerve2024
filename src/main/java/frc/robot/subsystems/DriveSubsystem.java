@@ -307,9 +307,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     }  else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
       SmartDashboard.putString("Mode", "AMP")  ;
-      if (Globals.batonState == BatonState.AMP_LOWERING){
-        xSpeed = -0.2;
-      }
+      //if (Globals.batonState == BatonState.AMP_LOWERING){
+      // xSpeed = -0.2;
+      //}
     } 
     
     else {  // ---  MANUAL DRIVING-------------------------------------------------
