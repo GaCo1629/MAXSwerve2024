@@ -3,76 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.2795852864433,
-        "y": 5.774493730805644
+        "x": 1.4454257887138124,
+        "y": 7.390705607622041
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.55376728935276,
-        "y": 6.119657330223752
-      },
-      "isLocked": true,
-      "linkedName": "6"
-    },
-    {
-      "anchor": {
-        "x": 5.628072063745078,
-        "y": 6.600586312811581
-      },
-      "prevControl": {
-        "x": 5.65869631831015,
-        "y": 6.201716358836732
-      },
-      "nextControl": {
-        "x": 5.598437709021824,
-        "y": 6.986563175674397
+        "x": 1.819816504241086,
+        "y": 7.554112666420107
       },
       "isLocked": true,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.568607273966684,
-        "y": 7.215293290985443
+        "x": 2.57639774186912,
+        "y": 7.682809474882607
       },
       "prevControl": {
-        "x": 6.430500270479951,
-        "y": 6.991403388660184
+        "x": 2.061610508019118,
+        "y": 7.68670937816935
+      },
+      "nextControl": {
+        "x": 3.9261173337903696,
+        "y": 7.67258432645896
+      },
+      "isLocked": true,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.714520322152286,
+        "y": 6.035100336233927
+      },
+      "prevControl": {
+        "x": 6.45766260193489,
+        "y": 7.191904982100564
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": "5C"
+      "linkedName": "6C"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -1.1691393279073938,
-      "rotateFast": false
+      "rotationDegrees": -4.558852695180617,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Lob",
-      "waypointRelativePos": 0.7,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Lob"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Collect",
-      "waypointRelativePos": 1.7,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.75,
       "command": {
         "type": "parallel",
         "data": {
@@ -96,13 +79,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 5.3965584180540835,
+    "rotation": -26.99699389547315,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "6",
+  "folder": "C",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 62.303518585072176,
     "velocity": 0
   },
   "useDefaultConstraints": true
