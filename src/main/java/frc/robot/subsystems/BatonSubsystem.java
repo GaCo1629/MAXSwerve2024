@@ -477,7 +477,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     public double rangeToRPM(double range) {
-        return MathUtil.clamp(2300 + (500 * range), 0,5000);
+        return MathUtil.clamp(2300 + (510 * range), 0,5000);
     }
     
     public void stopShooter(){
