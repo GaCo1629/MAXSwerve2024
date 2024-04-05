@@ -217,7 +217,7 @@ public class BatonSubsystem extends SubsystemBase {
     public void runStateMachine(){
         switch (currentState) {
             case IDLE:
-                if (noteInIntake()) {
+                if (noteInIntake() || noteAtShooter()) {
                     setState(BatonState.HOLDING);
                 } 
                 
