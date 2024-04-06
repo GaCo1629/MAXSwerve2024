@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5692064546522255,
+        "y": 5.566417514601411
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.63337450891426,
+        "y": 3.9526242015446997
+      },
+      "isLocked": false,
+      "linkedName": "CS2"
+    },
+    {
+      "anchor": {
+        "x": 7.683878224899308,
+        "y": 4.089988751406074
+      },
+      "prevControl": {
+        "x": 6.683878224899308,
+        "y": 4.089988751406074
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "7C"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "LookNow"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 600.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "CS",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
