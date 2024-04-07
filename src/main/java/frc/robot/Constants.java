@@ -130,7 +130,7 @@ public final class Constants {
     public static int tiltRightID = 23;
     public static int intakeID = 24;
     public static double maxTiltAngle  = 95;
-    public static double maxShooterRPM = 6500;
+    public static double maxShooterRPM = 6000;
     public static double collect = -0.6;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
