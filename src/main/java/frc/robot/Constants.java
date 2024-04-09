@@ -135,7 +135,7 @@ public final class Constants {
     public static double fire = -0.5;  // was -1.0   =================================
     public static double eject = 0.3;
     public static double indexUp = -0.25;
-    public static double indexDown = 0.15;
+    public static double indexDown = 0.20;
     public static double stop = 0;
 
     public static double seeingNote = 0.7;  // was 0.6

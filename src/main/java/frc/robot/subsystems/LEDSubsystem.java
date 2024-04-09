@@ -19,7 +19,7 @@ import frc.robot.utils.LEDmode;
 
 public class LEDSubsystem extends SubsystemBase {
 
-  private final int               stripLength = 24;
+  private final int               stripLength = 25;
   private final int               speedoGrn   = 14;
   private final int               speedoOrg   = 6;
 
@@ -105,6 +105,10 @@ public class LEDSubsystem extends SubsystemBase {
 
       case SPEAKER_DETECTED:   // Speaker Apriltag has been detected
         flashStrip(GREEN, 0.25, 0.0);
+        break;
+
+      case WINDING_UP:
+        showWindup();
         break;
 
       case SHOOTING:            // Green
@@ -226,6 +230,35 @@ public class LEDSubsystem extends SubsystemBase {
       }
     }
   }
+
+  public void showWindup() {
+
+      // The LED bar is divided into 3 bands...
+      // 0-7    Camera Allignment status
+      // 8-15   Tilt Status
+      // 16-24  Shooter Status
+      clearStrip();
+      
+      if (Globals.robotAtHeading) {
+        setStrip(GREEN,0, 8);
+      } else {
+        setStrip(RED,0, 8);
+      }
+
+      if (Globals.tiltInPosition) {
+        setStrip(GREEN,8, 8);
+      } else {
+        setStrip(RED,8, 8);
+      }
+      
+      if (Globals.shooterUpToSpeed) {
+         setStrip(GREEN,16, 8);
+      } else {
+        setStrip(RED,16, 8);
+      }
+  }
+
+
   // ==========================================================================
   //  Utility methods
   // ==========================================================================
@@ -247,6 +280,12 @@ public class LEDSubsystem extends SubsystemBase {
   private void setStrip(int hue){
     for (var i = 0; i < stripLength; i++) {
       ledBuffer.setHSV(i, hue, 255, 128);
+    }    
+  }
+
+  private void setStrip(int hue, int start, int length){
+    for (var i = 0; i < length -1; i++) {
+      ledBuffer.setHSV(start + i, hue, 255, 128);
     }    
   }
 

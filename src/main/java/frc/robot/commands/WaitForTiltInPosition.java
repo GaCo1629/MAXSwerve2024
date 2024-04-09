@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
+import frc.robot.utils.Globals;
 
 public class WaitForTiltInPosition extends Command {
   BatonSubsystem baton;
@@ -20,6 +21,6 @@ public class WaitForTiltInPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return baton.tiltIsInPosition();
+    return Globals.tiltInPosition;
   }
 }

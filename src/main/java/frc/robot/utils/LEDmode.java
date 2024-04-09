@@ -9,6 +9,7 @@ public enum LEDmode {
     NOTE_HOLDING,       // Note is in robot
     SEEKING,            // Seeking a speaker to score
     SPEAKER_DETECTED,   // Speaker Apriltag has been detected
+    WINDING_UP,         // We want to shoot but we aren't ready yet.
     SHOOTING,           // Actually firing when ready
     SHOOTING_TIMEOUT,   // Shooting even if not ready
     SPEEDOMETER,        // Displaying robot speed on power meter.

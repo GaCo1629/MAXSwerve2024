@@ -5,9 +5,14 @@ import frc.robot.Constants.ShooterConstants;
 public final class Globals{
     public static boolean enableLIftSubsystem   = true;  // set to false if climber removed.
 
+    // Shooter status variables
+    public static boolean robotAtHeading        = false;
+    public static boolean tiltInPosition        = false;
+    public static boolean shooterUpToSpeed      = false;
+
     public static boolean gyroHasBeenReset      = false;
     public static boolean batonIsDown           = false;
-    public static boolean robotAtHeading        = false;
+
     public static boolean startNoteFinding      = false;
     public static boolean noteInIntake          = false;
     public static boolean noteAtShooter         = false;

@@ -33,7 +33,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utils.BackImageSource;
-import frc.robot.utils.BatonState;
 import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.GPIDController;
 import frc.robot.utils.Globals;
@@ -268,15 +267,13 @@ public class DriveSubsystem extends SubsystemBase {
       VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
 
       if (Globals.speakerTarget.valid) {
-        Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
-
+        
         // Calculate turn power to point to speaker.
         rotate = trackingCalculate(Globals.speakerTarget.bearingDeg + BatonConstants.offTargetShooting);
         lockCurrentHeading();  // prepare for return to heading hold
 
       } else if (Globals.odoTarget.valid) {
-        Globals.setLEDMode(LEDmode.SEEKING);
-
+        
         rotate = trackingCalculate(imu.headingDeg - Globals.odoTarget.bearingDeg);
 
         SmartDashboard.putString("odo", String.format("Head %f  SP %f  Rot %f", imu.headingDeg, Globals.odoTarget.bearingDeg, rotate));

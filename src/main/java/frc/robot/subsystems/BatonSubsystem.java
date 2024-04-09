@@ -38,9 +38,9 @@ public class BatonSubsystem extends SubsystemBase {
     private RelativeEncoder tiltEncoderRel;
     private Timer           stateTimer = new Timer();
 
-    private boolean tiltInPosition;
+    //private boolean tiltInPosition;
 
-    private boolean shooterUpToSpeed;
+    //private boolean shooterUpToSpeed;
     private boolean topUpToSpeed;
     private boolean botUpToSpeed;    
     private boolean rememberToStopIntake;
@@ -134,21 +134,21 @@ public class BatonSubsystem extends SubsystemBase {
 
         // Read baton sensors
         currentTiltAngle    = getSafeTiltAngle(); 
-        Globals.batonIsDown = (currentTiltAngle < 1.0);
        
         // noteSensor          = getNoteSensorValue();
         noteSensorShooter   = shooterBot.getVoltage();
         noteSensorIntake    = shooterTop.getVoltage();
 
-        tiltInPosition      = calculateTiltInPosition();
-        shooterUpToSpeed    = areShootersUpToSpeed();
-
-        Globals.noteInIntake = noteInIntake();
-        Globals.noteAtShooter = noteAtShooter();
+        Globals.shooterUpToSpeed    = areShootersUpToSpeed();
+        Globals.noteInIntake        = noteInIntake();
+        Globals.noteAtShooter       = noteAtShooter();
+        Globals.batonIsDown         = (currentTiltAngle < 1.0);
+        calculateTiltInPosition();
 
         // control the baton angle and shooter speed.
         if (Globals.getSpeakerTracking()) {
              double range = 0;
+             Globals.setLEDMode(LEDmode.WINDING_UP);
 
             // Deterine which target location method we should use.
             if (Globals.speakerTarget.valid) {
@@ -170,6 +170,7 @@ public class BatonSubsystem extends SubsystemBase {
             manualShooting = false;
 
         } else if (manualShooting) {
+            Globals.setLEDMode(LEDmode.WINDING_UP);
             setTiltAngle(manualTiltAngle);
             setShooterRPM(manualShooterSpeed);
 
@@ -187,7 +188,7 @@ public class BatonSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tilt setpoint",       tiltAngleSetPoint);
         SmartDashboard.putNumber("tilt angle",          currentTiltAngle);
         SmartDashboard.putNumber("tilt Power",              tiltRight.getAppliedOutput());
-        SmartDashboard.putBoolean("tilt In Position",       tiltIsInPosition());
+        SmartDashboard.putBoolean("tilt In Position",       Globals.tiltInPosition);
         SmartDashboard.putBoolean("Note In Intake",         noteInIntake());
         SmartDashboard.putBoolean("Note At Shooter",        noteAtShooter());
         
@@ -217,11 +218,11 @@ public class BatonSubsystem extends SubsystemBase {
     public void runStateMachine(){
         switch (currentState) {
             case IDLE:
-                if (noteInIntake()) {
+                if (noteInIntake() || noteAtShooter()) {
                     setState(BatonState.HOLDING);
                 } 
                 
-                if ((tiltAngleSetPoint == TiltConstants.homeAngle) && !tiltIsInPosition()) {
+                if ((tiltAngleSetPoint == TiltConstants.homeAngle) && !Globals.tiltInPosition) {
                     // Warn if batton in not fully lowered
                     Globals.setLEDMode(LEDmode.LOWERING);
 
@@ -268,10 +269,12 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
         
             case HOLDING:
-                if (Globals.speakerTarget.valid){
-                    Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
-                } else {
-                    Globals.setLEDMode(LEDmode.NOTE_HOLDING);
+                if (!Globals.getSpeakerTracking()  && !manualShooting) {
+                    if (Globals.speakerTarget.valid){
+                        Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
+                    } else {
+                        Globals.setLEDMode(LEDmode.NOTE_HOLDING);
+                    }
                 }
 
                 // center note in intake
@@ -311,7 +314,7 @@ public class BatonSubsystem extends SubsystemBase {
                 
             case AUTO_SHOOT_FAST:
                 // Exits by being up to speed
-                if (shooterIsUpToSpeed()){
+                if (Globals.shooterUpToSpeed){
                    intake.set(BatonConstants.fire);
                    setState(BatonState.SHOOTING); 
                 } else if(stateTimer.hasElapsed(1.5)){
@@ -347,7 +350,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case AMP_TILTING:
-                if (tiltIsInPosition()){
+                if (Globals.tiltInPosition){
                     eject();
                     setState(BatonState.AMP_EJECTING);
                 }
@@ -361,7 +364,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case AMP_SCORING:
-                if (tiltIsInPosition()){
+                if (Globals.tiltInPosition){
                     relaxBaton();
                     Globals.setAmplifying(false);
                     VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
@@ -370,7 +373,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case AMP_LOWERING:
-                if (tiltIsInPosition() || stateTimer.hasElapsed(1)){
+                if (Globals.tiltInPosition || stateTimer.hasElapsed(1)){
                     setState(BatonState.IDLE);
                 }
                 break;
@@ -398,21 +401,16 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
     public double rangeToAngle(double range) {
-        double X3 =     0.4245; 
-        double X2 =    -7.0375; 
-        double X  =   40.843;  
-        double C  =  -43.196;  
-        //   y = 0.4245x3 - 7.0375x2 + 40.843x - 43.196
-
+        double X3 =   0.297; //  0.253 ; //   0.424; 
+        double X2 =  -5.33; // -4.730 ; //  -7.037; 
+        double X  =  33.01; // 31.283 ; //  40.843;  
+        double C  = -36.23; //-35.240 ; // -43.196;  
+      
         range = MathUtil.clamp(range, 1, 6.0);
 
         double angle = (X3 * range * range * range) + (X2 * range * range) + (X * range) + C;
         
         return MathUtil.clamp(angle, 0, 40);
-    }
-        
-    public boolean tiltIsInPosition() {
-        return tiltInPosition;
     }
 
     public void setTiltAngle(double angle){
@@ -421,7 +419,7 @@ public class BatonSubsystem extends SubsystemBase {
         if (newSetpoint != tiltAngleSetPoint) {
             tiltAngleSetPoint = newSetpoint;
             tiltControl.setGoal(tiltAngleSetPoint);
-            tiltInPosition = calculateTiltInPosition();
+            calculateTiltInPosition();
         }
     }
 
@@ -432,8 +430,8 @@ public class BatonSubsystem extends SubsystemBase {
         return safe;
     }
 
-    public boolean calculateTiltInPosition(){
-        return (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
+    public void calculateTiltInPosition(){
+        Globals.tiltInPosition = (Math.abs(tiltAngleSetPoint - currentTiltAngle) < TiltConstants.tiltThresholdDeg);
     }
 
     /**
@@ -453,9 +451,6 @@ public class BatonSubsystem extends SubsystemBase {
     }
 
     // ===== SHOOTER Methods  ===============================
-    public boolean shooterIsUpToSpeed() {
-        return shooterUpToSpeed;
-    }
 
     public void setShooterRPM(double speed){
         if (speed != shooterSpeedSetPoint) {
@@ -485,7 +480,7 @@ public class BatonSubsystem extends SubsystemBase {
     }
        
     public boolean readyToShoot() {
-        return  tiltIsInPosition() && shooterIsUpToSpeed() && Globals.robotAtHeading;
+        return  Globals.tiltInPosition && Globals.shooterUpToSpeed && Globals.robotAtHeading;
     }
      
     public boolean areShootersUpToSpeed() {
@@ -529,14 +524,14 @@ public class BatonSubsystem extends SubsystemBase {
             setState(BatonState.AMP_TILTING);
         } else {
             VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
-            if (shooterIsUpToSpeed()){
+            if (Globals.shooterUpToSpeed){
                 intake.set(BatonConstants.fire);
                 setState(BatonState.SHOOTING);
             }
         }
     }
 
-    // Kist fire the ring with whatever speed is set.
+    // Just fire the ring with whatever speed is set.
     public void lob (){
         intake.set(BatonConstants.fire);
         setState(BatonState.SHOOTING);

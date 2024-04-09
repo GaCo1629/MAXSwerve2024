@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BatonSubsystem;
 import frc.robot.utils.BatonState;
 import frc.robot.utils.Globals;
+import frc.robot.utils.LEDmode;
 
 public class AutoShootNow extends Command {
   BatonSubsystem baton;
@@ -31,6 +32,7 @@ public class AutoShootNow extends Command {
     baton.setManualShooterSpeed(shooterSpeed);
     baton.setManualShooting(true);
     baton.setState(BatonState.AUTO_SHOOT_FAST);
+    Globals.setLEDMode(LEDmode.WINDING_UP);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

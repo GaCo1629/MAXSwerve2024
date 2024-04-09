@@ -46,9 +46,9 @@ public class AutoShoot extends Command {
 
     double rotate = 0;
     SmartDashboard.putString("Mode", "Auto Shoot")  ;
+    Globals.setLEDMode(LEDmode.WINDING_UP);
 
     if (Globals.speakerTarget.valid) {
-      Globals.setLEDMode(LEDmode.SPEAKER_DETECTED);
       hasSeenTarget = true;
 
       // Calculate turn power to point to speaker.
@@ -56,7 +56,6 @@ public class AutoShoot extends Command {
       robotDrive.lockCurrentHeading();  // prepare for return to heading hold
 
     } else if (Globals.odoTarget.valid && !hasSeenTarget) {
-      Globals.setLEDMode(LEDmode.SEEKING);
 
       rotate = robotDrive.trackingCalculate(robotDrive.getHeadingDeg() - Globals.odoTarget.bearingDeg);
       rotate = MathUtil.clamp(rotate, -0.4, 0.4);
