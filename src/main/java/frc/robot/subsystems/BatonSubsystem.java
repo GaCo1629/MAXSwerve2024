@@ -21,6 +21,7 @@ import frc.robot.utils.FLEXShooter;
 import frc.robot.utils.FrontImageSource;
 import frc.robot.utils.Globals;
 import frc.robot.utils.LEDmode;
+import frc.robot.utils.PassSource;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
@@ -174,6 +175,13 @@ public class BatonSubsystem extends SubsystemBase {
             setTiltAngle(manualTiltAngle);
             setShooterRPM(manualShooterSpeed);
 
+        } else if (Globals.passingEnabled && Globals.passTarget.valid){
+            setTiltAngle(0);
+            if (Globals.passSource == PassSource.NEUTRAL){
+                setShooterRPM(BatonConstants.passNeutralRPM);
+            } else {
+                setShooterRPM(BatonConstants.passSourceRPM);
+            }
         }
      
         runTiltPID();

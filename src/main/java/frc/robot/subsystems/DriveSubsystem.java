@@ -39,6 +39,7 @@ import frc.robot.utils.Globals;
 import frc.robot.utils.IMUInterface;
 import frc.robot.utils.LEDmode;
 import frc.robot.utils.MAXSwerveModule;
+import frc.robot.utils.PassSource;
 import frc.robot.utils.Target;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -192,7 +193,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("Estimated Pos", odometry.getEstimatedPosition().toString());
 
     getSpeakerTargetFromOdometry();
-    getLobTargetFromOdometry();
+    getPassTargetFromOdometry();
   }
 
   /**
@@ -307,7 +308,11 @@ public class DriveSubsystem extends SubsystemBase {
       //if (Globals.batonState == BatonState.AMP_LOWERING){
       // xSpeed = -0.2;
       //}
-    } 
+    } else if (Globals.passingEnabled) { // -- PASSING ---------------------------
+      if (Globals.passTarget.valid) {
+        rotate = trackingCalculate(imu.headingDeg - Globals.passTarget.bearingDeg);
+      }
+    }
     
     else {  // ---  MANUAL DRIVING-------------------------------------------------
 
@@ -482,18 +487,26 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("Odo Target", Globals.odoTarget.toString());
   }
 
-  // set the global odometry speaker target
-  public void getLobTargetFromOdometry() {
-    if (Globals.startingLocationSet && DriverStation.getAlliance().isPresent()) {
+  // set the global odometry pass target
+  public void getPassTargetFromOdometry() {
+    if (Globals.startingLocationSet && DriverStation.getAlliance().isPresent() && (Globals.passSource != PassSource.UNKNOWN)) {
       if (DriverStation.getAlliance().get() == Alliance.Red) {
-        Globals.lobTarget = getTargetFromOdometry(FieldConstants.redLob);
+        if(Globals.passSource == PassSource.NEUTRAL){
+          Globals.passTarget = getTargetFromOdometry(FieldConstants.redNeutral);
+        } else {
+          Globals.passTarget = getTargetFromOdometry(FieldConstants.redSource);
+        }
       } else {
-        Globals.lobTarget = getTargetFromOdometry(FieldConstants.blueLob);
+        if(Globals.passSource == PassSource.NEUTRAL){
+          Globals.passTarget = getTargetFromOdometry(FieldConstants.blueNeutral);
+        } else {
+          Globals.passTarget = getTargetFromOdometry(FieldConstants.blueSource);
+        }
       }
     } else {
-      Globals.lobTarget = new Target();
+      Globals.passTarget = new Target();
     }
-    SmartDashboard.putString("Lob Target", Globals.lobTarget.toString());
+    SmartDashboard.putString("Pass Target", Globals.passTarget.toString());
   }
 
   /** 
@@ -565,8 +578,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void turnToFaceAmp() {
-    if (Globals.lobTarget.valid) {
-      newHeadingSetpoint(Globals.lobTarget.bearingRad);  
+    if (Globals.passTarget.valid) {
+      newHeadingSetpoint(Globals.passTarget.bearingRad);  
     }
   }
 

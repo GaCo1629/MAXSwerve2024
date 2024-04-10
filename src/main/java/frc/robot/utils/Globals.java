@@ -32,17 +32,22 @@ public final class Globals{
     public static Target  noteTarget            = new Target();
     public static Target  odoTarget             = new Target();
     public static Target  ampTarget             = new Target();
-    public static Target  lobTarget             = new Target();
+    public static Target  passTarget             = new Target();
  
     private static LEDmode ledMode               = LEDmode.ALLIANCE;
+    public  static PassSource passSource         = PassSource.UNKNOWN;
 
     private static boolean amplifyingEnabled     = false;
     private static boolean noteTrackingEnabled   = false;
     private static boolean speakerTrackingEnabled= false;
+    public  static boolean passingEnabled        = false;
 
     public  static int     driveSubsystemFaults = 0;
     public  static int     batonSubsystemFaults = 0;
     public  static int     liftSubsystemFaults  = 0;
+
+    
+
     
 
     public static void setNoteTracking(boolean on) {
@@ -88,5 +93,10 @@ public final class Globals{
 
     public static LEDmode getLEDMode() {
         return ledMode;
+    }
+
+    public static void setPassMode(boolean on, PassSource source){
+        passingEnabled = on;
+        passSource = source;
     }
 }

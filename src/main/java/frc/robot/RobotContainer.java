@@ -26,6 +26,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.Globals;
+import frc.robot.utils.PassSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -127,10 +128,6 @@ private void configureButtonBindings() {
         .whileTrue(Commands.run(() -> baton.fire()))  // Repeats Automatically
         .onTrue(Commands.runOnce(() -> robotDrive.updateOdometryFromSpeaker()));  
 
-    // Turn to Lob to Amp
-    new JoystickButton(driverController, Button.kTriangle.value)    
-        .onTrue(Commands.runOnce(() -> robotDrive.turnToFaceAmp()));
-    
     // Turn to source
     new JoystickButton(driverController, Button.kSquare.value)    
         .onTrue(Commands.runOnce(() -> robotDrive.turnToSource()));
@@ -160,11 +157,6 @@ private void configureButtonBindings() {
     // Manual Collect
     new JoystickButton(copilot_1, Button.kL1.value)    
         .onTrue(Commands.runOnce(() -> baton.collect()))
-        .onFalse(Commands.runOnce(() -> baton.stopIntake()));
-
-    // Eject Note
-    new JoystickButton(copilot_1, Button.kCross.value)
-        .whileTrue(Commands.run(() -> baton.eject()))
         .onFalse(Commands.runOnce(() -> baton.stopIntake()));
 
     // Amplify    
@@ -204,16 +196,24 @@ private void configureButtonBindings() {
         .onTrue(Commands.runOnce(() -> baton.bumpShooter(-200)));
 
     // Manual Low Lob
-    new JoystickButton(copilot_1, Button.kSquare.value)
+    new JoystickButton(copilot_1, Button.kCross.value)
         .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.lowNoteShareSpeed, BatonConstants.lowNoteShareAngle)));
-    
-    // Manual High Lob
-    new JoystickButton(copilot_1, Button.kTriangle.value)
-        .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.highNoteShareSpeed, BatonConstants.highNoteShareAngle)));
-  
+
     // Return to manual default
     new JoystickButton(copilot_1, Button.kCircle.value)
         .onTrue(Commands.runOnce(() -> baton.setSpeedAndTilt(BatonConstants.defaultRPM, BatonConstants.defaultTilt)));
+    
+    // Neutral Pass
+    new JoystickButton(copilot_1, Button.kTriangle.value)
+        .onTrue(Commands.runOnce(() -> Globals.setPassMode(true, PassSource.NEUTRAL)))
+        .onFalse(Commands.runOnce(() -> Globals.setPassMode(false, PassSource.UNKNOWN)))
+        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
+  
+    // Source Pass
+    new JoystickButton(copilot_1, Button.kSquare.value)
+        .onTrue(Commands.runOnce(() -> Globals.setPassMode(true, PassSource.SOURCE)))
+        .onFalse(Commands.runOnce(() -> Globals.setPassMode(false, PassSource.UNKNOWN)))
+        .onFalse(Commands.runOnce(() -> baton.stopShooter()));
   }
 
   /**
