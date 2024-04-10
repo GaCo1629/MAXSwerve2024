@@ -258,6 +258,7 @@ public class BatonSubsystem extends SubsystemBase {
 
             case COLLECTING:
                 if (noteInIntake() || noteAtShooter()){
+                    intake.set(BatonConstants.indexUp);
                     setState(BatonState.INDEXING);
                     Globals.setNoteTracking(false);
                 } else {
@@ -270,7 +271,7 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case INDEXING:
-                if (noteInIntake()){
+                if (noteAtShooter()){
                     setState(BatonState.HOLDING);
                 }
                 Globals.setLEDMode(LEDmode.NOTE_HOLDING);

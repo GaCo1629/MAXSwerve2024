@@ -43,6 +43,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ReadyShooterClose"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4to4B"
@@ -75,7 +81,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnTo90"
+            "name": "TurnTo80"
           }
         },
         {

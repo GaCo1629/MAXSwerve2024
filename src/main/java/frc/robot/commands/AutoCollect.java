@@ -80,7 +80,7 @@ public class AutoCollect extends Command {
   @Override
   public boolean isFinished() {
     // wailt till note is picked up, but don't wait too long
-    return ((baton.getState() == BatonState.HOLDING) || (collectTimer.hasElapsed(3.5)));
+    return ((baton.getState() == BatonState.HOLDING) || (collectTimer.hasElapsed(3.0)));
   }
 
 }
