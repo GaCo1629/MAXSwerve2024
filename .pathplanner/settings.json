@@ -14,18 +14,20 @@
     "8",
     "9",
     "A",
+    "C",
     "CS",
     "D",
     "LS",
+    "W",
     "P",
     "S",
-    "C",
     "SP"
   ],
   "autoFolders": [
     "Amp",
-    "Driver",
     "Corner",
+    "Driver",
+    "Wall",
     "Podium",
     "Speaker"
   ],
