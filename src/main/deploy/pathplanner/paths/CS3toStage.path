@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.8381720068283434,
+        "y": 5.461170124619452
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.36440895673814,
+        "y": 4.736132549188176
+      },
+      "isLocked": false,
+      "linkedName": "CS3"
+    },
+    {
+      "anchor": {
+        "x": 4.878951752205499,
+        "y": 4.0695657459691
+      },
+      "prevControl": {
+        "x": 4.083749250119583,
+        "y": 4.619191004763776
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Stage"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 600.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "CS",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
