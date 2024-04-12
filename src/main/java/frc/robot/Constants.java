@@ -185,8 +185,8 @@ public final class Constants {
 
   public static final class TiltConstants { 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kP = 0.020;    // was .24
-    public static final double kI = 0.015;    // was 0.0005
+    public static final double kP = 0.022;    // was 0.020
+    public static final double kI = 0.04;    // was 0.015
     public static final double kD = 0.000; 
     public static final double kFF = 0;
     public static final double kIzone = 1;
