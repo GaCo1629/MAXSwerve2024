@@ -36,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -109,8 +108,6 @@ public RobotContainer() {
     configureButtonBindings();
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    // As an example, this will only show autos that start with "comp" while at
-    // competition as defined by the programmer
     autoChooser = buildSortedAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -145,7 +142,7 @@ public RobotContainer() {
   }
 
   /**
-   * Get a list of all auto names in the project
+   * Get a SORTED  list of all auto names in the project
    *
    * @return List of all auto names
    */
