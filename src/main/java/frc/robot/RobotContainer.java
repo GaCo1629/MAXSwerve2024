@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -32,8 +33,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -99,15 +108,63 @@ public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    // As an example, this will only show autos that start with "comp" while at
+    // competition as defined by the programmer
+    autoChooser = buildSortedAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
     robotDrive.setDefaultCommand(new DefaultDriveCommand(robotDrive));
-
     Globals.startingLocationSet = false ;
 }
 
+/**
+   * Create and populate a sendable chooser with sorted list of all PathPlannerAutos in the project
+   * @return SendableChooser populated with all autos
+   */
+  public static SendableChooser<Command> buildSortedAutoChooser() {
+    if (!AutoBuilder.isConfigured()) {
+      throw new RuntimeException(
+          "AutoBuilder was not configured before attempting to build an auto chooser");
+    }
+
+    SendableChooser<Command> chooser = new SendableChooser<>();
+    List<String> autoNames = getAllAutoNames();
+    List<PathPlannerAuto> options = new ArrayList<>();
+
+    for (String autoName : autoNames) {
+      PathPlannerAuto auto = new PathPlannerAuto(autoName);
+        options.add(auto);
+    }
+
+    chooser.setDefaultOption("None", Commands.none());
+    options.forEach(auto -> chooser.addOption(auto.getName(), auto));
+
+    return chooser;
+  }
+
+  /**
+   * Get a list of all auto names in the project
+   *
+   * @return List of all auto names
+   */
+  public static List<String> getAllAutoNames() {
+    File[] autoFiles = new File(Filesystem.getDeployDirectory(), "pathplanner/autos").listFiles();
+
+    if (autoFiles == null) {
+      return new ArrayList<>();
+    }
+
+    return Stream.of(autoFiles)
+        .filter(file -> !file.isDirectory())
+        .map(File::getName)
+        .filter(name -> name.endsWith(".auto"))
+        .map(name -> name.substring(0, name.lastIndexOf(".")))
+        .sorted() 
+        .collect(Collectors.toList());
+  }
+  
 
 private void configureButtonBindings() {
 
