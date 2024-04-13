@@ -540,7 +540,9 @@ public class DriveSubsystem extends SubsystemBase {
       } else {
         speaker = FieldConstants.blueSpeaker;
       }
+
       double bearingToTarget = Globals.speakerTarget.bearingRad + imu.headingRad;
+      // double bearingToTarget = Globals.speakerTarget.bearingRad + imu.headingRad - Math.toRadian(BatonConstants.offTargetShooting);
 
       X = speaker.x + (Math.cos(bearingToTarget) * Globals.speakerTarget.range);
       Y = speaker.y + (Math.sin(bearingToTarget) * Globals.speakerTarget.range);
