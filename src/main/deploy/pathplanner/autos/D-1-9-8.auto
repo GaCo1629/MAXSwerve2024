@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Collect"
+            "name": "CollectTurnBack"
           }
         },
         {
@@ -76,7 +76,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Collect"
+            "name": "CollectTurnFront"
           }
         },
         {

@@ -29,6 +29,7 @@ public class AutoFindNoteLater extends Command {
     downTimer.restart();
     vision.flushNoteTargets();
     Globals.startNoteFinding = false;
+    Globals.noteFoundInAuto = true;  // just in case looking is never enabled.
     keepLooking = false;
     counter = 0;
     SmartDashboard.putString("Mode", "Path Later");
@@ -72,7 +73,10 @@ public class AutoFindNoteLater extends Command {
 
       if (Globals.noteTarget.valid){
         Globals.startNoteFinding = false;
+        Globals.noteFoundInAuto = true;
         finished = true;
+      } else {
+        Globals.noteFoundInAuto = false;
       }
     } else {
       Globals.setLEDMode(LEDmode.WAITING);

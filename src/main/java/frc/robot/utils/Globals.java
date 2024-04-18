@@ -18,6 +18,7 @@ public final class Globals{
     public static boolean noteAtShooter         = false;
     public static boolean liftIsEnabled         = false;
     public static boolean defenseActive         = false;
+    public static boolean noteFoundInAuto       = true;
 
     public static FrontImageSource frontSource;
     public static BackImageSource  backSource;
