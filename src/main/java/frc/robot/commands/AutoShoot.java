@@ -37,7 +37,7 @@ public class AutoShoot extends Command {
   public void initialize() {
     VisionSubsystem.setBackImageSource(BackImageSource.SPEAKER);
     Globals.setSpeakerTracking(true);
-    baton.setState(BatonState.AUTO_SHOOT);
+    baton.setState(BatonState.AUTO_PRE_SHOOT);  // added to ensure at least one vision target read.
     robotDrive.lockCurrentHeading();
     hasSeenTarget = false;
   }
