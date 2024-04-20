@@ -192,7 +192,7 @@ public final class Constants {
     public static final double tiltThresholdDeg = 1    ;  //  was 1.0
 
     public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(
-      100, 150);
+      100, 125);
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 80.0;
