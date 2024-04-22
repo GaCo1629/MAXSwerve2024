@@ -116,7 +116,7 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kDrivingMotorCurrentLimit = 70; // amps was 50;
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
@@ -192,7 +192,7 @@ public final class Constants {
     public static final double tiltThresholdDeg = 1    ;  //  was 1.0
 
     public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(
-      100, 150);
+      100, 125);
 
     public static final double minEncoderPosition = 0.0;
     public static final double maxEncoderPosition = 80.0;

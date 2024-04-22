@@ -14,6 +14,7 @@ import frc.robot.Constants.BatonConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoCollect;
+import frc.robot.commands.AutoCollectSmart;
 import frc.robot.commands.AutoFindNote;
 import frc.robot.commands.AutoFindNoteLater;
 import frc.robot.commands.AutoShoot;
@@ -74,6 +75,8 @@ public RobotContainer() {
         // Register named commands
     NamedCommands.registerCommand("Amp",            new AutoAmp(baton, robotDrive));
     NamedCommands.registerCommand("Collect",        new AutoCollect(baton, robotDrive));
+    NamedCommands.registerCommand("CollectTurnBack",    new AutoCollectSmart(baton, robotDrive, 90));
+    NamedCommands.registerCommand("CollectTurnFront",   new AutoCollectSmart(baton, robotDrive, -90));
     NamedCommands.registerCommand("Shoot",          new AutoShoot(baton, robotDrive));
     NamedCommands.registerCommand("ShootNow",       new AutoShootNow(baton, 0, 3000));
     NamedCommands.registerCommand("ShootNowSA",     new AutoShootNow(baton, 7, 3400));
