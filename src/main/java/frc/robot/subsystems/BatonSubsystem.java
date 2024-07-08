@@ -364,13 +364,14 @@ public class BatonSubsystem extends SubsystemBase {
 
             case AMP_TILTING:
                 if (Globals.tiltInPosition){
-                    eject();
+                    ejectAmp();
                     setState(BatonState.AMP_EJECTING);
                 }
                 break;
             
             case AMP_EJECTING:
-                if (!noteInIntake()){
+                // if (!noteInIntake()){
+                if (!noteAtShooter()){
                     setTiltAngle(TiltConstants.ampHighAngle);
                     setState(BatonState.AMP_SCORING);
                 }
@@ -593,6 +594,9 @@ public class BatonSubsystem extends SubsystemBase {
         intake.set(BatonConstants.eject);
     }
 
+    public void ejectAmp (){
+        intake.set(BatonConstants.ejectAmp);
+    }
 
     //  =========  Manual Shooting Commands
     public void bumpTilt(double bump) {
