@@ -418,7 +418,7 @@ public class BatonSubsystem extends SubsystemBase {
         double X3 =   0.291 ;  // 0.286    
         double X2 =  -5.25  ;  //          
         double X  =  32.87  ;  //          
-        double C  = -36.45  ;  // -36.22   
+        double C  = -36.70  ;  // -36.45  
       
         range = MathUtil.clamp(range, 1, 6.0);
 
