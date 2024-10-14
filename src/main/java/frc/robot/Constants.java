@@ -27,9 +27,9 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double kAtleeSpeedFactor     = 0.85; // Revised down due to new Joystick math // was 0.8
+    public static final double kAtleeSpeedFactor     = 1; // Revised down due to new Joystick math // was 0.8
     public static final double kAtleeTurnFactor      = 0.70; // Revised down due to new Joystick math // was 0.6
-    public static final double kAlexSpeedFactor      = 1; // Revised down due to new Joystick math // was 0.8
+    public static final double kAlexSpeedFactor      = 1.2; // Revised down due to new Joystick math // was 0.8
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
