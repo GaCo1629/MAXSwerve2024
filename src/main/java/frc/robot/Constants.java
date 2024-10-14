@@ -27,13 +27,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class DriveConstants {
-<<<<<<< Updated upstream
-    public static final double kAtleeSpeedFactor     = 0.40; // Revised down due to new Joystick math // was 0.85
-    public static final double kAtleeTurnFactor      = 0.30; // Revised down due to new Joystick math // was 0.7
-=======
     public static final double kAtleeSpeedFactor     = 1; // Revised down due to new Joystick math // was 0.85
     public static final double kAtleeTurnFactor      = 0.85; // Revised down due to new Joystick math // was 0.7
->>>>>>> Stashed changes
     public static final double kAlexSpeedFactor      = 1; // Revised down due to new Joystick math // was 0.8
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
@@ -137,7 +132,7 @@ public final class Constants {
     public static double maxTiltAngle  = 95;
     public static double maxShooterRPM = 6000;
     public static double collect = -0.6;  // was 0.5
-    public static double fire = -0.5;  // was -1.0   =================================
+    public static double fire = -0.5;  // was -1.0  
     public static double eject = 0.3;
     public static double indexUp = -0.25;
     public static double indexDown = 0.20;
