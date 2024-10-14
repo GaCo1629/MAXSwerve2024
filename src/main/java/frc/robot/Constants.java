@@ -133,9 +133,9 @@ public final class Constants {
     public static double maxShooterRPM = 6000;
     public static double collect = -0.6;  // was 0.5
     public static double fire = -0.5;  // was -1.0   =================================
-    public static double eject = 0.3;
+    public static double eject = 0.4;
     public static double ejectAmp = 0.20;
-    public static double indexUp = -0.25;
+    public static double indexUp = -0.30;
     public static double indexDown = 0.20;
     public static double stop = 0;
 

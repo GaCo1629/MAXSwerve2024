@@ -287,9 +287,10 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putString("Mode", "Note")  ;
       VisionSubsystem.setFrontImageSource(FrontImageSource.NOTE);
       fieldRelative = false;
-      ySpeed = 0;
+
       if (Globals.noteTarget.valid){
         // Calculate turn power to point to note.
+        ySpeed = 0;
         rotate = trackingCalculate(Globals.noteTarget.bearingDeg) * 0.70;  // was 0.75
         if (Math.abs(Globals.noteTarget.bearingDeg) < 10){
           xSpeed = Globals.noteTarget.range * 0.35; 
@@ -300,7 +301,8 @@ public class DriveSubsystem extends SubsystemBase {
         if (Math.abs(xSpeed) < BatonConstants.noteApproachSpeed ){
           xSpeed = BatonConstants.noteApproachSpeed;
         }
-        rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
+        // ySpeed = 0;
+        // rotate = headingLockController.calculate(imu.headingRad, headingSetpoint);
       }
 
     }  else if (Globals.getAmplifying()) {  // --  AMPLIFYING --------------------
