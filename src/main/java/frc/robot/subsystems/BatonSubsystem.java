@@ -341,10 +341,14 @@ public class BatonSubsystem extends SubsystemBase {
                 break;
 
             case SHOOTING_WAIT:    
-                if (stateTimer.hasElapsed(0.0)){   // was 0.5
-                    relaxBaton();
-                    Globals.setSpeakerTracking(false);
-                    setState(BatonState.IDLE);
+                if (stateTimer.hasElapsed(0)){   // was 0.5s
+                    stopIntake();
+                    if (stateTimer.hasElapsed(0.2)){  //Added 4/20/24
+                        stopShooter();
+                        setTiltAngle(TiltConstants.homeAngle);
+                        Globals.setSpeakerTracking(false);
+                        setState(BatonState.IDLE);
+                    }
                 }
                  break;
 
@@ -360,13 +364,14 @@ public class BatonSubsystem extends SubsystemBase {
 
             case AMP_TILTING:
                 if (Globals.tiltInPosition){
-                    eject();
+                    ejectAmp();
                     setState(BatonState.AMP_EJECTING);
                 }
                 break;
             
             case AMP_EJECTING:
-                if (!noteInIntake()){
+                // if (!noteInIntake()){
+                if (!noteAtShooter()){
                     setTiltAngle(TiltConstants.ampHighAngle);
                     setState(BatonState.AMP_SCORING);
                 }
@@ -410,11 +415,10 @@ public class BatonSubsystem extends SubsystemBase {
 
     // ===== TILT Methods  ===================================
     public double rangeToAngle(double range) {
-
-        double X3 =   0.286 ;  // 0.280   // 0.291 ; //  0.297; //  0.253 ; //   0.424; 
-        double X2 =  -5.25  ;  //         //         //  -5.33; // -4.730 ; //  -7.037; 
-        double X  =  32.87  ;  //         //         //  33.01; // 31.283 ; //  40.843;  
-        double C  = -36.22  ;  // -36.45  //         // -36.23; //-35.240 ; // -43.196;  
+        double X3 =   0.291 ;  //        // 0.308 // 0.291 // 0.286    
+        double X2 =  -5.25  ;  //        //       //       //   
+        double X  =  32.87  ;  //        //       //       //   
+        double C  = -36.7   ;  // -34.45 //-36.22 //       // -36.22   
       
         range = MathUtil.clamp(range, 1, 6.0);
 
@@ -590,6 +594,9 @@ public class BatonSubsystem extends SubsystemBase {
         intake.set(BatonConstants.eject);
     }
 
+    public void ejectAmp (){
+        intake.set(BatonConstants.ejectAmp);
+    }
 
     //  =========  Manual Shooting Commands
     public void bumpTilt(double bump) {
