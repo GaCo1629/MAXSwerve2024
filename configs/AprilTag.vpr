@@ -3,7 +3,7 @@ area_min:0.0017850625000000004
 area_similarity:0
 aspect_max:20.000000
 aspect_min:0.000000
-black_level:0
+black_level:5
 blue_balance:1975
 botfloorsnap:1
 botlength:0.7112
@@ -34,16 +34,16 @@ dilation_steps:0
 direction_filter:0
 dual_close_sort_origin:0
 erosion_steps:0
-exposure:250
+exposure:350
 fiducial_backend:umich
 fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
 fiducial_idfilters:
 fiducial_locfilters:
 fiducial_method:sqpnp
-fiducial_qualitythreshold:2.0
+fiducial_qualitythreshold:0
 fiducial_refine:0
-fiducial_resdiv:2
+fiducial_resdiv:1
 fiducial_size:165.1
 fiducial_skip3d:1
 fiducial_type:aprilClassic36h11
@@ -57,7 +57,7 @@ image_source:0
 img_to_show:0
 intersection_filter:0
 invert_hue:0
-lcgain:17
+lcgain:8.9
 multigroup_max:7
 multigroup_min:1
 multigroup_rejector:0
